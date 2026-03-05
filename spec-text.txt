@@ -1,0 +1,437 @@
+THE OBSERVATORY
+Production Specification Document
+Stilled — Admin Dashboard
+Version 1.0  ·  Phase 1 Handoff
+
+
+
+This document is the complete production specification for The Observatory, the private admin dashboard for Stilled. The frontend site (Theories, Directory, Artifacts, Counsel) is already built and deployed separately. This spec covers only the backend admin interface and its data architecture.
+
+The mockup HTML file (provided alongside this document) defines all visual layout and component styling. This document defines what everything does, how it is wired, and what logic governs each zone. Together, these two files are the complete handoff package.
+
+
+1. Project Context
+
+1.1 What The Observatory Is
+The Observatory is a solo-operator admin dashboard. There is no team, no collaborators, no multi-user access. Every design and security decision reflects this constraint. It is a private intelligence portal, not a SaaS product.
+
+Its purpose is to surface whether intellectual work is landing — not just being seen. It measures read depth, return visits, and conversion behavior rather than raw traffic. It is designed to reward quality publishing, not frequency or virality.
+
+1.2 The Frontend Is Separate
+The public-facing Stilled site (hosted on Vercel via Cloudflare) is already built and not within scope here. The Observatory is a completely separate interface, accessed via a private URL, gated by Cloudflare Zero Trust before Ghost login is reached.
+
+No changes should be made to the frontend site as part of this build. Any data surfaced in The Observatory is for internal visibility only.
+
+1.3 Visual Identity
+Background
+#FAF9F6 (warm alabaster)
+Text
+#1A1A1A (charcoal)
+Display font
+Cormorant Garamond (headers, zone titles)
+Body font
+Inter (data labels, body text, field labels)
+Tone
+Editorial, forensic, warm. Not generic SaaS.
+Design ratio
+80% function, 20% form. Data leads. No decorative elements.
+Prohibited
+Streak counters, gamification, congratulatory language, dark mode toggle, notification badges
+
+1.4 Infrastructure Stack
+CMS / Backend
+Ghost CMS on DigitalOcean (~$6/month)
+Security Gate
+Cloudflare Zero Trust in front of Ghost admin URL
+Analytics
+Plausible Analytics ($9/month)
+Video Data
+YouTube Analytics API
+Product Sales
+Gumroad (external, no integration needed in Phase 1)
+Total Monthly Cost
+~$20–25/month at full build completion
+
+
+2. Security Architecture
+
+2.1 Zero Trust Gate
+Cloudflare Zero Trust sits in front of the Ghost admin URL. The Ghost login screen is never reached without passing the Zero Trust authentication layer first. This resolves Ghost&apos;s known CVEs (XSS-to-owner-takeover, auth bypass) because the multi-user attack vectors they depend on do not apply to a solo operator with a gated admin panel.
+
+2.2 Security Status Bar
+The Observatory UI includes a persistent security status bar, visible at all times. It displays:
+Cloudflare Zero Trust session status (active / expired)
+Timestamp of last successful login
+Session invalidation button (force logout, one click)
+
+NOTE: This bar should be present in the UI on every view including the Writing Room. It does not disappear when navigating between zones.
+
+2.3 Ghost CVE Posture
+The known Ghost CVEs are structurally non-applicable in this configuration. Document this in internal notes. If Ghost is ever reconfigured to allow additional admin users, the Zero Trust posture must be re-evaluated before doing so.
+
+
+3. The Eleven Zones
+The Observatory dashboard is organized into eleven named zones plus the Security Bar and Writing Room. Each zone is described below with its data source, display logic, UI copy, and developer notes.
+
+NOTE: The mockup HTML file shows the visual layout and component style for all zones. Refer to it for spacing, card styling, typography treatment, and zone placement. This document defines the logic and wiring behind each zone.
+
+Zone 1 — AI Situational Brief
+
+Position
+Top of dashboard, full width, first element on load
+Data sources
+Ghost (recent posts, subscriber count), Plausible (traffic this week), YouTube API (latest video performance)
+Update frequency
+Generated fresh on each login
+Format
+3–5 plain sentences. No headers, no bullets, no markdown.
+
+Display Logic
+On login, the system queries all four data sources and passes a structured summary to the AI generation layer. The output is a brief, forensic situational assessment in plain language.
+
+The brief should answer: What is the current state of the platform? Is anything meaningfully above or below baseline? Is there anything that warrants attention today?
+
+Tone Guidance for AI Prompt
+The AI that generates this brief should be instructed to write like an analyst, not an assistant. No motivational language. No praise. No softening phrases. Plain declarative sentences. If nothing is notable, the brief should say so directly.
+
+Example acceptable output: &quot;Traffic is up 18% this week, driven primarily by direct and YouTube referral. The essay on belief architecture is showing return visit behavior above your personal baseline for the format. Subscriber intake has been flat for six days. No convergence events are active.&quot;
+
+NOTE: Phase 1 does not require the AI brief to be live. A static placeholder text block is acceptable until Phase 5 when this zone is wired.
+
+Zone 2 — Resonance Index
+
+Position
+Below AI Brief, primary content zone
+Data sources
+Ghost (subscriber conversion per post), Plausible (scroll depth, time on page, return visits)
+Update frequency
+Daily recalculation
+Format
+Ranked list. Each entry: essay title, composite score bar, qualitative tag
+
+Composite Score Formula
+The Resonance Index ranks essays by a composite score, not raw views. The score is calculated from four signals, weighted equally in Phase 1 (weights can be tuned later):
+Scroll depth (Plausible custom event or scroll tracking script)
+Average read time (Plausible time-on-page)
+Return visits (Plausible unique vs. total pageviews ratio for the same user)
+Subscriber conversion (Ghost: new subscribers whose first action was reading this post)
+
+Qualitative Tagging
+Each ranked essay must display one of three qualitative tags indicating why it scored well. The tag is determined by which signal contributed most to the composite score:
+DEEP READING — scroll depth and read time are the dominant signals
+RETURN VISITS — return visit rate is the dominant signal
+CONVERSION — subscriber conversion is the dominant signal
+
+NOTE: These tags are not decorative. They tell the operator what kind of resonance each piece generated. An essay scoring high on DEEP READING but low on CONVERSION means it absorbed readers but did not move them to subscribe — a meaningful distinction.
+
+Zone 3 — Baseline Engine
+
+Position
+Adjacent to or below Resonance Index
+Data sources
+Ghost (post metadata: format type, publish day), Plausible (historical performance per post)
+Update frequency
+Daily
+Format
+Labeled list, 3–4 essays per view, with flag badges
+
+Logic
+The Baseline Engine compares each essay&apos;s current performance against your personal historical average for the same format type and day of week. The underlying calculation is a z-score: how many standard deviations above or below your own baseline is this piece performing?
+
+This requires a minimum dataset before it becomes meaningful. The engine should not surface comparisons until at least 10 published pieces exist in the same format category. Until then, display a holding message: &quot;Baseline data is still building. Minimum 10 essays per format required.&quot;
+
+Flag Labels
+ABOVE BASELINE — performance is &gt;1 standard deviation above your historical average for this format/day
+WITHIN RANGE — performance is within 1 standard deviation of your average
+BELOW BASELINE — performance is &gt;1 standard deviation below your average
+
+UI Copy
+Zone header subline (visible beneath the zone title): &quot;Compared against your personal historical average for this format and day of week. Threshold: ±1 standard deviation (z-score).&quot;
+NOTE: This is the corrected subline from the mockup audit. The z-score language must be present so the developer knows what to build, even though it is written in plain terms for the operator.
+
+Zone 4 — Convergence Events
+
+Position
+Visually elevated, distinct from standard data zones. Recommend: top-right or inline with Zone 3 as an alert rail.
+Data sources
+Ghost, Plausible, YouTube API (all four)
+Update frequency
+Checked every 6 hours
+Format
+Alert cards. 1–3 cards maximum visible at once.
+
+Trigger Logic
+A Convergence Event fires when three or more of the following signals spike on the same essay within a 48-hour window:
+Scroll depth spikes above the essay&apos;s own previous average
+Return visits increase (same reader returning within 48 hours)
+Newsletter click rate on this piece rises above your average
+YouTube referral traffic to the associated essay increases
+New subscribers whose entry point was this essay
+
+Card Copy
+Each Convergence Event card must contain:
+Essay title (bold)
+Signals that fired (listed, e.g. &quot;Scroll depth · Return visits · Newsletter click&quot;)
+Time window label: &quot;Within 48 hours&quot;
+Verdict line (one sentence, forensic tone, e.g. &quot;This piece landed.&quot; or &quot;Strong academic resonance detected.&quot;)
+
+NOTE: The 48-hour window label is required on every card. It was missing from the mockup and must be present in production. It is not decorative — it communicates that this is a multi-signal confirmation within a defined window, not a single metric spike.
+
+Visual Treatment
+Convergence Event cards must be visually distinct from all other zone cards. Use one of: a subtle left accent border in warm charcoal (#1A1A1A at 30% opacity), a slightly warmer background fill, or a light elevation shadow. The visual signal communicates alert status without using color-coded urgency (no red, no green).
+
+Zone 5 — Publication Heatmap
+
+Position
+Full-width zone, below primary zones
+Data sources
+Ghost (publish dates), Resonance Index composite score
+Update frequency
+Daily
+Format
+GitHub-style full-year calendar grid. Below the grid: 7-day cadence label, 30-day trend line.
+
+Cell Intensity Logic
+Cell shading reflects Resonance Index composite score for that day&apos;s published piece, not the mere fact of publication. A published piece with a low Resonance score renders lighter than one with a high score. No publication = empty cell.
+
+Scale: 5 levels of intensity from empty to darkest, mapped to Resonance score quintiles.
+
+Prohibited Elements
+No streak counter. No &quot;days since last post&quot; label. No congratulatory copy for consistent publishing. No gamification of any kind. The heatmap is a record of quality output, not a behavioral nudge.
+
+Zone 6 — Traffic Sources
+
+Position
+Secondary zone, below heatmap or in sidebar configuration
+Data sources
+Plausible (referral source breakdown)
+Update frequency
+Weekly refresh
+Format
+Simple breakdown list with counts: YouTube / Direct / Search / Referral / Other
+
+Below the source breakdown: a single line displaying new subscriber count for the current week. Label: &quot;New subscribers this week: [N]&quot;
+
+Zone 7 — YouTube Intelligence Feed
+
+Position
+Secondary zone
+Data sources
+YouTube Analytics API, Plausible (essay scroll depth), Ghost (paper download events)
+Update frequency
+Daily
+Format
+Per-video rows with three sub-metrics each
+
+Three Sub-Metrics Per Video
+Retention curve overlay — YouTube audience retention data displayed as a simple curve. Overlaid against the essay scroll depth map for the associated commentary piece. Shows whether video viewers who proceed to the essay read the same depth.
+Commentary-to-Paper Bridge Rate — the percentage of commentary page readers who open the attached academic paper. Tracked via Ghost or a custom click event. Label: &quot;[N]% of commentary readers opened the paper.&quot;
+Subscriber conversion — video viewers who became site members. Source: YouTube referral traffic in Ghost + new member count from that source. Label: &quot;[N] video viewers became subscribers.&quot;
+
+Zone 8 — The 3AM Map
+
+Position
+Prominent zone, visually distinctive, given above-average vertical space
+Data sources
+Plausible (time of visit, geographic region, scroll depth per session)
+Update frequency
+Weekly
+Format
+Dual-axis heatmap grid
+
+Grid Structure
+Y-axis (rows)
+24 hours in 3-hour blocks: 12AM / 3AM / 6AM / 9AM / 12PM / 3PM / 6PM / 9PM
+X-axis (columns)
+5 geographic regions: North America East / North America West / Europe / SE Asian Diaspora / Other
+Cell value
+Read depth (composite of scroll depth + time on page), NOT visit count
+Cell shading
+5-level intensity scale, brand palette: light (#FAF9F6) to dark (#1A1A1A or warm charcoal variant)
+Legend
+Required. Text: &quot;Cell intensity = read depth (scroll + time on page)&quot;
+
+NOTE: SE Asian Diaspora must be an explicitly named column. It is not grouped into Other. This reflects an expected concentration of late-night reading from that geographic-psychological cohort and the operator wants it surfaced distinctly.
+
+Zone 9 — Audience Depth Index
+
+Position
+Secondary zone
+Data sources
+Ghost (member reading history via post access logs or member activity API)
+Update frequency
+Weekly
+Format
+Four tier breakdown + Tier 4 archetype portrait
+
+Four Tiers
+Tier 1
+1 essay read
+Tier 2
+2–5 essays read
+Tier 3
+6–10 essays read
+Tier 4
+10+ essays read
+
+Tier 4 Archetype Portrait
+For the Tier 4 cohort only, surface a pattern portrait:
+Average number of essays read before subscribing
+Most common discovery path (YouTube referral / direct / search)
+Average time from first visit to subscription
+
+This portrait shows aggregate behavior patterns only. No individual reader data is surfaced or stored in the UI.
+
+Zone 10 — Intellectual Proximity Layer
+
+Position
+Secondary zone, may be collapsed by default
+Data sources
+Plausible (session navigation paths, next-page events)
+Update frequency
+Weekly
+Format
+Linked list or matrix: essay title + essays readers opened next, with frequency counts
+
+Display Logic
+For each essay, track which essay readers navigate to next within the same session. Surface the top 2–3 next-reads per essay with a frequency count (e.g. &quot;42 readers&quot;).
+
+UI Structure (per row)
+Essay title — &quot;Readers next opened →&quot; — [Essay A] (N readers) · [Essay B] (N readers) · [Essay C] (N readers)
+
+This zone reveals the conceptual connections your audience makes organically — which may differ from how you categorize your own work. It is an audience-intelligence tool, not a recommendation engine. No algorithmic suggestions are made.
+
+Zone 11 — Intelligence Gap Indicator
+
+Position
+Slim bar, persistent, visible at all times. Recommend: below Security Bar or at absolute bottom of UI.
+Data sources
+Status ping to all four data source APIs
+Update frequency
+Real-time or near-real-time (every 5 minutes)
+Format
+Four status indicators, one per data source. Each shows: source name, status (Live / Stale / Unavailable), and timestamp of last successful sync.
+
+Four Sources Monitored
+Ghost CMS
+Plausible Analytics
+YouTube Analytics API
+Scroll tracking script (custom)
+
+Honesty Principle
+If a data source is stale or unavailable, the affected zones must display a visible notice. They should not display cached data silently. The operator must always know whether they are looking at current or outdated information.
+
+Example zone notice: &quot;Traffic data last updated 3 days ago. Plausible sync unavailable.&quot;
+
+
+4. The Writing Room
+
+The Writing Room is a distinct mode within The Observatory. It is accessed via a persistent &quot;New Post&quot; or &quot;Writing Room&quot; button visible from all dashboard views. Entering the Writing Room does not navigate away from The Observatory — it replaces the zone grid with a full-width editor interface.
+
+4.1 Main Editor Area
+Full-width, distraction-free. Cormorant Garamond at large size for the title field, Inter for the body. Ghost&apos;s native editor is used here — do not rebuild the editor from scratch. The Writing Room is a wrapper around Ghost&apos;s editor with additional fields in a collapsible drawer.
+
+4.2 Collapsible Drawer
+A panel that slides in from the right or expands below the editor. Contains all publishing metadata fields. Collapsed by default to preserve editorial focus.
+
+Drawer Contents
+YouTube URL
+Text input. Associates a YouTube video with this post for Zone 7 tracking.
+Cover Image
+Image upload. Standard Ghost cover image.
+Academic Paper
+File upload (PDF). Attached paper for Commentary-to-Paper Bridge Rate tracking.
+Publish Toggle
+Two options: &quot;Publish Now&quot; and &quot;Schedule&quot;. If Schedule is selected, a date/time input appears.
+Newsletter Toggle
+Checkbox or switch. Label: &quot;Send to subscribers as newsletter&quot;. Default: off.
+Subscriber Note
+Textarea. Label: &quot;PRIVATE NOTE TO SUBSCRIBERS — VISIBLE IN EMAIL ONLY, NOT ON SITE&quot;. Not published to the web.
+Scratchpad
+Large textarea. Label: &quot;SCRATCHPAD — NEVER PUBLISHED, PERSISTS BETWEEN SESSIONS&quot;. Stored locally or in Ghost metadata, never rendered publicly.
+
+4.3 Scratchpad Persistence
+The scratchpad must persist between sessions. It is not cleared on logout. It is not a draft — it is a permanent working surface for notes, ideas, and fragments that exist outside the publishing pipeline. Implementation options: Ghost member metadata field, browser localStorage as fallback, or a simple key-value store.
+
+
+5. Implementation Phasing
+
+The Observatory is built in five phases. Do not proceed to a new phase until the gate condition for the current phase is met.
+
+Phase 1 — Weeks 1–2 (Current Phase)
+Scope
+Ghost live, Cloudflare Zero Trust gate, basic publishing pipeline working
+Zones to build
+Writing Room (full spec above). Security Bar. Intelligence Gap Indicator (static placeholder — wiring comes later).
+Gate condition
+Three real posts published through Ghost before any Phase 2 work begins.
+What is NOT built in Phase 1
+All analytics zones (2–11). These require real data to be meaningful.
+
+Phase 2 — Weeks 3–4
+Scope
+Plausible analytics integration, YouTube API connection, 3AM Map, Publication Heatmap
+Zones to build
+Zone 5 (Heatmap), Zone 6 (Traffic Sources), Zone 8 (3AM Map)
+Gate condition
+Plausible tracking confirmed live on published posts. YouTube API key active.
+
+Phase 3 — Weeks 5–7
+Scope
+Custom scroll/read depth tracking, paper download tracking, Resonance Index
+Zones to build
+Zone 2 (Resonance Index), Zone 7 (YouTube Intelligence Feed)
+Gate condition
+At least 5 published posts with Plausible scroll data collected.
+
+Phase 4 — Weeks 8–10
+Scope
+Baseline Engine, Convergence Events, Intellectual Proximity Layer, Audience Depth tiers
+Zones to build
+Zone 3, Zone 4, Zone 9, Zone 10
+Gate condition
+Minimum 10 published posts in the same format category for z-score calculations to be valid.
+
+Phase 5 — Weeks 11–12
+Scope
+AI situational brief, Intelligence Gap wiring, full Security Bar
+Zones to build
+Zone 1 (AI Brief), Zone 11 (Intelligence Gap — fully wired), Security Bar (fully wired)
+Gate condition
+All prior zones live and returning data.
+
+Total ongoing cost (complete):
+~$20–25/month
+
+
+6. Developer Handoff Notes
+
+6.1 What the Mockup File Covers
+The mockup HTML/CSS/JS file (provided alongside this document) defines: zone layout and placement, card component styling, typography treatment, color palette implementation, Writing Room UI and drawer interaction, 3AM Map heatmap grid structure, Convergence Event card visual treatment, and Baseline Engine flag badge styling.
+
+6.2 What This Document Covers
+This spec document defines: every zone&apos;s data source and update frequency, all calculation and scoring logic, all required UI copy strings, the 48-hour window requirement for Convergence Events, the z-score language requirement for Baseline Engine, the qualitative tagging system for Resonance Index, the SE Asian Diaspora column requirement for the 3AM Map, scratchpad persistence behavior, phase gates and build sequence, and security architecture rationale.
+
+6.3 Key Text Strings (Do Not Paraphrase)
+The following copy strings must appear verbatim in the UI:
+Baseline Engine subline: &quot;Compared against your personal historical average for this format and day of week. Threshold: ±1 standard deviation (z-score).&quot;
+Convergence Event card: &quot;Within 48 hours&quot; (on every card)
+Subscriber Note field label: &quot;PRIVATE NOTE TO SUBSCRIBERS — VISIBLE IN EMAIL ONLY, NOT ON SITE&quot;
+Scratchpad label: &quot;SCRATCHPAD — NEVER PUBLISHED, PERSISTS BETWEEN SESSIONS&quot;
+3AM Map legend: &quot;Cell intensity = read depth (scroll + time on page)&quot;
+Intelligence Gap notice format: &quot;[Source] last updated [N] days ago. [Source] sync unavailable.&quot;
+
+6.4 Phase 1 Deliverable
+At the end of Phase 1, the following must be live and functional:
+Ghost CMS accessible at private URL
+Cloudflare Zero Trust gate active before Ghost login
+Writing Room accessible with all drawer fields functional
+Security Bar visible with session status and invalidation button
+Intelligence Gap Indicator present as static placeholder (no live wiring yet)
+All analytics zones present as visual placeholders with &quot;Data not yet available&quot; state
+
+NOTE: The gate condition is publishing three real posts through Ghost. Do not begin Phase 2 build until this is done.
+
+
+STILLED · The Observatory · Production Spec v1.0
+Internal document. Not for distribution.

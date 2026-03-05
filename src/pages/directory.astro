@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Stilled | Directory">
+  <div class="container relative min-h-screen flex-col" style="padding-top: 12rem;">
+    <h1 class="text-massive animate-fade-up">Directory</h1>
+    <p class="text-subtle animate-fade-up delay-100 mb-12">Index of external sources, tools, and recommended reading.</p>
+    
+    <ul class="directory-list animate-fade-up delay-300">
+      <li>
+        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1544365558-35aa4afcf11f?w=400">
+          <span class="index">01</span>
+          <span class="title">The Structure of Scientific Revolutions</span>
+          <span class="author">Thomas S. Kuhn</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1604871000636-074fa5117945?w=400">
+          <span class="index">02</span>
+          <span class="title">Man's Search for Meaning</span>
+          <span class="author">Viktor E. Frankl</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1544365558-35aa4afcf11f?w=400">
+          <span class="index">03</span>
+          <span class="title">Thinking, Fast and Slow</span>
+          <span class="author">Daniel Kahneman</span>
+        </a>
+      </li>
+    </ul>
+
+    <div id="hover-img-container"></div>
+  </div>
+
+  <script>
+    const links = document.querySelectorAll('.dir-link');
+    const imgContainer = document.getElementById('hover-img-container');
+    
+    links.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const imgSrc = link.getAttribute('data-img');
+        if (imgSrc) {
+          imgContainer.style.backgroundImage = `url(${imgSrc})`;
+          imgContainer.style.opacity = '1';
+        }
+      });
+      
+      link.addEventListener('mouseleave', () => {
+        imgContainer.style.opacity = '0';
+      });
+      
+      link.addEventListener('mousemove', (e) => {
+        imgContainer.style.left = e.clientX + 20 + 'px';
+        imgContainer.style.top = e.clientY + 20 + 'px';
+      });
+    });
+  </script>
+</Layout>
+
+<style>
+  .mb-12 { margin-bottom: 4rem; }
+  
+  .directory-list {
+    list-style: none;
+    max-width: 900px;
+    padding-bottom: var(--spacing-massive);
+  }
+  
+  .dir-link {
+    display: flex;
+    align-items: baseline;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+    transition: opacity 0.3s ease;
+  }
+  
+  .dir-link:hover {
+    opacity: 0.5;
+  }
+  
+  .index {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    opacity: 0.4;
+    width: 5rem;
+  }
+  
+  .title {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    flex-grow: 1;
+  }
+  
+  .author {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.6;
+    text-align: right;
+  }
+  
+  #hover-img-container {
+    position: fixed;
+    width: 320px;
+    height: 420px;
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 100;
+  }
+
+  @media (max-width: 768px) {
+    .dir-link {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .index { width: auto; }
+    .author { text-align: left; }
+    #hover-img-container { display: none; }
+  }
+</style>

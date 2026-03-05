@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CursorMask from '../components/CursorMask.jsx';
+---
+
+<Layout title="Stilled" showNav={false}>
+  <div class="video-container">
+    <video autoplay loop muted playsinline class="bg-video">
+      <source src="/bg.mp4" type="video/mp4" />
+    </video>
+    <div class="video-overlay"></div>
+  </div>
+
+  <div class="landing-container min-h-screen relative flex-center flex-col">
+    <CursorMask client:load />
+    
+    <div class="content relative text-center animate-fade-up">
+      <h1 class="text-massive">Stilled.</h1>
+      <a href="/home" class="enter-link delay-300 animate-fade-up">Enter</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--alabaster-rgb), 0.4);
+    mix-blend-mode: multiply;
+  }
+
+  .landing-container {
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .content {
+    z-index: 20;
+    pointer-events: auto;
+  }
+
+  .enter-link {
+    display: inline-block;
+    margin-top: var(--spacing-large);
+    padding: 0.75rem 2.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border: 1px solid rgba(26, 26, 26, 0.15);
+    transition: all var(--transition-medium);
+  }
+  
+  .enter-link:hover {
+    border-color: rgba(26, 26, 26, 0.5);
+    background-color: rgba(26, 26, 26, 0.05);
+  }
+</style>

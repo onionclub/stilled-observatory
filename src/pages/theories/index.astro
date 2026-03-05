@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { syntheses } from '../../data/syntheses.js';
+---
+<Layout title="Stilled | Theories">
+  <div class="container relative min-h-screen flex-col" style="padding-top: 12rem;">
+    <h1 class="text-massive animate-fade-up">Theories</h1>
+    <p class="text-subtle animate-fade-up delay-100 mb-12">Forensic synthesis of experience and meaning.</p>
+    
+    <div class="theories-list animate-fade-up delay-300">
+      {syntheses.map((theory) => (
+        <a href={`/theories/${theory.slug}`} class="theory-card">
+          <h2 class="title">{theory.title}</h2>
+          <p class="excerpt">{theory.excerpt}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .mb-12 { margin-bottom: 4rem; }
+  .theories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 800px;
+  }
+  .theory-card {
+    display: block;
+    padding: 2.5rem;
+    border: 1px solid rgba(26, 26, 26, 0.1);
+    transition: all var(--transition-medium);
+  }
+  .theory-card:hover {
+    border-color: rgba(26, 26, 26, 0.4);
+    background: rgba(26, 26, 26, 0.02);
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  .title {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .excerpt {
+    opacity: 0.7;
+    margin: 0;
+    max-width: 100%;
+    line-height: 1.6;
+  }
+</style>

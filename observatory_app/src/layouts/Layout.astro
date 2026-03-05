@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  activePath?: string;
+}
+
+const { title = "The Observatory | Stilled.", activePath = "/" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="wordmark">Stilled.</div>
+        <ul class="nav-links label-caps">
+            <li class={`nav-item ${activePath === '/' ? 'active' : ''}`}>
+                <a href="/" style="text-decoration: none; color: inherit; display: block;">Observatory</a>
+            </li>
+            <li class={`nav-item ${activePath === '/writing-room' ? 'active' : ''}`}>
+                <a href="/writing-room" style="text-decoration: none; color: inherit; display: block;">New Post</a>
+            </li>
+            <li class="nav-item">Theories</li>
+            <li class="nav-item">Members</li>
+            <li class="nav-item">Settings</li>
+        </ul>
+        
+        <div class="security-status">
+            <div class="status-row">
+                <div class="dot"></div>
+                <span class="status-text">Session Active</span>
+            </div>
+            <div class="login-text">Last login: Today, 2:47 AM</div>
+            <a href="#" class="invalidate-link">Invalidate Session</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" style="position: relative; min-height: 100vh; padding-bottom: 80px;">
+        <slot />
+        
+        <!-- Intelligence Gap Indicator (Persistent) -->
+        <div class="intel-gap" style="position: absolute; bottom: 0; left: 0;">
+            <div class="gap-item">
+                <div class="dot-large dot"></div> Ghost Members — Live
+            </div>
+            <div class="gap-divider"></div>
+            <div class="gap-item">
+                <div class="dot-large dot"></div> Plausible Analytics — Live
+            </div>
+            <div class="gap-divider"></div>
+            <div class="gap-item">
+                <div class="dot-large dot-amber"></div> YouTube API — Stale (3h ago)
+            </div>
+            <div class="gap-divider"></div>
+            <div class="gap-item">
+                <div class="dot-large dot"></div> Scroll Tracking — Live
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

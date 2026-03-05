@@ -1,0 +1,42 @@
+---
+---
+<header class="main-nav">
+  <div class="container nav-container">
+    <a href="/home" class="logo">Stilled.</a>
+    <nav class="links">
+      <a href="/theories">Theories</a>
+      <a href="/directory">Directory</a>
+      <a href="/artifacts">Artifacts</a>
+      <a href="/counsel">Counsel</a>
+    </nav>
+  </div>
+</header>
+<style>
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 0;
+    z-index: 50;
+    background: transparent;
+  }
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .links {
+    display: flex;
+    gap: 3rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.85;
+  }
+</style>

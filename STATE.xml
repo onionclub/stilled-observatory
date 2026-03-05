@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codebase_state>
+
+  <project name="The Observatory" last_updated="2026-03-05"/>
+
+  <stack>
+    <frontend>Astro (Node SSR mode), React (integrations)</frontend>
+    <backend>Ghost CMS (v5, Alpine, SQLite3 via Docker)</backend>
+    <security>Cloudflare Zero Trust (cloudflared Tunnel)</security>
+    <deployment>DigitalOcean Droplet</deployment>
+  </stack>
+
+  <modules>
+    <module name="infrastructure">Docker Compose setup isolating Ghost from open web via cloudflared.</module>
+    <module name="observatory_app">Private admin frontend interfacing with Ghost Admin API.</module>
+  </modules>
+
+  <decisions>
+    <decision name="Astro SSR">Decided to use Astro with Node SSR adapter for secure API key injection and server-side submission rendering, avoiding client-side exposure of Ghost keys.</decision>
+    <decision name="Zero Trust Over Open Ports">Chose internal docker networking for Ghost, mapped solely via cloudflared to mitigate multi-user CVEs.</decision>
+    <decision name="Custom Editor">Rejected iframe injection of Koenig to build a custom Writing Room editor bound to the Admin API to preserve frontend visual fidelity.</decision>
+    <decision name="Scratchpad API Persistence">Using Ghost Admin API to persist scratchpad input to survive sessions.</decision>
+    <decision name="Local First Approach">Testing phase 1 locally using Docker on Windows mapping to localhost:2368 before pushing to DigitalOcean.</decision>
+  </decisions>
+
+  <current_state>
+    <completed>
+      <task>Defined infrastructure and local docker-compose configuration for Ghost.</task>
+      <task>Scaffolded observatory_app in Astro and replicated HTML mockup layout/styling.</task>
+      <task>Constructed custom Writing Room UI with forms routing backend via SSR.</task>
+      <task>Wired Ghost Admin API utility and /api/scratchpad persistence endpoint.</task>
+    </completed>
+    <in_progress>
+      <task>Awaiting user manual verification of Phase 1 (publish 3 test posts).</task>
+    </in_progress>
+    <next_up>
+      <task>Phase 2: Plausible Analytics wiring, 3AM Map logic, Publication Heatmap logic.</task>
+    </next_up>
+    <blocked_on>
+      <dependency>Ghost instantiation output and manually publishing the 3 requisite gate-posts in production.</dependency>
+    </blocked_on>
+  </current_state>
+
+  <open_interfaces>
+    <interface path="observatory_app/src/utils/ghost.ts">API wrapper. Requires real Ghost Admin API keys post-deployment.</interface>
+  </open_interfaces>
+
+</codebase_state>

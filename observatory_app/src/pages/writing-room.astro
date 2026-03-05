@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getGhostAdmin } from '../utils/ghost';
+import { marked } from 'marked';
+
+// Handle form submission on the server-side if method is POST
+let message = '';
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData();
+    const title = data.get('title') as string;
+    const body = data.get('body') as string;
+    const action = data.get('action') as string; // 'publish' or 'draft'
+    
+    // Parse markdown
+    const htmlContent = marked.parse(body);
+
+    const api = getGhostAdmin();
+    // Ghost post creation via Admin API
+    await api.posts.add({
+        title: title,
+        html: htmlContent,
+        status: action === 'publish' ? 'published' : 'draft',
+        // Optional logic for youtubeUrl, newsletter, etc based on formData here
+    }, { source: 'html' });
+
+    message = action === 'publish' ? 'Post published successfully!' : 'Draft saved successfully!';
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      message = 'Error: ' + error.message;
+    }
+  }
+}
+---
+
+<Layout title="The Observatory | Writing Room" activePath="/writing-room">
+    <div id="view-new-post" class="view-section active">
+        <form class="writing-room" method="POST">
+            {message && <div style="margin-bottom: 20px; font-weight: bold; color: var(--status-green);">{message}</div>}
+
+            <!-- Custom Editor Title -->
+            <input 
+                type="text" 
+                name="title" 
+                class="display-font" 
+                placeholder="Title..." 
+                required
+                style="width: 100%; border: none; background: transparent; font-size: 32px; padding: 12px 0; margin-bottom: 16px; outline: none; color: var(--text-primary);"
+            />
+
+            <!-- Custom Editor Body -->
+            <textarea 
+                name="body" 
+                class="editor-textarea display-font" 
+                placeholder="Paste your theory here..."
+                required
+            ></textarea>
+            
+            <div class="wr-controls">
+                <input type="text" name="youtubeUrl" class="wr-input" placeholder="YouTube URL (Optional)">
+                
+                <div class="wr-toggle-group">
+                    <span class="wr-toggle-label">Cover Image</span>
+                    <button type="button" class="wr-btn-upload">Upload File</button>
+                    <!-- actual file input would go here -->
+                </div>
+                
+                <div class="wr-toggle-group">
+                    <span class="wr-toggle-label">Academic Paper (No paper attached)</span>
+                    <button type="button" class="wr-btn-upload">Attach PDF</button>
+                </div>
+
+                <!-- Expanded Controls -->
+                <div class="wr-toggle-group" style="align-items: flex-start; padding-top: 16px; padding-bottom: 16px;">
+                    <span class="wr-toggle-label" style="padding-top: 2px;">Publishing Options</span>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 12px;">
+                        <div style="display: flex; gap: 16px;">
+                            <label class="ui-font" style="font-size: 13px; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                                <input type="radio" name="pub-mode" value="now" checked> Publish Now
+                            </label>
+                            <label class="ui-font" style="font-size: 13px; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                                <input type="radio" name="pub-mode" value="schedule"> Schedule
+                            </label>
+                        </div>
+                        <div id="schedule-input-container" style="display: none; width: 100%;">
+                            <input type="datetime-local" name="scheduledAt" class="wr-input" style="width: 100%; padding: 8px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wr-toggle-group" style="justify-content: flex-start; gap: 12px;">
+                    <input type="checkbox" id="send-newsletter" name="sendNewsletter" style="cursor: pointer;">
+                    <label for="send-newsletter" class="wr-toggle-label" style="cursor: pointer;">Send to subscribers as newsletter</label>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                    <label class="label-caps">Private note to subscribers — visible in email only, not on site</label>
+                    <textarea class="wr-input" name="subscriberNote" rows="3" placeholder="Add a personal note..."></textarea>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                    <label class="label-caps">Scratchpad — never published, persists between sessions</label>
+                    <!-- ID added for background saving logic -->
+                    <textarea id="scratchpad-textarea" class="wr-input scratchpad" name="scratchpad" rows="6" placeholder="Rough ideas, fragments, outlines..."></textarea>
+                    <div id="scratchpad-status" style="font-size: 10px; color: var(--text-secondary); text-align: right;"></div>
+                </div>
+            </div>
+
+            <div class="wr-actions">
+                <button type="submit" name="action" value="publish" class="btn btn-primary">Publish Now</button>
+                <button type="submit" name="action" value="draft" class="btn btn-secondary">Save Draft</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Client-side JS -->
+    <script is:inline>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Writing Room Schedule Toggle
+            const pubRadios = document.querySelectorAll('input[name="pub-mode"]');
+            const scheduleContainer = document.getElementById('schedule-input-container');
+            const publishBtn = document.querySelector('button[value="publish"]');
+
+            if (pubRadios.length > 0 && scheduleContainer) {
+                pubRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        if(e.target.value === 'schedule') {
+                            scheduleContainer.style.display = 'block';
+                            publishBtn.textContent = 'Schedule Post';
+                        } else {
+                            scheduleContainer.style.display = 'none';
+                            publishBtn.textContent = 'Publish Now';
+                        }
+                    });
+                });
+            }
+
+            // Scratchpad Auto-Save integration
+            const scratchpad = document.getElementById('scratchpad-textarea');
+            const status = document.getElementById('scratchpad-status');
+            let timeoutId;
+
+            if (scratchpad) {
+                // Fetch the existing scratchpad content on load
+                fetch('/api/scratchpad')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.content) {
+                            scratchpad.value = data.content;
+                        }
+                    })
+                    .catch(err => console.error('Failed to load scratchpad', err));
+
+                scratchpad.addEventListener('input', () => {
+                    status.textContent = 'Saving...';
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        fetch('/api/scratchpad', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ content: scratchpad.value })
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                status.textContent = 'Saved';
+                                setTimeout(() => status.textContent = '', 2000);
+                            } else {
+                                status.textContent = 'Failed to save';
+                            }
+                        })
+                        .catch(() => {
+                            status.textContent = 'Network error saving';
+                        });
+                    }, 1000); // 1s auto-save debounce
+                });
+            }
+        });
+    </script>
+</Layout>

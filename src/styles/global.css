@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..700&display=swap');
+
+:root {
+  color-scheme: light;
+  --alabaster-rgb: 247, 243, 232;
+  --alabaster: rgb(var(--alabaster-rgb));
+  --ivory: #FFFFF0;
+  --charcoal: #1A1A1A;
+  --off-black: #0F0F0F;
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --spacing-base: 1rem;
+  --spacing-large: 4rem;
+  --spacing-massive: 8rem;
+  --transition-slow: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-medium: 0.4s ease-out;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: var(--alabaster);
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-base);
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+  max-width: 65ch;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--transition-medium);
+}
+
+a:hover {
+  opacity: 0.6;
+}
+
+/* Base layouts */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 4vw;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Utilities */
+.text-massive {
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 1;
+}
+
+.text-subtle {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+/* Animations */
+@keyframes softFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: softFadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Stagger delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Frosted glass utility */
+.frosted-glass {
+  background: rgba(var(--alabaster-rgb), 0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
