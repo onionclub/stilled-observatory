@@ -19,7 +19,7 @@
 
 The Observatory is a bespoke, solo-operator command center designed explicitly for **Stilled.** It bypasses traditional vanity metrics to measure read depth, long-term resonance, and true psychological reach.
 
-It is built with a deep appreciation for the **Dark Academia Noir** aesthetic: warm alabaster, charcoal, and antique bronze. Function dictates form. High negative space. Quiet confidence.
+It is built with a deep appreciation for its core aesthetic: warm alabaster, charcoal, and antique bronze. Function dictates form. High negative space. Quiet confidence.
 
 ---
 

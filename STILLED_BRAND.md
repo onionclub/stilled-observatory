@@ -28,7 +28,7 @@ The period is load-bearing. It signals finality, precision, and the arrest of ch
 
 **Content model:** Forensic synthesis theories delivered through a high-fidelity, frictionless media ecosystem. Anti-prescription — Stilled never tells people how to live. It reveals the architectural blueprints of how reality, psychology, and meaning operate.
 
-**Aesthetic identity:** Dark Academia Noir. Forensic Consciousness Cinema. Warm Divinity — simplified.
+**Aesthetic identity:** Forensic Consciousness Cinema. Warm Divinity — simplified.
 
 ---
 
