@@ -1,15 +1,15 @@
 import type { APIRoute } from 'astro';
-import { getGhostAdmin, SCRATCHPAD_SLUG } from '../../utils/ghost';
+import { getGhostAdmin } from '../../utils/ghost';
+
+const SCRATCHPAD_EMAIL = 'scratchpad@stilled.xyz';
 
 export const GET: APIRoute = async () => {
     try {
         const api = getGhostAdmin();
-        const posts = await api.posts.browse({ filter: `slug:${SCRATCHPAD_SLUG}`, status: 'all', formats: 'html' });
+        const members = await api.members.browse({ filter: `email:'${SCRATCHPAD_EMAIL}'` });
 
-        if (posts && posts.length > 0) {
-            // Strip basic ghost HTML wrapper parts for plain text presentation in the textarea
-            const rawHtml = posts[0].html || '';
-            const content = rawHtml.replace(/<p>/g, '').replace(/<\/p>/g, '\n').replace(/<br>/g, '\n').trim();
+        if (members && members.length > 0) {
+            const content = members[0].note || '';
             return new Response(JSON.stringify({ content }), {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -30,23 +30,24 @@ export const POST: APIRoute = async ({ request }) => {
         const content = data.content || '';
         const api = getGhostAdmin();
 
-        const posts = await api.posts.browse({ filter: `slug:${SCRATCHPAD_SLUG}`, status: 'all' });
-        const htmlContent = content.split('\n').map((line: string) => `<p>${line}</p>`).join('');
+        const members = await api.members.browse({ filter: `email:'${SCRATCHPAD_EMAIL}'` });
 
-        if (posts && posts.length > 0) {
-            await api.posts.edit({
-                id: posts[0].id,
-                updated_at: posts[0].updated_at,
-                // The Ghost Admin API automatically converts html input to lexical/mobiledoc format internal to Ghost
-                html: htmlContent
-            });
+        if (members && members.length > 0 && members[0].id) {
+            await api.members.edit({
+                id: members[0].id,
+                email: SCRATCHPAD_EMAIL,
+                note: content,
+                newsletters: [],
+                labels: [{ name: 'System', slug: 'system-scratchpad' }],
+            } as any);
         } else {
-            await api.posts.add({
-                title: 'Observatory Scratchpad',
-                slug: SCRATCHPAD_SLUG,
-                html: htmlContent,
-                status: 'draft'
-            }, { source: 'html' }); // Specifying source HTML just in case
+            await api.members.add({
+                email: SCRATCHPAD_EMAIL,
+                name: 'Observatory Scratchpad',
+                note: content,
+                newsletters: [],
+                labels: [{ name: 'System', slug: 'system-scratchpad' }]
+            } as any);
         }
 
         return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });

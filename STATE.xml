@@ -19,8 +19,9 @@
     <decision name="Astro SSR">Decided to use Astro with Node SSR adapter for secure API key injection and server-side submission rendering, avoiding client-side exposure of Ghost keys.</decision>
     <decision name="Zero Trust Over Open Ports">Chose internal docker networking for Ghost, mapped solely via cloudflared to mitigate multi-user CVEs.</decision>
     <decision name="Custom Editor">Rejected iframe injection of Koenig to build a custom Writing Room editor bound to the Admin API to preserve frontend visual fidelity.</decision>
-    <decision name="Scratchpad API Persistence">Using Ghost Admin API to persist scratchpad input to survive sessions.</decision>
+    <decision name="Scratchpad API Persistence">Using Ghost Admin API `members` endpoint to persist scratchpad input to the owner's `note` metadata field, avoiding draft post clutter per spec.</decision>
     <decision name="Local First Approach">Testing phase 1 locally using Docker on Windows mapping to localhost:2368 before pushing to DigitalOcean.</decision>
+    <decision name="Local API Key Injection">Used Astro .env locally to securely wire the Ghost Admin API key provided by the user, ensuring the front-end connects immediately while keeping the key server-side.</decision>
   </decisions>
 
   <current_state>
@@ -29,20 +30,24 @@
       <task>Scaffolded observatory_app in Astro and replicated HTML mockup layout/styling.</task>
       <task>Constructed custom Writing Room UI with forms routing backend via SSR.</task>
       <task>Wired Ghost Admin API utility and /api/scratchpad persistence endpoint.</task>
+      <task>Spun up and verified local Ghost development environment via Docker, configured API key, and successfully launched front-end.</task>
+      <task>Gate condition met: User manually published the 3 requisite gate-posts locally in the Ghost admin.</task>
+      <task>Phase 1 is complete.</task>
     </completed>
     <in_progress>
-      <task>Awaiting user manual verification of Phase 1 (publish 3 test posts).</task>
+      <task>Phase 2: Plausible and YouTube placeholder setups.</task>
     </in_progress>
     <next_up>
-      <task>Phase 2: Plausible Analytics wiring, 3AM Map logic, Publication Heatmap logic.</task>
+      <task>Awaiting real Plausible/YouTube API keys to inject into `.env` to execute live fetches.</task>
+      <task>Phase 3: Resonance Index calculations and Heatmap shading hooks.</task>
     </next_up>
     <blocked_on>
-      <dependency>Ghost instantiation output and manually publishing the 3 requisite gate-posts in production.</dependency>
+      <dependency>User supplying real `PLAUSIBLE_API_KEY`, `PLAUSIBLE_SITE_ID`, and `YOUTUBE_API_KEY` for `.env` injection.</dependency>
     </blocked_on>
   </current_state>
 
   <open_interfaces>
-    <interface path="observatory_app/src/utils/ghost.ts">API wrapper. Requires real Ghost Admin API keys post-deployment.</interface>
+    <interface path="observatory_app/src/utils/ghost.ts">API wrapper. Wired via .env locally. Requires real Ghost Admin API keys post-deployment.</interface>
   </open_interfaces>
 
 </codebase_state>
