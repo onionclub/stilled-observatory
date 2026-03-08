@@ -115,6 +115,34 @@ a:hover {
   }
 }
 
+/* 
+ * IntersectionObserver Logic Setup 
+ * Elements start hidden and translate down.
+ * When .is-visible is attached by JS, animation triggers.
+ */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    transform: none;
+    transition: opacity 0.5s ease;
+  }
+  .animate-on-scroll.is-visible {
+    transform: none;
+  }
+}
+
+/* Legacy Direct Load Animation */
 .animate-fade-up {
   opacity: 0;
   animation: softFadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;

@@ -2,10 +2,28 @@
 import Layout from '../layouts/Layout.astro';
 import { get3AMMapData, getTrafficSources } from '../utils/plausible';
 import { getYouTubeIntelligence } from '../utils/youtube';
+import { getResonanceIndexData, getBaselineEngineData, getConvergenceEvents, getAudienceDepthData, getIntellectualProximityData, getAiSituationalBrief } from '../utils/metrics';
+import { pingIntelligenceSources } from '../utils/ping';
 
 const amMapData = await get3AMMapData();
 const trafficSources = await getTrafficSources();
 const ytData = await getYouTubeIntelligence();
+const resonanceData = await getResonanceIndexData();
+const baselineData = await getBaselineEngineData();
+const convergenceEvents = await getConvergenceEvents();
+const audienceDepth = await getAudienceDepthData();
+const proximityData = await getIntellectualProximityData();
+const aiBrief = await getAiSituationalBrief();
+const pings = await pingIntelligenceSources();
+
+const getSourceNotice = (sourceName: string) => {
+    const p = pings.find(p => p.source === sourceName);
+    if (p && p.status !== 'Live') {
+        const days = p.lastSyncDate ? Math.max(1, Math.floor((new Date().getTime() - p.lastSyncDate.getTime()) / (1000 * 60 * 60 * 24))) : 1;
+        return `${sourceName} last updated ${days} days ago. ${sourceName} sync unavailable.`;
+    }
+    return null;
+};
 
 // Server-side generation of the Publication heatmap (52 weeks x 7 days)
 const totalCells = 52 * 7;
@@ -28,10 +46,10 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
     <div id="view-observatory" class="view-section active">
         
         <!-- Zone 1: Brief -->
-        <div class="brief-zone">
-            <div class="label-caps">INTELLIGENCE BRIEF</div>
-            <p class="display-font brief-text">
-                Your last published theory is performing 2.4× above your 30-day baseline for read depth. Traffic is arriving primarily from YouTube — 67% of this week's new subscribers discovered Stilled through video first. Your academic paper attachment is being downloaded at twice the rate of your previous paperless piece. You last published 41 hours ago.
+        <div class="brief-zone" style="background-color: var(--surface); border: none;">
+            <div class="display-font" style="font-size: 1.5rem; margin-bottom: 8px;">INTELLIGENCE BRIEF</div>
+            <p class="ui-font" style="margin: 0; line-height: 1.6; color: var(--text);">
+                {aiBrief}
             </p>
         </div>
 
@@ -46,48 +64,19 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                         <h2 class="display-font card-title">Resonance Index</h2>
                         <div class="label-caps">RANKED BY IMPACT, NOT VIEWS</div>
                     </div>
+                    {getSourceNotice('Scroll tracking script') && <div class="ui-font" style="color: var(--text-secondary); padding: 12px; border: 1px solid var(--border); margin-bottom: 16px; font-size: 13px;">{getSourceNotice('Scroll tracking script')}</div>}
                     
                     <div class="resonance-list">
-                        <div class="resonance-row">
-                            <div class="row-header">
-                                <span class="ui-font theory-title">The Architecture of Meaning</span>
-                                <span class="display-font theory-score">94</span>
+                        {resonanceData.map(item => (
+                            <div class="resonance-row">
+                                <div class="row-header">
+                                    <span class="ui-font theory-title">{item.title}</span>
+                                    <span class="display-font theory-score">{item.compositeScore}</span>
+                                </div>
+                                <div class="bar-container"><div class="bar-fill" style={`width: ${item.compositeScore}%;`}></div></div>
+                                <span class="tag">{item.dominantTag.toLowerCase()}</span>
                             </div>
-                            <div class="bar-container"><div class="bar-fill" style="width: 94%;"></div></div>
-                            <span class="tag">deep reading</span>
-                        </div>
-                        <div class="resonance-row">
-                            <div class="row-header">
-                                <span class="ui-font theory-title">Navigating Liminal Time</span>
-                                <span class="display-font theory-score">87</span>
-                            </div>
-                            <div class="bar-container"><div class="bar-fill" style="width: 87%;"></div></div>
-                            <span class="tag">return visits</span>
-                        </div>
-                        <div class="resonance-row">
-                            <div class="row-header">
-                                <span class="ui-font theory-title">The Void of the Absolute</span>
-                                <span class="display-font theory-score">81</span>
-                            </div>
-                            <div class="bar-container"><div class="bar-fill" style="width: 81%;"></div></div>
-                            <span class="tag">conversion</span>
-                        </div>
-                        <div class="resonance-row">
-                            <div class="row-header">
-                                <span class="ui-font theory-title">Mechanisms of Self-Dissolution</span>
-                                <span class="display-font theory-score">73</span>
-                            </div>
-                            <div class="bar-container"><div class="bar-fill" style="width: 73%;"></div></div>
-                            <span class="tag">deep reading</span>
-                        </div>
-                        <div class="resonance-row">
-                            <div class="row-header">
-                                <span class="ui-font theory-title">On the Tyranny of Coherence</span>
-                                <span class="display-font theory-score">61</span>
-                            </div>
-                            <div class="bar-container"><div class="bar-fill" style="width: 61%;"></div></div>
-                            <span class="tag">return visits</span>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
@@ -137,6 +126,7 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                         <h2 class="display-font card-title">YouTube Intelligence</h2>
                         <div class="label-caps">LINKED VIDEOS</div>
                     </div>
+                    {getSourceNotice('YouTube Analytics API') && <div class="ui-font" style="color: var(--text-secondary); padding: 12px; border: 1px solid var(--border); margin-bottom: 16px; font-size: 13px;">{getSourceNotice('YouTube Analytics API')}</div>}
                     
                     <div class="yt-list">
                         {ytData.map(video => (
@@ -144,11 +134,9 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                                 <div class="yt-title ui-font">{video.title}</div>
                                 <div class="yt-stats">{video.views} views &nbsp;·&nbsp; {video.retention} avg watch</div>
                                 <div class="yt-curve">
-                                    <svg width="120" height="28" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d={video.curvePath} stroke="#8B7355" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                                    </svg>
+                                    <canvas id={`chart-${video.id}`} width="120" height="28"></canvas>
                                 </div>
-                                <div class="yt-bridge">Bridge rate: {video.bridgeRate} read the paper</div>
+                                <div class="yt-bridge">Bridge rate: {video.bridgeRate} read the paper <span style="opacity:0.5">· {video.conversions} subs</span></div>
                             </div>
                         ))}
                     </div>
@@ -165,23 +153,29 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                     <h2 class="display-font card-title">Baseline Engine</h2>
                     <div class="ui-font" style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">Compared against your personal historical average for this format and day of week. Threshold: ±1 standard deviation (z-score).</div>
                 </div>
+                {getSourceNotice('Plausible Analytics') && <div class="ui-font" style="color: var(--text-secondary); padding: 12px; border: 1px solid var(--border); margin-bottom: 16px; font-size: 13px;">{getSourceNotice('Plausible Analytics')}</div>}
                 
                 <div class="baseline-list">
-                    <div class="baseline-row">
-                        <span class="ui-font theory-title">The Architecture of Meaning</span>
-                        <span class="display-font" style="margin-left: auto; margin-right: 16px;">9.2m read time</span>
-                        <span class="tag tag-above">Above Baseline</span>
-                    </div>
-                    <div class="baseline-row">
-                        <span class="ui-font theory-title">The Void of the Absolute</span>
-                        <span class="display-font" style="margin-left: auto; margin-right: 16px;">6.4m read time</span>
-                        <span class="tag tag-range">Within Range</span>
-                    </div>
-                    <div class="baseline-row">
-                        <span class="ui-font theory-title">On the Tyranny of Coherence</span>
-                        <span class="display-font" style="margin-left: auto; margin-right: 16px;">3.1m read time</span>
-                        <span class="tag tag-below">Below Baseline</span>
-                    </div>
+                    {baselineData.length >= 10 ? (
+                        baselineData.map(item => (
+                            <div class="baseline-row">
+                                <span class="ui-font theory-title">{item.title}</span>
+                                <span class="display-font" style="margin-left: auto; margin-right: 16px;">{item.readTimeMetric}</span>
+                                <span class={`tag tag-${item.label.split(' ')[0].toLowerCase()}`}>{item.label}</span>
+                            </div>
+                        ))
+                    ) : (
+                        <div>
+                            {baselineData.map(item => (
+                                <div class="baseline-row">
+                                    <span class="ui-font theory-title">{item.title}</span>
+                                    <span class="display-font" style="margin-left: auto; margin-right: 16px;">{item.readTimeMetric}</span>
+                                    <span class={`tag tag-${item.label.split(' ')[0].toLowerCase()}`}>{item.label}</span>
+                                </div>
+                            ))}
+                            <div class="ui-font" style="font-size: 11px; color: var(--text-secondary); margin-top: 12px; font-style: italic;">Baseline data is still building. Minimum 10 essays per format required.</div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -193,18 +187,14 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                 </div>
                 
                 <div class="convergence-list">
-                    <div class="convergence-card">
-                        <div class="cv-title">Navigating Liminal Time</div>
-                        <div class="cv-signals">Scroll depth + Return visits + Newsletter click</div>
-                        <div class="cv-window">Within 48 hours</div>
-                        <div class="cv-verdict">This piece landed.</div>
-                    </div>
-                    <div class="convergence-card">
-                        <div class="cv-title">Mechanisms of Self-Dissolution</div>
-                        <div class="cv-signals">Direct sharing + Academic paper download spike</div>
-                        <div class="cv-window">Within 48 hours</div>
-                        <div class="cv-verdict">Strong academic resonance.</div>
-                    </div>
+                    {convergenceEvents.map(event => (
+                        <div class="convergence-card">
+                            <div class="cv-title">{event.title}</div>
+                            <div class="cv-signals">{event.signals}</div>
+                            <div class="cv-window">{event.windowStr}</div>
+                            <div class="cv-verdict">{event.verdict}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -250,28 +240,24 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
             <div class="stat-line" style="font-style: italic; margin-top: 12px;">Cell intensity = read depth (scroll + time on page)</div>
         </div>
 
-        <!-- Zone 7: Audience Depth -->
+        <!-- Zone 9: Audience Depth Index -->
         <div class="grid-2col-half">
             <!-- Left Card -->
             <div class="card">
                 <h2 class="display-font card-title" style="margin-bottom: 24px;">Audience Depth</h2>
+                {getSourceNotice('Ghost CMS') && <div class="ui-font" style="color: var(--text-secondary); padding: 12px; border: 1px solid var(--border); margin-bottom: 16px; font-size: 13px;">{getSourceNotice('Ghost CMS')}</div>}
                 
-                <div class="tier-row">
-                    <div class="tier-header ui-font"><span>Tier 1: Read 1 essay</span><span>847 readers</span></div>
-                    <div class="bar-container"><div class="bar-fill" style="width: 100%;"></div></div>
-                </div>
-                <div class="tier-row">
-                    <div class="tier-header ui-font"><span>Tier 2: Read 2–5 essays</span><span>203 readers</span></div>
-                    <div class="bar-container"><div class="bar-fill" style="width: 24%;"></div></div>
-                </div>
-                <div class="tier-row">
-                    <div class="tier-header ui-font"><span>Tier 3: Read 6–10 essays</span><span>67 readers</span></div>
-                    <div class="bar-container"><div class="bar-fill" style="width: 8%;"></div></div>
-                </div>
-                <div class="tier-row">
-                    <div class="tier-header ui-font"><span>Tier 4: Read 10+ essays, returned, subscribed</span><span>31 readers</span></div>
-                    <div class="bar-container"><div class="bar-fill tier-4" style="width: 4%;"></div></div>
-                </div>
+                {audienceDepth.tiers.map(tier => (
+                    <div class="tier-row">
+                        <div class="tier-header ui-font">
+                            <span>{tier.label}</span>
+                            <span>{tier.count} readers</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class={`bar-fill ${tier.isImmersed ? 'tier-4' : ''}`} style={`width: ${tier.percentage}%;`}></div>
+                        </div>
+                    </div>
+                ))}
                 
                 <div class="tier-footer display-font">Your real audience.</div>
             </div>
@@ -280,34 +266,58 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
             <div class="card">
                 <div class="card-header" style="margin-bottom: 16px;">
                     <h2 class="display-font card-title">Tier 4 Archetype</h2>
-                    <div class="label-caps">31 READERS — THE PATTERN</div>
+                    <div class="label-caps">{audienceDepth.archetype.tierSize} READERS — THE PATTERN</div>
                 </div>
                 
                 <div class="archetype-grid">
                     <div>
                         <div class="label-caps arch-stat-label">AVG ESSAYS BEFORE SUBSCRIBING</div>
-                        <div class="display-font arch-stat-val">4.2</div>
+                        <div class="display-font arch-stat-val">{audienceDepth.archetype.avgEssaysBeforeSub}</div>
                     </div>
                     <div>
                         <div class="label-caps arch-stat-label">AVG DAYS FROM FIRST VISIT</div>
-                        <div class="display-font arch-stat-val">11</div>
+                        <div class="display-font arch-stat-val">{audienceDepth.archetype.avgDaysToSub}</div>
                     </div>
                     <div>
                         <div class="label-caps arch-stat-label">DISCOVERY PATH</div>
-                        <div class="display-font arch-stat-val">71% YouTube first</div>
+                        <div class="display-font arch-stat-val">{audienceDepth.archetype.discoveryPath}</div>
                     </div>
                     <div>
                         <div class="label-caps arch-stat-label">MOST COMMON ENTRY</div>
-                        <div class="display-font arch-stat-val">The Architecture of Meaning</div>
+                        <div class="display-font arch-stat-val">{audienceDepth.archetype.mostCommonEntry}</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Zone 10: Intellectual Proximity Layer -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="display-font card-title">Intellectual Proximity</h2>
+                <div class="label-caps">READER TRAVERSAL PATHS</div>
+            </div>
+            
+            <div class="proximity-list" style="display: flex; flex-direction: column; gap: 12px;">
+                {proximityData.map(node => (
+                    <div class="proximity-row" style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span class="ui-font" style="font-weight: 500; font-size: 15px;">{node.sourceTitle}</span>
+                            <span style="color: var(--text-secondary);">→</span>
+                            <span class="ui-font" style="font-weight: 500; font-size: 15px;">{node.destinationTitle}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="display-font" style="font-size: 18px;">{node.frequencyCount} paths</span>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
 
     </div>
 
     <!-- Client-side JS -->
-    <script is:inline>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script is:inline define:vars={{ ytData }}>
         document.addEventListener('DOMContentLoaded', () => {
             // Interactive hover for 3AM Map Cells
             const cells = document.querySelectorAll('.map3-cell');
@@ -316,6 +326,54 @@ const heatCells = Array.from({ length: totalCells }, (_, i) => {
                 if (!isZero) {
                     cell.addEventListener('mouseenter', () => cell.style.opacity = '0.7');
                     cell.addEventListener('mouseleave', () => cell.style.opacity = '1');
+                }
+            });
+
+            // Chart.js initialization for YouTube Intelligence Feed
+            const backgroundPlugin = {
+                id: 'customCanvasBackgroundColor',
+                beforeDraw: (chart) => {
+                    const ctx = chart.canvas.getContext('2d');
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.fillStyle = '#FAF9F6';
+                    ctx.fillRect(0, 0, chart.width, chart.height);
+                    ctx.restore();
+                }
+            };
+            Chart.register(backgroundPlugin);
+
+            ytData.forEach(video => {
+                const ctx = document.getElementById(`chart-${video.id}`);
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: video.retentionData.map((_, i) => i),
+                            datasets: [{
+                                data: video.retentionData,
+                                borderColor: '#8B7355',
+                                backgroundColor: 'transparent',
+                                borderWidth: 1.5,
+                                tension: 0.4,
+                                pointRadius: 0
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            maintainAspectRatio: false,
+                            plugins: { 
+                                legend: { display: false }, 
+                                tooltip: { enabled: false },
+                                customCanvasBackgroundColor: { color: '#FAF9F6' }
+                            },
+                            scales: {
+                                x: { display: false },
+                                y: { display: false, min: 0, max: 100 }
+                            },
+                            layout: { padding: 0 }
+                        }
+                    });
                 }
             });
         });

@@ -28,25 +28,31 @@ export async function getYouTubeIntelligence() {
 function generatePlaceholderYouTubeIntel() {
     return [
         {
+            id: 'video-1',
             title: 'Why High-Achievers Collapse in Silence',
             views: '2.4K',
             retention: '61%',
             bridgeRate: '34%',
-            curvePath: 'M0 2 C 40 2, 60 5.6, 120 15.4'
+            retentionData: [100, 95, 88, 80, 75, 71, 68, 65, 62, 60, 58, 55],
+            conversions: 12
         },
         {
+            id: 'video-2',
             title: 'The 3AM Problem Nobody Names',
             views: '1.8K',
             retention: '58%',
             bridgeRate: '29%',
-            curvePath: 'M0 2 C 30 2, 50 8, 120 18'
+            retentionData: [100, 85, 75, 70, 65, 60, 58, 55, 52, 48, 45, 40],
+            conversions: 8
         },
         {
+            id: 'video-3',
             title: 'Against Self-Help: A Forensic Critique',
             views: '4.1K',
             retention: '72%',
             bridgeRate: '41%',
-            curvePath: 'M0 2 C 50 2, 80 4, 120 12'
+            retentionData: [100, 98, 95, 90, 88, 85, 82, 80, 78, 75, 74, 72],
+            conversions: 35
         }
     ];
 }

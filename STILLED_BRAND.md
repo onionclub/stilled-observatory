@@ -28,7 +28,7 @@ The period is load-bearing. It signals finality, precision, and the arrest of ch
 
 **Content model:** Forensic synthesis theories delivered through a high-fidelity, frictionless media ecosystem. Anti-prescription — Stilled never tells people how to live. It reveals the architectural blueprints of how reality, psychology, and meaning operate.
 
-**Aesthetic identity:** Forensic Consciousness Cinema. Warm Divinity — simplified.
+**Aesthetic identity:** Lucid Antiquity.Forensic Consciousness Cinema. Warm Divinity — simplified.
 
 ---
 
@@ -105,6 +105,12 @@ The following are never acceptable on any Stilled surface including The Observat
 - No "you're on a streak" or similar behavioral nudge copy
 - No dark mode toggle
 - No gamification of publishing frequency
+
+## 6B. PROHIBITED AESTHETIC DESCRIPTORS
+
+The following words must never appear in any UI surface, copy string, zone label,
+comment, or brand document:
+Dark, Noir, Academia, Gothic, Grim, Shadow, Moody, Somber, Black, Dim
 
 ---
 

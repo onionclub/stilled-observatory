@@ -7,7 +7,7 @@
     <frontend>Astro (Node SSR mode), React (integrations)</frontend>
     <backend>Ghost CMS (v5, Alpine, SQLite3 via Docker)</backend>
     <security>Cloudflare Zero Trust (cloudflared Tunnel)</security>
-    <deployment>DigitalOcean Droplet</deployment>
+    <deployment>Hetzner CX22</deployment>
   </stack>
 
   <modules>
@@ -20,7 +20,7 @@
     <decision name="Zero Trust Over Open Ports">Chose internal docker networking for Ghost, mapped solely via cloudflared to mitigate multi-user CVEs.</decision>
     <decision name="Custom Editor">Rejected iframe injection of Koenig to build a custom Writing Room editor bound to the Admin API to preserve frontend visual fidelity.</decision>
     <decision name="Scratchpad API Persistence">Using Ghost Admin API `members` endpoint to persist scratchpad input to the owner's `note` metadata field, avoiding draft post clutter per spec.</decision>
-    <decision name="Local First Approach">Testing phase 1 locally using Docker on Windows mapping to localhost:2368 before pushing to DigitalOcean.</decision>
+    <decision name="Local First Approach">Testing phase 1 locally using Docker on Windows mapping to localhost:2368 before pushing to Hetzner CX22.</decision>
     <decision name="Local API Key Injection">Used Astro .env locally to securely wire the Ghost Admin API key provided by the user, ensuring the front-end connects immediately while keeping the key server-side.</decision>
   </decisions>
 
@@ -33,16 +33,22 @@
       <task>Spun up and verified local Ghost development environment via Docker, configured API key, and successfully launched front-end.</task>
       <task>Gate condition met: User manually published the 3 requisite gate-posts locally in the Ghost admin.</task>
       <task>Phase 1 is complete.</task>
+      <task>Phase 2 structurally built: Plausible and YouTube placeholder setups.</task>
+      <task>Phase 3 status: built</task>
+      <task>Phase 3 gate: NOT MET. Gate condition note: Requires minimum 5 published posts with live Plausible scroll data confirmed. Cannot be met until deployment.</task>
+      <task>Phase 4 status: built</task>
+      <task>Phase 4 gate: NOT MET. Gate condition note: Requires Phase 3 completion + 10 published posts for valid z-score. Cannot be met until deployment.</task>
+      <task>Phase 5 status: built</task>
+      <task>Phase 5 gate: NOT MET. Gate condition note: Requires all prior zones live and returning real data. Cannot be met until deployment.</task>
     </completed>
     <in_progress>
-      <task>Phase 2: Plausible and YouTube placeholder setups.</task>
+      <task>None. Awaiting deployment.</task>
     </in_progress>
     <next_up>
-      <task>Awaiting real Plausible/YouTube API keys to inject into `.env` to execute live fetches.</task>
-      <task>Phase 3: Resonance Index calculations and Heatmap shading hooks.</task>
+      <task>Awaiting live Plausible/YouTube API keys for Phase 2 implementation.</task>
     </next_up>
     <blocked_on>
-      <dependency>User supplying real `PLAUSIBLE_API_KEY`, `PLAUSIBLE_SITE_ID`, and `YOUTUBE_API_KEY` for `.env` injection.</dependency>
+      <dependency>User supplying real PLAUSIBLE_API_KEY, PLAUSIBLE_SITE_ID, and YOUTUBE_API_KEY for .env injection.</dependency>
     </blocked_on>
   </current_state>
 

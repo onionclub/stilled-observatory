@@ -73,11 +73,17 @@ import Layout from '../layouts/Layout.astro';
     align-items: baseline;
     padding: 2.5rem 0;
     border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-    transition: opacity 0.3s ease;
+    transition: color 0.3s ease, opacity 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
   }
   
   .dir-link:hover {
     opacity: 0.5;
+  }
+
+  .dir-link:active {
+    opacity: 0.8;
+    color: #8B7355;
   }
   
   .index {

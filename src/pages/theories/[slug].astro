@@ -20,13 +20,10 @@ const { theory } = Astro.props;
         <p class="theory-excerpt">{theory.excerpt}</p>
         
         <div class="media-container">
-          <iframe 
-            src={theory.youtubeUrl} 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-          </iframe>
+          <div class="video-placeholder">
+            <span class="placeholder-icon">—</span>
+            <span class="placeholder-text">Archival record unlinked</span>
+          </div>
         </div>
         
         <div class="diagram-container">
@@ -97,18 +94,36 @@ const { theory } = Astro.props;
 
   .media-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%; /* 16:9 box */
     height: 0;
     overflow: hidden;
-    background: #000;
+    border: 1px solid rgba(200, 188, 168, 0.4);
+    background: rgba(26, 26, 26, 0.02);
   }
 
-  .media-container iframe {
+  .video-placeholder {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    opacity: 0.5;
+  }
+
+  .placeholder-icon {
+    font-size: 2rem;
+  }
+
+  .placeholder-text {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
   }
 
   .diagram-container img {

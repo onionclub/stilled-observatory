@@ -3,56 +3,263 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Stilled | Sanctum">
-  <div class="video-container">
-    <video autoplay loop muted playsinline class="bg-video">
-      <source src="/bg.mp4" type="video/mp4" />
-    </video>
-    <div class="video-overlay"></div>
-    <div class="video-tint"></div>
-  </div>
+  <div class="sanctum-content container relative z-10 flex-col">
+    
+    {/* HERO SECTION */}
+    <section class="hero flex-center flex-col animate-on-scroll min-h-screen relative">
+      <img src="/portraits/dostoevsky.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-hero" />
+      <h1 class="wordmark">Stilled.</h1>
+      <p class="manifesto delay-300 animate-on-scroll">A forensic analyst of consciousness, paradox, and identity.</p>
+    </section>
 
-  <div class="sanctum-content container relative z-10 min-h-screen flex-center flex-col">
-    <!-- Optional intro content or just high negative space allowing navigation to breathe -->
+    {/* RECENT THEORIES */}
+    <section class="recent-theories content-section delay-500 animate-on-scroll">
+        <h2 class="section-heading">Recent Theories</h2>
+        <div class="theory-list flex-col">
+            <a href="#" class="theory-entry">
+                <span class="theory-meta">Synthesized 10.14.26</span>
+                <h3 class="theory-title">The Architecture of Arrival</h3>
+                <p class="theory-excerpt">An examination of the friction experienced precisely at the moment a long-pursued goal is realized.</p>
+            </a>
+            <a href="#" class="theory-entry">
+                <span class="theory-meta">Synthesized 09.28.26</span>
+                <h3 class="theory-title">Ghosting the Panopticon</h3>
+                <p class="theory-excerpt">Methods for withdrawing visible engagement while maintaining structural influence.</p>
+            </a>
+            <a href="#" class="theory-entry">
+                <span class="theory-meta">Synthesized 09.04.26</span>
+                <h3 class="theory-title">The Gravity of Unmade Decisions</h3>
+                <p class="theory-excerpt">How deferred choices create dense psychological mass that distorts surrounding navigational logic.</p>
+            </a>
+        </div>
+    </section>
+
+    {/* FEATURED ARTIFACTS */}
+    <section class="featured-artifacts content-section animate-on-scroll relative">
+        <img src="/portraits/laozi.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-threshold animate-on-scroll" />
+        <h2 class="section-heading">Featured Artifacts</h2>
+        <div class="artifacts-grid">
+            <a href="#" class="artifact-card">
+                <div class="artifact-content">
+                    <h3 class="artifact-title">The Meta-Framework</h3>
+                    <p class="artifact-desc">A comprehensive guide to identity reconstruction. Physical edition.</p>
+                </div>
+            </a>
+            <a href="#" class="artifact-card">
+                <div class="artifact-content">
+                    <h3 class="artifact-title">Liminal Engine</h3>
+                    <p class="artifact-desc">A browser environment for analytical reading and attention management.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    {/* PULL QUOTE */}
+    <section class="pull-quote-section content-section flex-center animate-on-scroll relative">
+        <img src="/portraits/nietzsche.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-quote animate-on-scroll delay-300" />
+        <blockquote class="philosophical-fragment">
+            "We do not manufacture meaning; we reveal the architecture where it already exists."
+        </blockquote>
+    </section>
+
   </div>
 </Layout>
 
 <style>
-  .video-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
+  .sanctum-content {
+    /* Use fluid vertical padding for the whole container */
+    padding-top: clamp(6rem, 15vh, var(--spacing-massive));
+    padding-bottom: clamp(6rem, 15vh, var(--spacing-massive));
   }
 
-  .bg-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .hero {
+    margin-bottom: clamp(6rem, 12vh, 8rem);
   }
 
-  .video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(var(--alabaster-rgb), 0.3); /* Warm tint */
-    mix-blend-mode: multiply;
+  .wordmark {
+    font-size: clamp(3rem, 8vw, 6rem);
+    margin-bottom: clamp(1rem, 3vh, 2rem);
+  }
+
+  .manifesto {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    text-align: center;
+    max-width: 50ch;
+  }
+  .manifesto.is-visible {
+    opacity: 0.8;
+  }
+
+  .content-section {
+    margin-bottom: clamp(8rem, 20vh, 12rem);
+  }
+
+  .section-heading {
+    font-family: var(--font-sans);
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--charcoal);
+    margin-bottom: clamp(3rem, 8vh, 4rem);
+    border-bottom: 1px solid rgba(200, 188, 168, 0.4);
+    padding-bottom: 1rem;
+  }
+  .content-section.is-visible .section-heading {
+    opacity: 0.6;
+  }
+
+  /* Theories */
+  .theory-list {
+    gap: clamp(3rem, 6vh, 4rem);
+  }
+
+  .theory-entry {
+     display: flex;
+     flex-direction: column;
+     transition: opacity var(--transition-medium);
+  }
+  .theory-entry.is-visible {
+     opacity: 0.8;
+  }
+
+  .theory-entry:hover {
+     opacity: 1;
+  }
+
+  .theory-meta {
+     font-family: var(--font-sans);
+     font-size: clamp(0.65rem, 1vw, 0.75rem);
+     text-transform: uppercase;
+     letter-spacing: 0.12em;
+     margin-bottom: 0.5rem;
+     color: var(--charcoal);
+     opacity: 0.5;
+  }
+
+  .theory-title {
+     font-size: clamp(1.5rem, 3vw, 2rem);
+     margin-bottom: 0.5rem;
   }
   
-  .video-tint {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(var(--alabaster-rgb), 0.6) 0%, rgba(var(--alabaster-rgb), 0.2) 100%);
+  .theory-excerpt {
+      margin: 0;
+      font-size: clamp(0.9rem, 1.5vw, 1.125rem);
+  }
+  .theory-entry.is-visible .theory-excerpt {
+      opacity: 0.8;
   }
 
-  .sanctum-content {
-    padding-top: var(--spacing-massive);
+  /* Artifacts Grid */
+  .artifacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .artifact-card {
+      border: 1px solid var(--pale-stone, #C8BCA8);
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+      transition: all var(--transition-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: clamp(200px, 20vw, 250px);
+  }
+
+  .artifact-card:hover {
+      background-color: var(--secondary-bg, #F0EDE4);
+      border-color: var(--charcoal);
+      opacity: 1; /* override global anchor hover */
+  }
+
+  .artifact-title {
+      font-size: clamp(1.25rem, 2vw, 1.5rem);
+      margin-bottom: 0.5rem;
+  }
+
+  .artifact-desc {
+      font-size: clamp(0.85rem, 1.2vw, 0.875rem);
+      margin: 0 auto;
+      max-width: 35ch;
+  }
+  .artifact-card.is-visible .artifact-desc {
+      opacity: 0.7;
+  }
+
+  /* Pull Quote */
+  .pull-quote-section {
+      min-height: clamp(40vh, 50vh, 60vh);
+      text-align: center;
+  }
+
+  .philosophical-fragment {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      line-height: 1.4;
+      max-width: 25ch;
+      color: var(--charcoal);
+  }
+  .pull-quote-section.is-visible .philosophical-fragment {
+      opacity: 0.9;
+  }
+
+  /* Atmospheric Portraits */
+  .atmospheric-portrait {
+    position: absolute;
+    z-index: -1;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    filter: grayscale(100%) contrast(1.2);
+  }
+
+  .portrait-hero {
+    right: -5%;
+    top: 10%;
+    width: clamp(300px, 40vw, 600px);
+    opacity: 0;
+    animation: slowSubliminalFade 8s ease-in-out forwards;
+    animation-delay: 1s;
+  }
+
+  .portrait-threshold {
+    left: -10%;
+    top: -20%;
+    width: clamp(200px, 25vw, 400px);
+  }
+  .portrait-threshold.is-visible {
+    opacity: 0.18;
+  }
+
+  .portrait-quote {
+    right: -5%;
+    bottom: 0;
+    width: clamp(250px, 30vw, 500px);
+  }
+  .portrait-quote.is-visible {
+    opacity: 0.15;
+  }
+
+  @keyframes slowSubliminalFade {
+    to { opacity: 0.15; }
+  }
+
+  @media (max-width: 768px) {
+    .portrait-threshold, 
+    .portrait-quote {
+      display: none;
+    }
+    .portrait-hero {
+      right: -20%;
+      opacity: 0.10 !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-hero {
+      animation: none;
+      opacity: 0.15;
+    }
   }
 </style>

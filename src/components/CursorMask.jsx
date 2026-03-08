@@ -1,9 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function CursorMask() {
     const maskRef = useRef(null);
+    const [isTouch, setIsTouch] = useState(false);
 
     useEffect(() => {
+        // Detect touch capability to gracefully degrade mask
+        if (window.matchMedia("(pointer: coarse)").matches) {
+            setIsTouch(true);
+            return;
+        }
+
         const updateMask = (e) => {
             const { clientX, clientY } = e;
             if (maskRef.current) {
@@ -15,6 +22,8 @@ export default function CursorMask() {
         window.addEventListener('mousemove', updateMask);
         return () => window.removeEventListener('mousemove', updateMask);
     }, []);
+
+    if (isTouch) return null;
 
     return (
         <div

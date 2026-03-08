@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codebase_state>
+
+  <project name="Stilled Frontend" last_updated="2026-03-06"/>
+
+  <stack>
+    <frontend>Astro, React (integrations)</frontend>
+    <styling>Vanilla CSS (global.css)</styling>
+  </stack>
+
+  <modules>
+    <module name="src/styles">Global CSS defining Stilled brand typography, color palette, animations, and utility classes.</module>
+    <module name="src/components">Reusable React and Astro UI components (CursorMask, Navigation).</module>
+    <module name="src/layouts">HTML shell and common page structure.</module>
+    <module name="src/data">Hardcoded mock data (syntheses.js) for theories.</module>
+    <module name="src/pages">Static and dynamic Astro pages serving the public Stilled site.</module>
+  </modules>
+
+  <decisions>
+    <decision name="Astro SSG">Using Astro for static site generation of the public-facing Stilled pages, completely separate from the Observatory app.</decision>
+    <decision name="Strict Branding">Frontend styling adheres strictly to STILLED_BRAND.md rules (warm alabaster, Inter/Cormorant, no gamification).</decision>
+    <decision name="Mock Data Usage">Critical pages (counsel, theories) currently rely on mock JS files or disabled placeholders, pending Ghost Content API integration.</decision>
+    <decision name="Component Isolation">React used sparingly for specific interactive components (CursorMask) via Astro's client directives.</decision>
+  </decisions>
+
+  <current_state>
+    <completed>
+      <task>Base Astro project scaffolding.</task>
+      <task>Global CSS implementation matching STILLED_BRAND.md specifications.</task>
+      <task>Core navigation and layout structure.</task>
+      <task>Landing page (index.astro) with background video and frosted glass cursor mask.</task>
+      <task>Home (Sanctum) page structure.</task>
+      <task>Directory page with interactive cursor-following image hover effect.</task>
+      <task>Artifacts page with alternating grid layout.</task>
+      <task>Theories index page mapping mock data.</task>
+      <task>Theories dynamic routing ([slug].astro) with sticky left-column and intersection observer for prose.</task>
+      <task>Refactored home.astro with CSS grid, fluid typography clamp() and semantic editorial layout.</task>
+      <task>Enabled IntersectionObserver smooth scroll reveal tracking globally via Layout.astro.</task>
+      <task>Refactored Navigation for flexible wrapping at mobile widths (390px).</task>
+      <task>Improvement 1: ViewTransitions / ClientRouter + transition:persist on CursorMask.</task>
+      <task>Improvement 2: CursorMask touch degradation logic established.</task>
+      <task>Improvement 3: Navigation mobile overflow fix via flexbox.</task>
+      <task>Improvement 4: IntersectionObserver + clamp() spacing injected globally.</task>
+      <task>Improvement 5: Fluid spacing layout applied to home.astro.</task>
+      <task>Resolved mobile QA FIX 1 & 2: Added frosted glass overlay to Navigation to prevent text overlap, and scaled links to fit one line on 320px+ viewports.</task>
+      <task>Resolved mobile QA FIX 3 & 4: Bound Astro ViewTransitions correctly to Layout and fixed CSS specificity hiding .animate-on-scroll logic.</task>
+      <task>Resolved mobile QA FIX 6: Squelched default iOS blue tap highlights on Directory items.</task>
+      <task>Resolved mobile QA FIX 7 & 8: Appended base html background #FAF9F6, replaced broken YouTube iframes with Stilled branding UI placeholders.</task>
+      <task>Philosopher portraits integrated (dostoevsky, laozi, nietzsche) via mix-blend-mode targeting scroll zones.</task>
+    </completed>
+    <in_progress>
+      <task>Awaiting Ghost Content API integration to replace mock data.</task>
+    </in_progress>
+    <next_up>
+      <task>Wire up `src/data/syntheses.js` equivalents to Ghost Content API.</task>
+      <task>Implement functional form submission/backend for `counsel.astro`.</task>
+    </next_up>
+    <blocked_on>
+      <dependency>Ghost Content API keys and live content for full public site functionality.</dependency>
+    </blocked_on>
+  </current_state>
+
+  <open_interfaces>
+    <interface path="src/data/syntheses.js">Temporary mock data source for theories pages. To be replaced with Ghost Content API calls.</interface>
+  </open_interfaces>
+
+</codebase_state>

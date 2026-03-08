@@ -17,24 +17,37 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 2rem 0;
-    z-index: 50;
-    background: transparent;
+    /* Create solid/blurred background to prevent text collision */
+    background: rgba(250, 249, 246, 0.95); /* Brand Alabaster slightly transparent */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: clamp(1rem, 3vh, 2rem) 0;
+    z-index: 100; /* Ensure on top of all page content */
+    border-bottom: 1px solid rgba(200, 188, 168, 0.15); /* Subtle visual break */
   }
+
   .nav-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
   }
+
   .logo {
     font-family: var(--font-serif);
     font-size: 1.5rem;
     font-weight: 500;
   }
+
+  /* FIX 2: Mobile Overflow logic */
   .links {
     display: flex;
-    gap: 3rem;
-    font-size: 0.875rem;
+    flex-wrap: wrap;
+    /* Use fluid gap to collapse tight on mobile but breathe on desktop */
+    gap: clamp(0.75rem, 2vw, 3rem);
+    /* Scale font very slightly down on ultra-small screens */
+    font-size: clamp(0.6rem, 2vw, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     opacity: 0.85;
