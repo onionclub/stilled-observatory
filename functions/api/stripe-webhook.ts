@@ -4,35 +4,12 @@
  */
 
 import Stripe from 'stripe';
+import { writePayment } from '../_shared/payment-log';
 
 interface Env {
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   PAYMENT_LOG?: KVNamespace;
-}
-
-interface PaymentLogEntry {
-  id: string;
-  created: string;
-  customerEmail: string;
-  customerName: string;
-  service: string;
-  addons: string[];
-  amountTotal: number;
-  currency: string;
-  paymentStatus: string;
-  sessionId: string;
-}
-
-async function logPayment(env: Env, entry: PaymentLogEntry) {
-  const key = `payment:${entry.id}`;
-  const value = JSON.stringify(entry);
-
-  if (env.PAYMENT_LOG) {
-    await env.PAYMENT_LOG.put(key, value);
-  } else {
-    console.log('[PAYMENT LOG]', key, value);
-  }
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -56,31 +33,26 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return new Response('Invalid signature.', { status: 400 });
   }
 
-  // Handle checkout.session.completed
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    const service = session.metadata?.service || 'unknown';
-    const addons = session.metadata?.addons
-      ? session.metadata.addons.split(',').filter(Boolean)
-      : [];
-
-    const entry: PaymentLogEntry = {
+    await writePayment({
       id: session.id,
       created: new Date().toISOString(),
       customerEmail: session.customer_details?.email || 'unknown',
       customerName: session.customer_details?.name || 'unknown',
-      service,
-      addons,
+      service: session.metadata?.service || 'unknown',
+      addons: session.metadata?.addons ? session.metadata.addons.split(',').filter(Boolean) : [],
       amountTotal: session.amount_total || 0,
       currency: session.currency || 'usd',
       paymentStatus: session.payment_status || 'unknown',
       sessionId: session.id,
-    };
+      receiptUrl: session.payment_intent
+        ? `https://dashboard.stripe.com/payments/${session.payment_intent}`
+        : undefined,
+    }, env.PAYMENT_LOG);
 
-    await logPayment(env, entry);
-
-    console.log(`[PAYMENT] ${entry.customerEmail} paid $${(entry.amountTotal / 100).toFixed(2)} for ${entry.service}`);
+    console.log(`[PAYMENT] ${session.customer_details?.email} paid $${((session.amount_total || 0) / 100).toFixed(2)} for ${session.metadata?.service}`);
   }
 
   return new Response(JSON.stringify({ received: true }), {

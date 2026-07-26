@@ -1,0 +1,344 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Head from '../../components/Head.astro';
+---
+
+<Layout title="Stilled | Admin">
+  <Head slot="head" title="Admin — Stilled." description="Payment log and order management." />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">ADMIN</div>
+  <div class="micro micro-tr" aria-hidden="true">PAYMENT LOG</div>
+
+  <section class="page" id="app">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Payment Log</h1>
+      <p class="sub">Orders, customers, and revenue. Private.</p>
+    </header>
+
+    <!-- Auth gate -->
+    <div id="auth-gate" class="auth-gate reveal">
+      <label class="field">
+        <span class="field-label">Admin key</span>
+        <input type="password" id="admin-key" placeholder="Enter admin key..." autocomplete="off" />
+      </label>
+      <button id="auth-btn" class="btn">Unlock</button>
+      <p id="auth-error" class="auth-error" style="display:none;"></p>
+    </div>
+
+    <!-- Dashboard (hidden until auth) -->
+    <div id="dashboard" style="display:none;">
+
+      <!-- Summary cards -->
+      <div class="summary-grid reveal">
+        <div class="summary-card">
+          <span class="summary-label">Total Revenue</span>
+          <span class="summary-value" id="sum-revenue">—</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Paid Orders</span>
+          <span class="summary-value" id="sum-orders">—</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">By Service</span>
+          <span class="summary-value" id="sum-services">—</span>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="toolbar reveal">
+        <input type="text" id="filter-input" placeholder="Filter by name or email..." class="filter-input" />
+        <button id="refresh-btn" class="refresh-btn">Refresh</button>
+        <span class="last-updated" id="last-updated"></span>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap reveal">
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Service</th>
+              <th>Add‑ons</th>
+              <th class="num">Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr><td colspan="7" class="empty-row">No payments yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 35vw; height: 35vw; background: var(--mesh-2); top: -10%; right: -10%; }
+  .blob-2 { width: 25vw; height: 25vw; background: var(--mesh-4); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
+
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-2xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-lead); color: var(--ink-dim); }
+
+  /* ── Auth Gate ──────────────────────── */
+  .auth-gate { max-width: 360px; }
+  .field { display: flex; flex-direction: column; gap: var(--space-2xs); margin-bottom: var(--space-md); }
+  .field-label { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
+  input[type="password"], input[type="text"] {
+    width: 100%; background: transparent;
+    border: none; border-bottom: 1px solid var(--border-thin);
+    padding: var(--space-sm) 0;
+    font-family: var(--font-sans); font-size: var(--text-body); color: var(--ink);
+    transition: border-color 0.4s ease; outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+  .btn {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--border-thin);
+    padding: var(--space-sm) var(--space-xl);
+    font-family: var(--font-sans); font-size: var(--text-label);
+    text-transform: uppercase; letter-spacing: var(--tracking-label);
+    cursor: pointer; transition: all 0.4s ease;
+  }
+  .btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow-accent); }
+  .auth-error { margin-top: var(--space-md); font-size: var(--text-caption); color: var(--rose); }
+
+  /* ── Summary ────────────────────────── */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg); margin-bottom: var(--space-2xl);
+  }
+  .summary-card {
+    border: 1px solid var(--border-hairline);
+    padding: var(--space-lg);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+  .summary-label {
+    display: block; font-size: var(--text-label);
+    text-transform: uppercase; letter-spacing: var(--tracking-label);
+    opacity: 0.45; margin-bottom: var(--space-sm);
+  }
+  .summary-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-h2); font-weight: var(--weight-light);
+    color: var(--accent);
+  }
+
+  /* ── Toolbar ────────────────────────── */
+  .toolbar {
+    display: flex; gap: var(--space-md); align-items: center;
+    margin-bottom: var(--space-xl); flex-wrap: wrap;
+  }
+  .filter-input {
+    flex: 1; min-width: 200px;
+    background: transparent;
+    border: none; border-bottom: 1px solid var(--border-thin);
+    padding: var(--space-sm) 0;
+    font-family: var(--font-sans); font-size: var(--text-body); color: var(--ink);
+    transition: border-color 0.4s; outline: none;
+  }
+  .filter-input:focus { border-color: var(--accent); }
+  .filter-input::placeholder { color: var(--ink-faint); }
+  .refresh-btn {
+    background: transparent; color: var(--ink-dim);
+    border: 1px solid var(--border-thin);
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-sans); font-size: var(--text-label);
+    text-transform: uppercase; letter-spacing: var(--tracking-label);
+    cursor: pointer; transition: all 0.35s;
+  }
+  .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .last-updated { font-size: var(--text-label); opacity: 0.35; color: var(--ink-faint); }
+
+  /* ── Table ──────────────────────────── */
+  .table-wrap { overflow-x: auto; }
+  .payments-table { width: 100%; border-collapse: collapse; }
+  .payments-table th {
+    text-align: left; font-size: var(--text-label);
+    text-transform: uppercase; letter-spacing: var(--tracking-label);
+    opacity: 0.4; padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border-thin);
+    font-weight: var(--weight-regular); white-space: nowrap;
+  }
+  .payments-table th.num { text-align: right; }
+  .payments-table td {
+    padding: var(--space-md); border-bottom: 1px solid var(--border-hairline);
+    font-size: var(--text-caption); vertical-align: top;
+    line-height: var(--leading-relaxed);
+  }
+  .payments-table tbody tr { transition: background 0.25s; }
+  .payments-table tbody tr:hover { background: oklch(0.14 0.02 260 / 0.4); }
+  .payments-table td.num {
+    text-align: right; font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .empty-row { text-align: center !important; color: var(--ink-faint); padding: var(--space-2xl) !important; font-style: italic; }
+
+  .status-badge {
+    display: inline-block; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; padding: 0.1em 0.5em;
+    border: 1px solid; white-space: nowrap;
+    background: oklch(0.72 0.16 140 / 0.1); color: var(--accent);
+  }
+  .status-badge.paid { background: oklch(0.72 0.16 140 / 0.12); color: var(--accent); border-color: var(--accent-soft); }
+  .status-badge.unpaid { background: oklch(0.68 0.18 25 / 0.1); color: var(--rose); border-color: oklch(0.68 0.18 25 / 0.3); }
+  .addon-tag {
+    display: inline-block; font-size: 10px; padding: 0.05em 0.4em;
+    border: 1px solid var(--border-hairline); margin: 0.1em 0.2em;
+  }
+
+  @media (max-width: 768px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .micro { display: none; }
+  }
+</style>
+
+<script>
+  const SERVICE_NAMES: Record<string, string> = {
+    'single-inquiry': 'Single Inquiry',
+    'three-letter-series': '3-Letter Series',
+    'monthly-rhythm': 'Monthly Rhythm',
+  };
+
+  const ADDON_NAMES: Record<string, string> = {
+    'rush-delivery': 'Rush',
+    'audio-reflection': 'Audio',
+  };
+
+  let currentData: any = null;
+
+  function formatCurrency(cents: number) {
+    return '$' + (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 });
+  }
+
+  function formatDate(iso: string) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  }
+
+  function render() {
+    if (!currentData) return;
+
+    const { payments, summary } = currentData;
+
+    // Summary
+    document.getElementById('sum-revenue')!.textContent = formatCurrency(summary.totalRevenue);
+    document.getElementById('sum-orders')!.textContent = String(summary.totalPayments);
+
+    const svcList = Object.entries(summary.byService as Record<string, {count:number;revenue:number}>)
+      .map(([k, v]) => `${SERVICE_NAMES[k] || k}: ${v.count}`)
+      .join(' · ');
+    document.getElementById('sum-services')!.textContent = svcList || '—';
+
+    // Filter
+    const filter = (document.getElementById('filter-input') as HTMLInputElement).value.toLowerCase();
+
+    // Table
+    const tbody = document.getElementById('table-body')!;
+    const filtered = payments.filter((p: any) => {
+      if (!filter) return true;
+      return (p.customerName || '').toLowerCase().includes(filter)
+        || (p.customerEmail || '').toLowerCase().includes(filter)
+        || (SERVICE_NAMES[p.service] || '').toLowerCase().includes(filter);
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-row">No matching payments.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((p: any) => `
+      <tr>
+        <td>${formatDate(p.created)}</td>
+        <td>${p.customerName || '—'}</td>
+        <td>${p.customerEmail}</td>
+        <td>${SERVICE_NAMES[p.service] || p.service}</td>
+        <td>${(p.addons || []).map((a: string) => `<span class="addon-tag">${ADDON_NAMES[a] || a}</span>`).join('') || '—'}</td>
+        <td class="num">${formatCurrency(p.amountTotal)}</td>
+        <td><span class="status-badge ${p.paymentStatus}">${p.paymentStatus}</span></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('last-updated')!.textContent = 'Updated ' + new Date().toLocaleTimeString();
+  }
+
+  async function loadPayments(key: string) {
+    const resp = await fetch(`/api/admin/payments?key=${encodeURIComponent(key)}`);
+    if (!resp.ok) throw new Error('Unauthorized or failed to load.');
+    currentData = await resp.json();
+    render();
+  }
+
+  // Auth
+  let adminKey = '';
+  document.getElementById('auth-btn')!.addEventListener('click', async () => {
+    const keyInput = document.getElementById('admin-key') as HTMLInputElement;
+    adminKey = keyInput.value.trim();
+    if (!adminKey) return;
+
+    const btn = document.getElementById('auth-btn')! as HTMLButtonElement;
+    btn.textContent = 'Unlocking...';
+    btn.disabled = true;
+
+    try {
+      await loadPayments(adminKey);
+      document.getElementById('auth-gate')!.style.display = 'none';
+      document.getElementById('dashboard')!.style.display = 'block';
+    } catch {
+      const err = document.getElementById('auth-error')!;
+      err.style.display = 'block';
+      err.textContent = 'Invalid key or could not reach the server.';
+      btn.textContent = 'Unlock';
+      btn.disabled = false;
+    }
+  });
+
+  // Enter key to submit
+  document.getElementById('admin-key')!.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('auth-btn')!.click();
+  });
+
+  // Filter
+  document.getElementById('filter-input')!.addEventListener('input', render);
+
+  // Refresh
+  document.getElementById('refresh-btn')!.addEventListener('click', async () => {
+    if (!adminKey) return;
+    const btn = document.getElementById('refresh-btn')!;
+    btn.textContent = 'Refreshing...';
+    try { await loadPayments(adminKey); } catch { /* silent */ }
+    btn.textContent = 'Refresh';
+  });
+
+  // Auto-refresh every 60s
+  setInterval(async () => {
+    if (!adminKey || !document.getElementById('dashboard')!.style.display) return;
+    try { await loadPayments(adminKey); } catch { /* silent */ }
+  }, 60000);
+</script>
