@@ -1,0 +1,10 @@
+# Local development environment variables for Cloudflare Pages Functions
+# Copy this to .dev.vars and fill in your Stripe test keys
+# .dev.vars is gitignored — never commit real keys
+
+# Stripe test mode keys (from https://dashboard.stripe.com/test/apikeys)
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxx
+
+# The email address customers send inquiries to after payment
+COUNSEL_INQUIRY_EMAIL=counsel@stilled.page

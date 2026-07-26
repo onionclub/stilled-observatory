@@ -1,0 +1,119 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Head from '../../components/Head.astro';
+
+const desc = 'Your order has been confirmed. Here is what happens next.';
+---
+
+<Layout title="Stilled | Order Confirmed">
+  <Head slot="head" title="Order Confirmed — Stilled." description={desc} />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">CONFIRMED</div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Order confirmed.</h1>
+      <p class="sub">Your payment has been received. Here's what happens next.</p>
+    </header>
+
+    <div class="instructions reveal">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <h3>Check your email</h3>
+          <p>You'll receive a receipt from Stripe and a confirmation with the inquiry address. If you don't see it within a few minutes, check your spam folder.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal delay-1">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <h3>Send your inquiry</h3>
+          <p>Write an email up to 750 words describing your situation and up to 3 specific questions. Include your order reference number from the Stripe receipt so your message is routed correctly.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal delay-2">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <h3>Receive your response</h3>
+          <p>A comprehensive, custom essay-style response will arrive in your inbox within 3 business days. If you added Rush Delivery, expect it within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="back-link reveal">
+      <a href="/home">← Return home</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 40vw; height: 40vw; background: var(--mesh-3); top: -10%; right: -10%; animation-delay: 0s; }
+  .blob-2 { width: 30vw; height: 30vw; background: var(--mesh-2); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
+
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-lead); color: var(--ink-dim); }
+
+  .instructions { display: flex; flex-direction: column; gap: var(--space-xl); margin-bottom: var(--space-3xl); }
+  .step-card {
+    display: flex; gap: var(--space-lg); align-items: flex-start;
+    padding: var(--space-xl); border: 1px solid var(--border-hairline);
+    transition: border-color 0.4s, background 0.4s;
+  }
+  .step-card:hover {
+    border-color: var(--glass-border-glow);
+    background: var(--glass-bg);
+  }
+  .step-num {
+    display: flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; flex-shrink: 0;
+    border: 1px solid var(--accent-soft);
+    font-family: var(--font-mono); font-size: var(--text-caption);
+    color: var(--accent); font-weight: var(--weight-medium);
+  }
+  .step-body h3 {
+    font-family: var(--font-sans); font-size: var(--text-body);
+    font-weight: var(--weight-medium); letter-spacing: 0;
+    margin-bottom: var(--space-2xs);
+  }
+  .step-body p {
+    font-size: var(--text-caption); color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+  }
+
+  .back-link { }
+  .back-link a {
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.4;
+    transition: opacity 0.35s;
+  }
+  .back-link a:hover { opacity: 0.7; }
+
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+
+  @media (max-width: 600px) {
+    .micro { display: none; }
+    .step-card { padding: var(--space-lg); }
+  }
+</style>

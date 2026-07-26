@@ -5,3 +5,16 @@ compatibility_flags = ["nodejs_compat"]
 
 [env.production]
 vars = { GHOST_URL = "", GHOST_CONTENT_API_KEY = "" }
+
+# Stripe — set via `wrangler secret put` or Cloudflare dashboard
+# STRIPE_SECRET_KEY    — sk_live_xxx (never commit this)
+# STRIPE_WEBHOOK_SECRET — whsec_xxx (never commit this)
+
+# For local dev, create a .dev.vars file:
+# STRIPE_SECRET_KEY=sk_test_xxx
+# STRIPE_WEBHOOK_SECRET=whsec_xxx
+
+# Payment log KV (create in Cloudflare dashboard, bind here)
+# [[kv_namespaces]]
+# binding = "PAYMENT_LOG"
+# id = "xxx"

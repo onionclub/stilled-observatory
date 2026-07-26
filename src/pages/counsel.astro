@@ -27,11 +27,11 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     <!-- How It Works -->
     <div class="how-it-works reveal">
       <div class="steps">
-        <div class="step"><span class="step-num">1</span><span>Choose a service below</span></div>
+        <div class="step"><span class="step-num">1</span><span>Choose a service</span></div>
         <div class="step-sep" aria-hidden="true">→</div>
-        <div class="step"><span class="step-num">2</span><span>Submit your order with context</span></div>
+        <div class="step"><span class="step-num">2</span><span>Pay securely via Stripe</span></div>
         <div class="step-sep" aria-hidden="true">→</div>
-        <div class="step"><span class="step-num">3</span><span>Receive a written response within 3 days</span></div>
+        <div class="step"><span class="step-num">3</span><span>Receive instructions by email</span></div>
       </div>
     </div>
 
@@ -48,7 +48,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
           <ul class="features">
             {s.features.map(f => <li>{f}</li>)}
           </ul>
-          <a href="#order-form" class="order-btn">Order {s.name} →</a>
+          <button class="order-btn" data-service={s.slug}>Purchase — {s.price}</button>
         </article>
       ))}
     </div>
@@ -69,66 +69,17 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
       </div>
     </section>
 
-    <!-- Order Form -->
-    <div class="form-section reveal" id="order-form">
+    <!-- Checkout -->
+    <div class="form-section reveal" id="checkout">
       <hr class="rule" />
-      <h2 class="section-heading">Place Your Order</h2>
-      <p class="section-sub">Fill out the form below. You'll receive a confirmation and payment instructions within 24 hours. No charge until you confirm.</p>
+      <h2 class="section-heading">Ready to order?</h2>
+      <p class="section-sub">Click any <em>Purchase</em> button above. You'll be redirected to Stripe's secure checkout. After payment, you'll receive an email with the inquiry address and next steps.</p>
 
-      <form
-        class="form"
-        action="https://formspree.io/f/your-form-id"
-        method="POST"
-      >
-        <!-- Service -->
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Select a service</legend>
-          <div class="service-options">
-            {services.map((s, i) => (
-              <label class="svc-option">
-                <input type="radio" name="service" value={s.slug} required={i === 0} />
-                <span class="svc-info">
-                  <span class="svc-name">{s.name}</span>
-                  <span class="svc-price">{s.price}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+      <div class="checkout-note">
+        <p><strong>How it works:</strong> Pay → receive email with inquiry address → send your situation → get your written response within 3 business days. Simple, private, no account needed.</p>
+      </div>
 
-        <!-- Add-ons -->
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Add‑ons (optional)</legend>
-          <div class="addon-options">
-            {addOns.map(a => (
-              <label class="addon-option">
-                <input type="checkbox" name="addons" value={a.slug} />
-                <span class="addon-info">
-                  <span class="addon-label">{a.name}</span>
-                  <span class="addon-label-price">{a.price}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <!-- Contact -->
-        <label class="field">
-          <span class="field-label">Your name</span>
-          <input type="text" name="name" required placeholder="Full name" />
-        </label>
-        <label class="field">
-          <span class="field-label">Email</span>
-          <input type="email" name="email" required placeholder="you@example.com" />
-        </label>
-        <label class="field">
-          <span class="field-label">What are you navigating?</span>
-          <textarea name="context" rows="4" required placeholder="Describe your situation, your question, or what you're seeking clarity on. The more context you provide, the more precise the response will be."></textarea>
-        </label>
-
-        <button type="submit" class="submit-btn">Submit Order</button>
-        <p class="form-note">You'll receive a confirmation email within 24 hours with payment details. Your card is not charged until you confirm the order.</p>
-      </form>
+      <div id="checkout-error" class="checkout-error" style="display:none;"></div>
     </div>
   </section>
 </Layout>
@@ -260,71 +211,23 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   .addon-price { font-family: var(--font-mono); font-size: var(--text-h3); font-weight: var(--weight-light); color: var(--accent); margin-bottom: var(--space-sm); }
   .addon-desc { font-size: var(--text-caption); color: var(--ink-dim); line-height: var(--leading-relaxed); }
 
-  /* ── Order Form ─────────────────────── */
+  /* ── Checkout ───────────────────────── */
   .form-section { }
-  .form { display: flex; flex-direction: column; gap: var(--space-2xl); }
-
-  .fieldset { border: 0; padding: 0; }
-  .fieldset-legend {
-    font-size: var(--text-label); text-transform: uppercase;
-    letter-spacing: var(--tracking-label); opacity: 0.5;
-    margin-bottom: var(--space-md); display: block; width: 100%;
+  .checkout-note {
+    padding: var(--space-lg); border: 1px solid var(--border-hairline);
+    font-size: var(--text-caption); color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
   }
-
-  .service-options { display: flex; flex-direction: column; gap: var(--space-sm); }
-  .svc-option {
-    display: flex; align-items: flex-start; gap: var(--space-md);
-    padding: var(--space-md); border: 1px solid var(--border-hairline);
-    cursor: pointer; transition: border-color 0.35s, background 0.35s;
-  }
-  .svc-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-  .svc-option:hover { border-color: var(--glass-border-glow); }
-  .svc-option input[type="radio"] { accent-color: var(--accent); margin-top: 0.2rem; }
-  .svc-info { display: flex; flex-direction: column; gap: 0.15rem; }
-  .svc-name { font-size: var(--text-body); font-weight: var(--weight-medium); }
-  .svc-price { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--accent); }
-
-  .addon-options { display: flex; flex-direction: column; gap: var(--space-sm); }
-  .addon-option {
-    display: flex; align-items: flex-start; gap: var(--space-md);
-    padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-hairline);
-    cursor: pointer; transition: border-color 0.35s, background 0.35s;
-  }
-  .addon-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-  .addon-option:hover { border-color: var(--glass-border-glow); }
-  .addon-option input[type="checkbox"] { accent-color: var(--accent); margin-top: 0.25rem; }
-  .addon-info { display: flex; justify-content: space-between; align-items: baseline; width: 100%; gap: var(--space-md); }
-  .addon-label { font-size: var(--text-body); }
-  .addon-label-price { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--accent); white-space: nowrap; }
-
-  .field { display: flex; flex-direction: column; gap: var(--space-2xs); }
-  .field-label { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
-  input[type="text"], input[type="email"], textarea {
-    width: 100%; background: transparent;
-    border: none; border-bottom: 1px solid var(--border-thin);
-    padding: var(--space-sm) 0;
-    font-family: var(--font-sans); font-size: var(--text-body); color: var(--ink);
-    transition: border-color 0.4s ease; outline: none; resize: vertical; border-radius: 0;
-  }
-  input:focus, textarea:focus { border-color: var(--accent); }
-  input::placeholder, textarea::placeholder { color: var(--ink-faint); }
-
-  .submit-btn {
-    align-self: flex-start;
-    background: transparent; color: var(--ink);
-    border: 1px solid var(--accent-soft);
-    padding: var(--space-md) var(--space-2xl);
-    font-family: var(--font-sans); font-size: var(--text-label);
-    text-transform: uppercase; letter-spacing: var(--tracking-label);
-    cursor: pointer; transition: all 0.4s ease;
-    font-weight: var(--weight-medium);
-  }
-  .submit-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow-accent); color: var(--accent); }
-
-  .form-note {
-    font-size: var(--text-caption); color: var(--ink-faint);
-    font-style: italic; line-height: var(--leading-relaxed);
-    margin-top: -0.5rem;
+  .checkout-note strong { font-weight: var(--weight-medium); color: var(--ink); }
+  .checkout-error {
+    margin-top: var(--space-md); padding: var(--space-md);
+    border: 1px solid oklch(0.68 0.18 25 / 0.4);
+    background: oklch(0.68 0.18 25 / 0.08);
+    font-size: var(--text-caption); color: var(--rose);
+    line-height: var(--leading-relaxed);
   }
 
   .delay-0 { transition-delay: 0s; }
@@ -341,3 +244,44 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     .micro { display: none; }
   }
 </style>
+
+<script>
+  (function() {
+    const buttons = document.querySelectorAll(".order-btn");
+    const errorEl = document.getElementById("checkout-error");
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const service = btn.dataset.service;
+        if (!service) return;
+
+        btn.disabled = true;
+        btn.textContent = "Redirecting to Stripe...";
+        if (errorEl) errorEl.style.display = "none";
+
+        try {
+          const resp = await fetch("/api/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ service }),
+          });
+
+          const data = await resp.json();
+
+          if (!resp.ok || !data.url) {
+            throw new Error(data.error || "Could not start checkout.");
+          }
+
+          window.location.href = data.url;
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = btn.dataset.originalText || "Purchase";
+          if (errorEl) {
+            errorEl.style.display = "block";
+            errorEl.textContent = err.message || "Something went wrong. Please try again or contact us.";
+          }
+        }
+      });
+    });
+  })();
+</script>
