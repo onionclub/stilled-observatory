@@ -178,6 +178,7 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   .hero {
     display: grid;
     grid-template-columns: [glass] 1fr [portrait] 1fr;
+    grid-template-rows: 1fr;
     min-height: 90vh;
     align-items: start;
     margin-bottom: 10rem;
@@ -185,8 +186,8 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   }
   .hero-glass {
     grid-column: glass;
-    padding: clamp(1.5rem, 4vw, 3rem) 0 0 clamp(2rem, 6vw, 4rem);
-    align-self: center;
+    grid-row: 1;
+    padding: clamp(6rem, 10vh, 9rem) 0 0 clamp(2rem, 6vw, 4rem);
   }
   .hero-glass .glass-card {
     padding: clamp(2rem, 4vw, 3rem); max-width: 38rem;
@@ -216,6 +217,7 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   .hero-nav a:hover { opacity: 1; border-color: var(--accent); }
   .hero-portrait {
     grid-column: portrait;
+    grid-row: 1;
     min-height: 90vh; overflow: hidden; position: relative;
   }
   .hero-portrait img {
