@@ -5,6 +5,7 @@
     <a href="/directory">Directory</a>
     <a href="/artifacts">Artifacts</a>
     <a href="/counsel">Counsel</a>
+    <a href="https://ai-os-alpha.vercel.app/" class="nav-archive">Archive</a>
   </nav>
 </header>
 
@@ -51,6 +52,12 @@
     border-bottom: 1px solid transparent;
   }
   .nav-links a:hover { opacity: 0.9; border-color: var(--ink-faint); }
+  .nav-archive {
+    color: var(--accent) !important;
+    opacity: 0.8 !important;
+    font-weight: var(--weight-medium);
+  }
+  .nav-archive:hover { opacity: 1 !important; border-color: var(--accent) !important; }
   @media (max-width: 600px) {
     .nav-links { gap: 1rem; }
   }
