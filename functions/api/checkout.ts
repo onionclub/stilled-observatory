@@ -8,7 +8,6 @@
 
 interface Env {
   STRIPE_SECRET_KEY: string;
-  PAYMENT_LOG?: KVNamespace;
 }
 
 // Service definitions — price in cents, name, description
@@ -139,11 +138,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         addons: validAddons.join(','),
       }),
       ...(svc.mode === 'subscription'
-        ? { subscription_data: JSON.stringify({ metadata: { service } }) }
+        ? { subscription_data: JSON.stringify({ metadata: { service, addons: validAddons.join(',') } }) }
         : {}),
-      payment_intent_data: JSON.stringify({
-        metadata: { service, addons: validAddons.join(',') },
-      }),
     }),
   });
 
