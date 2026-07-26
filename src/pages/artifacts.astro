@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Head from '../components/Head.astro';
 import artifacts, { bundle } from '../data/artifacts.js';
 
-const desc = 'Self-guided digital products and study resources from Stilled. Frameworks, text syntheses, and instruments for the examined life.';
+const desc = 'Forthcoming digital instruments and study resources. Self-guided frameworks, text syntheses, and tools for the examined life — currently in development.';
 const notes = artifacts.filter(a => a.category === 'author-notes');
 ---
 
@@ -16,7 +16,7 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
   </div>
   <div class="grid-lines" aria-hidden="true"></div>
   <div class="micro micro-tl" aria-hidden="true">ARTIFACTS</div>
-  <div class="micro micro-tr" aria-hidden="true">DIGITAL LIBRARY</div>
+  <div class="micro micro-tr" aria-hidden="true">IN DEVELOPMENT</div>
 
   <section class="page">
     <header class="page-header reveal">
@@ -25,13 +25,18 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
       <p class="sub">{desc}</p>
     </header>
 
+    <!-- Development Notice -->
+    <div class="dev-notice reveal">
+      <p>None of these products are available for purchase yet. They are shown here as a preview of what is being built. Sign up for the newsletter or check back for launch dates.</p>
+    </div>
+
     <!-- Master Guidebook -->
     {artifacts.filter(a => a.slug === 'master-guidebook').map(a => (
       <section class="featured reveal">
         <article class="featured-card">
+          <div class="dev-badge">In Development</div>
           <h2 class="featured-name">{a.name}</h2>
           <p class="featured-tagline">{a.tagline}</p>
-          <p class="featured-price">{a.price}</p>
           <div class="featured-formats">
             {a.formats.map(f => <span class="format-tag">{f}</span>)}
           </div>
@@ -46,14 +51,13 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
     <!-- Author Study Notes -->
     <section class="notes-section reveal">
       <h2 class="section-heading">Metaphysical Author Study Notes</h2>
-      <p class="section-sub">Concise, high-density syntheses of complex metaphysical texts — distilled into practical, accessible insights. Each note is a standalone PDF.</p>
+      <p class="section-sub">Concise, high-density syntheses of complex metaphysical texts — distilled into practical, accessible insights. Each note will be a standalone PDF. All five titles are currently being written.</p>
 
-      <!-- Bundle card -->
+      <!-- Bundle preview -->
       <article class="bundle-card">
-        <div class="bundle-badge">Best Value</div>
+        <div class="dev-badge">In Development</div>
         <h3 class="bundle-name">{bundle.name}</h3>
         <p class="bundle-tagline">{bundle.tagline}</p>
-        <p class="bundle-price">{bundle.price}</p>
         {bundle.note && <p class="bundle-note">{bundle.note}</p>}
       </article>
 
@@ -64,7 +68,6 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
             <h3 class="note-name">{n.name}</h3>
             <p class="note-tagline">{n.tagline}</p>
             <p class="note-overview">{n.overview}</p>
-            <p class="note-price">{n.price}</p>
             <span class="note-format">{n.formats.join('')}</span>
           </article>
         ))}
@@ -89,10 +92,34 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
   .micro-tr { top: 1.2rem; right: 1.5rem; }
 
   .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-wide); margin: 0 auto; position: relative; z-index: 2; }
-  .page-header { margin-bottom: var(--space-4xl); }
+  .page-header { margin-bottom: var(--space-2xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
+
+  /* ── Dev Notice ─────────────────────── */
+  .dev-notice {
+    margin-bottom: var(--space-3xl);
+    padding: var(--space-lg) var(--space-xl);
+    border: 1px solid var(--amber-glow);
+    background: oklch(0.78 0.16 85 / 0.06);
+    font-size: var(--text-body);
+    color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+    text-align: center;
+    font-style: italic;
+  }
+
+  .dev-badge {
+    display: inline-block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--amber);
+    border: 1px solid var(--amber-glow);
+    padding: 0.15em 0.75em;
+    margin-bottom: var(--space-md);
+  }
 
   /* ── Featured (Master Guidebook) ───── */
   .featured { margin-bottom: var(--space-4xl); }
@@ -100,6 +127,7 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
     border: 1px solid var(--border-hairline);
     padding: var(--space-2xl);
     transition: border-color 0.45s, box-shadow 0.45s, background 0.45s;
+    opacity: 0.85;
   }
   .featured-card:hover {
     border-color: var(--glass-border-glow);
@@ -110,14 +138,6 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
   }
   .featured-name { font-size: var(--text-h1); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
   .featured-tagline { font-size: var(--text-lead); color: var(--ink-dim); margin-bottom: var(--space-md); font-style: italic; }
-  .featured-price {
-    font-family: var(--font-mono);
-    font-size: var(--text-h2);
-    font-weight: var(--weight-light);
-    color: var(--accent);
-    margin-bottom: var(--space-md);
-    letter-spacing: var(--tracking-tight);
-  }
   .featured-formats { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); }
   .format-tag {
     display: inline-block;
@@ -162,35 +182,16 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
 
   /* ── Bundle Card ───────────────────── */
   .bundle-card {
-    border: 1px solid var(--accent-soft);
+    border: 1px solid var(--border-hairline);
     padding: var(--space-xl);
     margin-bottom: var(--space-2xl);
     position: relative;
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
+    opacity: 0.85;
     transition: border-color 0.45s, box-shadow 0.45s;
   }
   .bundle-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
-  .bundle-badge {
-    display: inline-block;
-    font-size: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent);
-    border: 1px solid var(--accent-soft);
-    padding: 0.15em 0.75em;
-    margin-bottom: var(--space-md);
-  }
   .bundle-name { font-size: var(--text-h2); font-weight: var(--weight-regular); margin-bottom: var(--space-xs); }
   .bundle-tagline { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-md); font-style: italic; }
-  .bundle-price {
-    font-family: var(--font-mono);
-    font-size: var(--text-h3);
-    font-weight: var(--weight-light);
-    color: var(--accent);
-    margin-bottom: var(--space-xs);
-  }
   .bundle-note { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; opacity: 0.7; }
 
   /* ── Notes Grid ────────────────────── */
@@ -204,19 +205,13 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
     padding: var(--space-lg);
     display: flex;
     flex-direction: column;
-    transition: border-color 0.35s, box-shadow 0.35s;
+    opacity: 0.8;
+    transition: border-color 0.35s, box-shadow 0.35s, opacity 0.35s;
   }
-  .note-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
+  .note-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); opacity: 0.95; }
   .note-name { font-family: var(--font-sans); font-size: var(--text-body); font-weight: var(--weight-medium); margin-bottom: var(--space-2xs); letter-spacing: 0; }
-  .note-tagline { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; margin-bottom: var(--space-sm); flex-grow: 0; }
+  .note-tagline { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; margin-bottom: var(--space-sm); }
   .note-overview { font-size: var(--text-caption); color: var(--ink-dim); line-height: var(--leading-relaxed); margin-bottom: var(--space-md); flex-grow: 1; }
-  .note-price {
-    font-family: var(--font-mono);
-    font-size: var(--text-h3);
-    font-weight: var(--weight-light);
-    color: var(--accent);
-    margin-bottom: var(--space-2xs);
-  }
   .note-format {
     font-size: var(--text-label);
     text-transform: uppercase;

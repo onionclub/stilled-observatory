@@ -24,10 +24,21 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
       <p class="sub">{desc}</p>
     </header>
 
+    <!-- How It Works -->
+    <div class="how-it-works reveal">
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><span>Choose a service below</span></div>
+        <div class="step-sep" aria-hidden="true">→</div>
+        <div class="step"><span class="step-num">2</span><span>Submit your order with context</span></div>
+        <div class="step-sep" aria-hidden="true">→</div>
+        <div class="step"><span class="step-num">3</span><span>Receive a written response within 3 days</span></div>
+      </div>
+    </div>
+
     <!-- Services -->
     <div class="services">
       {services.map((s, i) => (
-        <article class={`service reveal delay-${i}`}>
+        <article class={`service reveal delay-${i}`} id={`svc-${s.slug}`}>
           {s.badge && <span class="badge">{s.badge}</span>}
           <h2 class="name">{s.name}</h2>
           <p class="tagline">{s.tagline}</p>
@@ -37,6 +48,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
           <ul class="features">
             {s.features.map(f => <li>{f}</li>)}
           </ul>
+          <a href="#order-form" class="order-btn">Order {s.name} →</a>
         </article>
       ))}
     </div>
@@ -45,7 +57,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     <section class="addons reveal">
       <hr class="rule" />
       <h2 class="section-heading">Consultation Add‑Ons</h2>
-      <p class="section-sub">Available at checkout with any written consultation.</p>
+      <p class="section-sub">Available with any written consultation. Select during checkout.</p>
       <div class="addon-grid">
         {addOns.map(a => (
           <div class="addon-card">
@@ -57,38 +69,65 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
       </div>
     </section>
 
-    <!-- Inquiry -->
-    <div class="form-section reveal">
+    <!-- Order Form -->
+    <div class="form-section reveal" id="order-form">
       <hr class="rule" />
-      <h2 class="section-heading">Inquire</h2>
-      <p class="section-sub">Not sure which service fits? Tell me what you're navigating. No cost to inquire.</p>
+      <h2 class="section-heading">Place Your Order</h2>
+      <p class="section-sub">Fill out the form below. You'll receive a confirmation and payment instructions within 24 hours. No charge until you confirm.</p>
+
       <form
         class="form"
         action="https://formspree.io/f/your-form-id"
         method="POST"
       >
+        <!-- Service -->
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Select a service</legend>
+          <div class="service-options">
+            {services.map((s, i) => (
+              <label class="svc-option">
+                <input type="radio" name="service" value={s.slug} required={i === 0} />
+                <span class="svc-info">
+                  <span class="svc-name">{s.name}</span>
+                  <span class="svc-price">{s.price}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <!-- Add-ons -->
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Add‑ons (optional)</legend>
+          <div class="addon-options">
+            {addOns.map(a => (
+              <label class="addon-option">
+                <input type="checkbox" name="addons" value={a.slug} />
+                <span class="addon-info">
+                  <span class="addon-label">{a.name}</span>
+                  <span class="addon-label-price">{a.price}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <!-- Contact -->
         <label class="field">
-          <span class="field-label">Name</span>
-          <input type="text" name="name" required placeholder="Your name" />
+          <span class="field-label">Your name</span>
+          <input type="text" name="name" required placeholder="Full name" />
         </label>
         <label class="field">
           <span class="field-label">Email</span>
           <input type="email" name="email" required placeholder="you@example.com" />
         </label>
         <label class="field">
-          <span class="field-label">Service</span>
-          <select name="service">
-            <option value="">Select a service tier...</option>
-            {services.map(s => (
-              <option value={s.slug}>{s.name} — {s.price}</option>
-            ))}
-          </select>
+          <span class="field-label">What are you navigating?</span>
+          <textarea name="context" rows="4" required placeholder="Describe your situation, your question, or what you're seeking clarity on. The more context you provide, the more precise the response will be."></textarea>
         </label>
-        <label class="field">
-          <span class="field-label">What brings you here?</span>
-          <textarea name="message" rows="4" required placeholder="Describe your situation, question, or impasse..."></textarea>
-        </label>
-        <button type="submit" class="btn">Send Inquiry</button>
+
+        <button type="submit" class="submit-btn">Submit Order</button>
+        <p class="form-note">You'll receive a confirmation email within 24 hours with payment details. Your card is not charged until you confirm the order.</p>
       </form>
     </div>
   </section>
@@ -110,10 +149,29 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   .micro-tr { top: 1.2rem; right: 1.5rem; }
 
   .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-wide); margin: 0 auto; position: relative; z-index: 2; }
-  .page-header { margin-bottom: var(--space-4xl); }
+  .page-header { margin-bottom: var(--space-2xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
+
+  /* ── How It Works ───────────────────── */
+  .how-it-works { margin-bottom: var(--space-3xl); }
+  .steps {
+    display: flex; align-items: center; gap: var(--space-md);
+    flex-wrap: wrap; justify-content: center;
+  }
+  .step {
+    display: flex; align-items: center; gap: var(--space-sm);
+    font-size: var(--text-caption); color: var(--ink-dim);
+  }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem;
+    border: 1px solid var(--accent-soft);
+    font-size: var(--text-label); font-weight: var(--weight-medium);
+    color: var(--accent); flex-shrink: 0;
+  }
+  .step-sep { color: var(--ink-faint); font-size: var(--text-label); }
 
   /* ── Service Cards ─────────────────── */
   .services { display: flex; flex-direction: column; gap: var(--space-2xl); margin-bottom: var(--space-3xl); }
@@ -152,13 +210,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     margin-bottom: var(--space-sm);
     letter-spacing: var(--tracking-tight);
   }
-  .note {
-    font-size: var(--text-caption);
-    color: var(--ink-dim);
-    font-style: italic;
-    margin-bottom: var(--space-lg);
-    opacity: 0.7;
-  }
+  .note { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; margin-bottom: var(--space-lg); opacity: 0.7; }
   .overview {
     font-size: var(--text-body);
     color: var(--ink);
@@ -167,7 +219,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     padding-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border-hairline);
   }
-  .features { list-style: none; display: flex; flex-direction: column; gap: var(--space-sm); }
+  .features { list-style: none; display: flex; flex-direction: column; gap: var(--space-sm); margin-bottom: var(--space-xl); }
   .features li {
     font-size: var(--text-body);
     color: var(--ink-dim);
@@ -177,14 +229,20 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   }
   .features li::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 0.65em;
-    width: 6px;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.5;
+    position: absolute; left: 0; top: 0.65em;
+    width: 6px; height: 1px;
+    background: var(--accent); opacity: 0.5;
   }
+
+  .order-btn {
+    display: inline-flex; align-items: center; gap: 0.4em;
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); color: var(--accent);
+    font-weight: var(--weight-medium);
+    padding-bottom: 0.25rem; border-bottom: 1px solid var(--accent);
+    transition: opacity 0.35s, border-color 0.35s;
+  }
+  .order-btn:hover { opacity: 0.7; border-color: transparent; }
 
   /* ── Add-Ons ───────────────────────── */
   .addons { margin-bottom: var(--space-3xl); }
@@ -199,54 +257,75 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   }
   .addon-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
   .addon-name { font-family: var(--font-sans); font-size: var(--text-body); font-weight: var(--weight-medium); margin-bottom: var(--space-2xs); letter-spacing: 0; }
-  .addon-price {
-    font-family: var(--font-mono);
-    font-size: var(--text-h3);
-    font-weight: var(--weight-light);
-    color: var(--accent);
-    margin-bottom: var(--space-sm);
-  }
+  .addon-price { font-family: var(--font-mono); font-size: var(--text-h3); font-weight: var(--weight-light); color: var(--accent); margin-bottom: var(--space-sm); }
   .addon-desc { font-size: var(--text-caption); color: var(--ink-dim); line-height: var(--leading-relaxed); }
 
-  /* ── Form ──────────────────────────── */
+  /* ── Order Form ─────────────────────── */
   .form-section { }
-  .form { display: flex; flex-direction: column; gap: var(--space-xl); }
+  .form { display: flex; flex-direction: column; gap: var(--space-2xl); }
+
+  .fieldset { border: 0; padding: 0; }
+  .fieldset-legend {
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.5;
+    margin-bottom: var(--space-md); display: block; width: 100%;
+  }
+
+  .service-options { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .svc-option {
+    display: flex; align-items: flex-start; gap: var(--space-md);
+    padding: var(--space-md); border: 1px solid var(--border-hairline);
+    cursor: pointer; transition: border-color 0.35s, background 0.35s;
+  }
+  .svc-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .svc-option:hover { border-color: var(--glass-border-glow); }
+  .svc-option input[type="radio"] { accent-color: var(--accent); margin-top: 0.2rem; }
+  .svc-info { display: flex; flex-direction: column; gap: 0.15rem; }
+  .svc-name { font-size: var(--text-body); font-weight: var(--weight-medium); }
+  .svc-price { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--accent); }
+
+  .addon-options { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .addon-option {
+    display: flex; align-items: flex-start; gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-hairline);
+    cursor: pointer; transition: border-color 0.35s, background 0.35s;
+  }
+  .addon-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .addon-option:hover { border-color: var(--glass-border-glow); }
+  .addon-option input[type="checkbox"] { accent-color: var(--accent); margin-top: 0.25rem; }
+  .addon-info { display: flex; justify-content: space-between; align-items: baseline; width: 100%; gap: var(--space-md); }
+  .addon-label { font-size: var(--text-body); }
+  .addon-label-price { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--accent); white-space: nowrap; }
+
   .field { display: flex; flex-direction: column; gap: var(--space-2xs); }
   .field-label { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
-  input, textarea, select {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border-thin);
+  input[type="text"], input[type="email"], textarea {
+    width: 100%; background: transparent;
+    border: none; border-bottom: 1px solid var(--border-thin);
     padding: var(--space-sm) 0;
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    color: var(--ink);
-    transition: border-color 0.4s ease;
-    outline: none;
-    resize: vertical;
-    border-radius: 0;
+    font-family: var(--font-sans); font-size: var(--text-body); color: var(--ink);
+    transition: border-color 0.4s ease; outline: none; resize: vertical; border-radius: 0;
   }
-  select { cursor: pointer; }
-  select option { background: var(--paper-deep); color: var(--ink); }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  input:focus, textarea:focus { border-color: var(--accent); }
   input::placeholder, textarea::placeholder { color: var(--ink-faint); }
 
-  .btn {
+  .submit-btn {
     align-self: flex-start;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--border-thin);
-    padding: var(--space-sm) var(--space-2xl);
-    font-family: var(--font-sans);
-    font-size: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border-radius: 2px;
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--accent-soft);
+    padding: var(--space-md) var(--space-2xl);
+    font-family: var(--font-sans); font-size: var(--text-label);
+    text-transform: uppercase; letter-spacing: var(--tracking-label);
+    cursor: pointer; transition: all 0.4s ease;
+    font-weight: var(--weight-medium);
   }
-  .btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow-accent); }
+  .submit-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow-accent); color: var(--accent); }
+
+  .form-note {
+    font-size: var(--text-caption); color: var(--ink-faint);
+    font-style: italic; line-height: var(--leading-relaxed);
+    margin-top: -0.5rem;
+  }
 
   .delay-0 { transition-delay: 0s; }
   .delay-1 { transition-delay: 0.1s; }
@@ -254,6 +333,8 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
 
   @media (max-width: 768px) {
     .addon-grid { grid-template-columns: 1fr; }
+    .steps { flex-direction: column; gap: var(--space-sm); }
+    .step-sep { display: none; }
   }
   @media (max-width: 600px) {
     .service { padding: var(--space-xl); }
