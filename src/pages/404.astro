@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+---
+
+<Layout title="Stilled | Not Found">
+  <Head slot="head" title="Page Not Found — Stilled." description="The page you're looking for doesn't exist or has been moved." />
+
+  <section class="page reveal">
+    <span class="mark" aria-hidden="true"></span>
+    <h1 class="code">404</h1>
+    <p class="lede">The page you're looking for doesn't exist or has been moved.</p>
+    <nav class="links">
+      <a href="/home">Home</a>
+      <a href="/theories">Theories</a>
+      <a href="/directory">Directory</a>
+      <a href="/artifacts">Artifacts</a>
+      <a href="/counsel">Counsel</a>
+    </nav>
+  </section>
+</Layout>
+
+<style>
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--page-pad-x);
+  }
+  .mark {
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--accent);
+    margin-bottom: var(--space-xl);
+    opacity: 0.4;
+  }
+  .code {
+    font-family: var(--font-serif);
+    font-size: var(--text-display-lg);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tightest);
+    margin-bottom: var(--space-md);
+    opacity: 0.25;
+  }
+  .lede {
+    font-size: var(--text-lead);
+    color: var(--ink-dim);
+    max-width: var(--measure-narrow);
+    margin-bottom: var(--space-2xl);
+    font-style: italic;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-lg);
+  }
+  .links a {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.4;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid transparent;
+    transition: opacity 0.35s, border-color 0.35s;
+  }
+  .links a:hover { opacity: 0.8; border-color: var(--ink-faint); }
+</style>

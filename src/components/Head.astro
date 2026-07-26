@@ -1,0 +1,63 @@
+---
+// SEO + Meta component with Open Graph, Twitter Cards, and editorial defaults.
+// Usage: <Head title="Page Title" description="..." image="/og.png" />
+
+export interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    canonicalURL?: string;
+    type?: 'website' | 'article';
+    publishedAt?: string;
+}
+
+const {
+    title = 'Stilled.',
+    description = 'Precision instruments for the examined life. Forensic synthesis of consciousness, paradox, and identity.',
+    image = '/og-default.png',
+    canonicalURL,
+    type = 'website',
+    publishedAt,
+} = Astro.props;
+
+const siteURL = Astro.site?.toString() || 'https://stilled.page';
+const resolvedCanonical = canonicalURL || Astro.url.href;
+const resolvedImage = image.startsWith('http') ? image : `${siteURL}${image}`;
+---
+
+<!-- Primary Meta -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={resolvedCanonical} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Font Preconnects -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+/>
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={resolvedCanonical} />
+<meta property="og:image" content={resolvedImage} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content="Stilled." />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={resolvedImage} />
+
+<!-- Article-specific -->
+{type === 'article' && publishedAt && (
+    <meta property="article:published_time" content={publishedAt} />
+)}

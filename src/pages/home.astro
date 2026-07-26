@@ -1,265 +1,362 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+import { getSyntheses } from '../data/syntheses.js';
+
+const theories = await getSyntheses();
+const desc = 'Precision instruments for the examined life. Forensic synthesis of consciousness, paradox, and identity.';
 ---
 
 <Layout title="Stilled | Sanctum">
-  <div class="sanctum-content container relative z-10 flex-col">
-    
-    {/* HERO SECTION */}
-    <section class="hero flex-center flex-col animate-on-scroll min-h-screen relative">
-      <img src="/portraits/dostoevsky.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-hero" />
-      <h1 class="wordmark">Stilled.</h1>
-      <p class="manifesto delay-300 animate-on-scroll">A forensic analyst of consciousness, paradox, and identity.</p>
-    </section>
+  <Head slot="head" title="Stilled | Sanctum" description={desc} />
+  <link rel="stylesheet" href="/mouse-follower.css" />
 
-    {/* RECENT THEORIES */}
-    <section class="recent-theories content-section delay-500 animate-on-scroll">
-        <h2 class="section-heading">Recent Theories</h2>
-        <div class="theory-list flex-col">
-            <a href="#" class="theory-entry">
-                <span class="theory-meta">Synthesized 10.14.26</span>
-                <h3 class="theory-title">The Architecture of Arrival</h3>
-                <p class="theory-excerpt">An examination of the friction experienced precisely at the moment a long-pursued goal is realized.</p>
-            </a>
-            <a href="#" class="theory-entry">
-                <span class="theory-meta">Synthesized 09.28.26</span>
-                <h3 class="theory-title">Ghosting the Panopticon</h3>
-                <p class="theory-excerpt">Methods for withdrawing visible engagement while maintaining structural influence.</p>
-            </a>
-            <a href="#" class="theory-entry">
-                <span class="theory-meta">Synthesized 09.04.26</span>
-                <h3 class="theory-title">The Gravity of Unmade Decisions</h3>
-                <p class="theory-excerpt">How deferred choices create dense psychological mass that distorts surrounding navigational logic.</p>
-            </a>
-        </div>
-    </section>
-
-    {/* FEATURED ARTIFACTS */}
-    <section class="featured-artifacts content-section animate-on-scroll relative">
-        <img src="/portraits/laozi.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-threshold animate-on-scroll" />
-        <h2 class="section-heading">Featured Artifacts</h2>
-        <div class="artifacts-grid">
-            <a href="#" class="artifact-card">
-                <div class="artifact-content">
-                    <h3 class="artifact-title">The Meta-Framework</h3>
-                    <p class="artifact-desc">A comprehensive guide to identity reconstruction. Physical edition.</p>
-                </div>
-            </a>
-            <a href="#" class="artifact-card">
-                <div class="artifact-content">
-                    <h3 class="artifact-title">Liminal Engine</h3>
-                    <p class="artifact-desc">A browser environment for analytical reading and attention management.</p>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    {/* PULL QUOTE */}
-    <section class="pull-quote-section content-section flex-center animate-on-scroll relative">
-        <img src="/portraits/nietzsche.png" alt="" aria-hidden="true" class="atmospheric-portrait portrait-quote animate-on-scroll delay-300" />
-        <blockquote class="philosophical-fragment">
-            "We do not manufacture meaning; we reveal the architecture where it already exists."
-        </blockquote>
-    </section>
-
+  <!-- MESH GRADIENT BLOBS -->
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
   </div>
+
+  <!-- GEOMETRIC GRID -->
+  <div class="grid-lines" aria-hidden="true"></div>
+
+  <!-- DENSITY: CORNER MICRO-TYPE -->
+  <div class="micro micro-tl" aria-hidden="true">INDEX 01</div>
+  <div class="micro micro-tr" aria-hidden="true">51°30′N 0°07′W</div>
+  <div class="micro micro-bl" aria-hidden="true">SYS:OPERATIONAL</div>
+  <div class="micro micro-br" aria-hidden="true">PRECISION · INSTRUMENTS</div>
+
+  <!-- HERO — glass card on left, portrait right -->
+  <section class="hero">
+    <div class="hero-portrait" data-parallax="0.1">
+      <img src="/portraits/dostoevsky.webp" alt="" aria-hidden="true" loading="eager" />
+    </div>
+    <div class="hero-glass">
+      <div class="glass-card">
+        <span class="mark" aria-hidden="true"></span>
+        <h1 data-split="chars">Stilled.</h1>
+        <p class="hero-lead" data-split="words">{desc}</p>
+        <nav class="hero-nav">
+          <a href="/theories" data-cursor-text="Theories">Theories</a>
+          <a href="/directory" data-cursor-text="Directory">Directory</a>
+          <a href="/artifacts" data-cursor-text="Artifacts">Artifacts</a>
+          <a href="/counsel" data-cursor-text="Counsel">Counsel</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEORIES -->
+  {theories.length > 1 ? (
+    <section class="horizontal-section" data-horizontal-pin>
+      <header class="section-head">
+        <span class="label">Theories</span>
+        <h2 class="section-title">Recent Theories</h2>
+        <span class="hint">Scroll →</span>
+      </header>
+      <div class="horizontal-track" data-horizontal-track>
+        {theories.map((t) => (
+          <a href={`/theories/${t.slug}`} class="glass-card-item" data-cursor-text="Read">
+            {t.featureImage && (
+              <div class="card-img" data-reveal-clip="up">
+                <img src={t.featureImage} alt="" loading="lazy" />
+              </div>
+            )}
+            <time class="card-date">
+              {t.publishedAt ? new Date(t.publishedAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: '2-digit' }).replace(/,/g, '') : 'Synthesized'}
+            </time>
+            <h3 class="card-title">{t.title}</h3>
+            <p class="card-blurb">{t.excerpt.slice(0, 100)}…</p>
+            <span class="card-index">{String(theories.indexOf(t) + 1).padStart(2, '0')}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <section class="fallback">
+      <header class="section-head"><span class="label">Theories</span><h2 class="section-title">Recent Theories</h2></header>
+      {theories.length === 1 ? (
+        <a href={`/theories/${theories[0].slug}`} class="glass-card-item single"><h3>{theories[0].title}</h3><p>{theories[0].excerpt}</p></a>
+      ) : (
+        <p class="empty">No syntheses published yet.</p>
+      )}
+    </section>
+  )}
+
+  <!-- ARTIFACTS — glass bento -->
+  <section class="artifacts">
+    <header class="section-head">
+      <span class="label">Artifacts</span>
+      <h2 class="section-title">Artifacts</h2>
+    </header>
+    <div class="bento-row">
+      <a href="/artifacts" class="glass-card-item bento-main" data-cursor-text="View" data-reveal-clip="left">
+        <div class="bento-visual"><img src="/artifacts/meta-framework.svg" alt="" loading="lazy" /></div>
+        <div class="bento-text">
+          <h3>The Meta‑Framework</h3>
+          <p>A comprehensive guide to identity reconstruction.</p>
+          <span class="bento-price">$40.00</span>
+        </div>
+      </a>
+      <a href="/artifacts" class="glass-card-item bento-side" data-cursor-text="View" data-reveal-clip="right">
+        <div class="bento-visual"><img src="/artifacts/liminal-engine.svg" alt="" loading="lazy" /></div>
+        <div class="bento-text">
+          <h3>Liminal Engine</h3>
+          <p>A browser environment for analytical reading and attention management.</p>
+          <span class="bento-price">$12.00 / mo</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- QUOTE — glass pull -->
+  <section class="quote">
+    <div class="quote-glass glass-card">
+      <span class="label">Cogito</span>
+      <blockquote data-split="words">
+        "We do not manufacture meaning; we reveal the architecture where it already exists."
+      </blockquote>
+    </div>
+  </section>
+
 </Layout>
 
 <style>
-  .sanctum-content {
-    /* Use fluid vertical padding for the whole container */
-    padding-top: clamp(6rem, 15vh, var(--spacing-massive));
-    padding-bottom: clamp(6rem, 15vh, var(--spacing-massive));
+  body {
+    background: var(--paper-deep);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: var(--weight-light);
+    overflow-x: hidden;
   }
 
+  /* ── MESH GRADIENT BLOBS ──────────────── */
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob {
+    position: absolute; border-radius: 50%; filter: blur(140px);
+    animation: drift 24s ease-in-out infinite;
+  }
+  .blob-1 { width: 55vw; height: 55vw; background: var(--mesh-1); top: -25%; left: -10%; }
+  .blob-2 { width: 45vw; height: 45vw; background: var(--mesh-2); top: 45%; right: -15%; animation-delay: -8s; }
+  .blob-3 { width: 38vw; height: 38vw; background: var(--mesh-3); bottom: -15%; left: 25%; animation-delay: -16s; }
+  .blob-4 { width: 30vw; height: 30vw; background: var(--mesh-4); top: 5%; right: 35%; animation-delay: -4s; }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25%      { transform: translate(10%, -15%) scale(1.18); }
+    50%      { transform: translate(-6%, 10%) scale(0.88); }
+    75%      { transform: translate(-12%, -6%) scale(1.1); }
+  }
+
+  /* ── GEOMETRIC GRID ───────────────────── */
+  .grid-lines {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background-image:
+      linear-gradient(var(--border-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-hairline) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 55% 45% at 50% 50%, black 18%, transparent 65%);
+  }
+
+  /* ── MICRO TYPOGRAPHY ─────────────────── */
+  .micro {
+    position: fixed; z-index: var(--z-above);
+    font-family: var(--font-mono, monospace);
+    font-size: 9px; text-transform: uppercase;
+    letter-spacing: 0.18em; opacity: 0.28;
+    pointer-events: none; color: var(--ink-dim);
+  }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
+  .micro-bl { bottom: 1.2rem; left: 1.5rem; }
+  .micro-br { bottom: 1.2rem; right: 1.5rem; }
+
+  /* ── GLASS CARD BASE ──────────────────── */
+  .glass-card, .glass-card-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    box-shadow: var(--shadow-float);
+    position: relative;
+  }
+  .glass-card::after, .glass-card-item::after {
+    content: '';
+    position: absolute; inset: -1px; border-radius: 3px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--glass-border-glow), transparent 50%, var(--glass-border-glow) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none; z-index: -1;
+  }
+  .glass-card-item:hover {
+    border-color: var(--glass-border-glow);
+    box-shadow: var(--shadow-glow-accent);
+    transition: border-color 0.5s, box-shadow 0.5s;
+  }
+
+  /* ── HERO ─────────────────────────────── */
   .hero {
-    margin-bottom: clamp(6rem, 12vh, 8rem);
+    display: grid;
+    grid-template-columns: [glass] 1fr [portrait] 1fr;
+    min-height: 100vh;
+    align-items: center;
+    margin-bottom: 12rem;
+    position: relative; z-index: 2;
+  }
+  .hero-glass {
+    grid-column: glass;
+    padding: clamp(2rem, 6vw, 5rem);
+  }
+  .hero-glass .glass-card {
+    padding: clamp(2.5rem, 5vw, 4rem); max-width: 34rem;
+  }
+  .hero-glass .mark {
+    display: block; width: 48px; height: 1px;
+    background: var(--accent); margin-bottom: 2rem; opacity: 0.6;
+  }
+  .hero-glass h1 {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: var(--weight-regular);
+    line-height: 1.08; letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .hero-glass h1 span { display: inline-block; }
+  .hero-lead {
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.7; color: var(--ink-dim); margin-bottom: 2.5rem;
+  }
+  .hero-nav { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .hero-nav a {
+    font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.12em; opacity: 0.65;
+    padding-bottom: 0.25rem; border-bottom: 1px solid transparent;
+    transition: opacity 0.35s, border-color 0.35s;
+  }
+  .hero-nav a:hover { opacity: 1; border-color: var(--accent); }
+  .hero-portrait {
+    grid-column: portrait;
+    height: 100vh; overflow: hidden; position: relative;
+  }
+  .hero-portrait img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) contrast(1.15) brightness(0.7) saturate(0.5);
+    mix-blend-mode: multiply; opacity: 0.2;
   }
 
-  .wordmark {
-    font-size: clamp(3rem, 8vw, 6rem);
-    margin-bottom: clamp(1rem, 3vh, 2rem);
+  /* ── SECTION HEAD ─────────────────────── */
+  .section-head { margin-bottom: 3rem; padding: 0 var(--page-pad-x); position: relative; z-index: 2; }
+  .section-head .label {
+    font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.18em;
+    display: block; margin-bottom: 0.5rem; opacity: 0.6; color: var(--accent);
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: var(--weight-regular); letter-spacing: -0.015em;
+  }
+  .hint {
+    display: inline-block; margin-top: 1rem;
+    font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.12em; opacity: 0.2; color: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.2} 50%{opacity:0.5} }
+
+  /* ── HORIZONTAL SCROLL ────────────────── */
+  .horizontal-section { overflow: hidden; margin-bottom: 12rem; position: relative; z-index: 2; }
+  .horizontal-track {
+    display: flex; gap: clamp(2rem, 5vw, 5rem);
+    padding: 0 var(--page-pad-x) 3rem; width: max-content; will-change: transform;
+  }
+  .glass-card-item {
+    display: block; width: clamp(320px, 45vw, 520px); flex-shrink: 0;
+    padding: 2rem; transition: border-color 0.5s, box-shadow 0.5s, opacity 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .glass-card-item:hover { opacity: 0.9; }
+  .card-img {
+    width: 100%; aspect-ratio: 16/10; overflow: hidden;
+    margin-bottom: 1.5rem; border-radius: 1px; will-change: clip-path;
+  }
+  .card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    border: 1px solid var(--border-hairline);
+  }
+  .card-date {
+    font-size: 0.625rem; text-transform: uppercase;
+    letter-spacing: 0.18em; opacity: 0.7; color: var(--accent);
+    display: block; margin-bottom: 0.5rem;
+  }
+  .card-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.015em; margin-bottom: 0.5rem;
+  }
+  .card-blurb { font-size: var(--text-body); color: var(--ink-dim); line-height: 1.6; }
+  .card-index {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: var(--font-mono); font-size: 10px;
+    opacity: 0.2; color: var(--accent);
   }
 
-  .manifesto {
-    font-family: var(--font-sans);
-    font-size: clamp(1rem, 2vw, 1.125rem);
-    text-align: center;
-    max-width: 50ch;
-  }
-  .manifesto.is-visible {
-    opacity: 0.8;
-  }
+  /* ── FALLBACK ─────────────────────────── */
+  .fallback { margin-bottom: 12rem; padding: 0 var(--page-pad-x); position: relative; z-index: 2; }
+  .fallback .glass-card-item.single { max-width: 600px; padding: 2.5rem; }
+  .fallback h3 { font-size: clamp(1.8rem,3vw,2.5rem); font-weight:var(--weight-regular); margin-bottom:.5rem; }
+  .fallback p { color: var(--ink-dim); }
+  .empty { color: var(--ink-dim); font-style: italic; }
 
-  .content-section {
-    margin-bottom: clamp(8rem, 20vh, 12rem);
+  /* ── BENTO ────────────────────────────── */
+  .artifacts { margin-bottom: 12rem; position: relative; z-index: 2; }
+  .bento-row {
+    display: grid;
+    grid-template-columns: [full] var(--page-pad-x) [main] 1.2fr [gap] 0.8fr [side] 1fr [end] var(--page-pad-x);
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
+  .bento-main { grid-column: main / gap; padding: 2rem; margin-top: 0; }
+  .bento-side  { grid-column: side / end; padding: 2rem; margin-top: 4rem; }
+  .bento-visual { width: 100%; aspect-ratio: 4/5; overflow: hidden; margin-bottom: 1.5rem; border-radius: 1px; }
+  .bento-visual img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--border-hairline); }
+  .bento-text h3 { font-size: clamp(1.3rem,2.2vw,1.8rem); font-weight:var(--weight-regular); margin-bottom:.25rem; }
+  .bento-text p { font-size:.8125rem; color: var(--ink-dim); margin-bottom:.75rem; }
+  .bento-price { font-size:.625rem; text-transform:uppercase; letter-spacing:.15em; opacity:.3; display:inline-block; padding-top:.5rem; border-top:1px solid var(--border-thin); color: var(--accent); }
 
-  .section-heading {
-    font-family: var(--font-sans);
-    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--charcoal);
-    margin-bottom: clamp(3rem, 8vh, 4rem);
-    border-bottom: 1px solid rgba(200, 188, 168, 0.4);
-    padding-bottom: 1rem;
+  /* ── QUOTE ────────────────────────────── */
+  .quote {
+    min-height: 50vh; display: flex; align-items: center; justify-content: center;
+    padding: 4rem var(--page-pad-x); margin-bottom: 6rem;
+    position: relative; z-index: 2;
   }
-  .content-section.is-visible .section-heading {
-    opacity: 0.6;
+  .quote-glass {
+    padding: clamp(3rem, 6vw, 5rem); text-align: center; max-width: 500px;
   }
+  .quote-glass .label { display: block; margin-bottom: 2rem; opacity: 0.25; }
+  .quote-glass blockquote {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-style: italic; font-weight: var(--weight-regular);
+    line-height: 1.2; color: var(--ink);
+  }
+  .quote-glass blockquote span { display: inline-block; }
 
-  /* Theories */
-  .theory-list {
-    gap: clamp(3rem, 6vh, 4rem);
+  /* ── RESPONSIVE ───────────────────────── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-portrait { height: 40vh; order: -1; }
+    .hero-portrait img { opacity: 0.1; }
+    .bento-row { grid-template-columns: var(--page-pad-x) 1fr var(--page-pad-x); }
+    .bento-main, .bento-side { grid-column: 2; margin-top: 0; }
   }
-
-  .theory-entry {
-     display: flex;
-     flex-direction: column;
-     transition: opacity var(--transition-medium);
-  }
-  .theory-entry.is-visible {
-     opacity: 0.8;
-  }
-
-  .theory-entry:hover {
-     opacity: 1;
-  }
-
-  .theory-meta {
-     font-family: var(--font-sans);
-     font-size: clamp(0.65rem, 1vw, 0.75rem);
-     text-transform: uppercase;
-     letter-spacing: 0.12em;
-     margin-bottom: 0.5rem;
-     color: var(--charcoal);
-     opacity: 0.5;
-  }
-
-  .theory-title {
-     font-size: clamp(1.5rem, 3vw, 2rem);
-     margin-bottom: 0.5rem;
-  }
-  
-  .theory-excerpt {
-      margin: 0;
-      font-size: clamp(0.9rem, 1.5vw, 1.125rem);
-  }
-  .theory-entry.is-visible .theory-excerpt {
-      opacity: 0.8;
-  }
-
-  /* Artifacts Grid */
-  .artifacts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: clamp(1.5rem, 4vw, 2rem);
-  }
-
-  .artifact-card {
-      border: 1px solid var(--pale-stone, #C8BCA8);
-      padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
-      transition: all var(--transition-medium);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: clamp(200px, 20vw, 250px);
-  }
-
-  .artifact-card:hover {
-      background-color: var(--secondary-bg, #F0EDE4);
-      border-color: var(--charcoal);
-      opacity: 1; /* override global anchor hover */
-  }
-
-  .artifact-title {
-      font-size: clamp(1.25rem, 2vw, 1.5rem);
-      margin-bottom: 0.5rem;
-  }
-
-  .artifact-desc {
-      font-size: clamp(0.85rem, 1.2vw, 0.875rem);
-      margin: 0 auto;
-      max-width: 35ch;
-  }
-  .artifact-card.is-visible .artifact-desc {
-      opacity: 0.7;
-  }
-
-  /* Pull Quote */
-  .pull-quote-section {
-      min-height: clamp(40vh, 50vh, 60vh);
-      text-align: center;
-  }
-
-  .philosophical-fragment {
-      font-family: var(--font-serif);
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      line-height: 1.4;
-      max-width: 25ch;
-      color: var(--charcoal);
-  }
-  .pull-quote-section.is-visible .philosophical-fragment {
-      opacity: 0.9;
-  }
-
-  /* Atmospheric Portraits */
-  .atmospheric-portrait {
-    position: absolute;
-    z-index: -1;
-    mix-blend-mode: multiply;
-    pointer-events: none;
-    filter: grayscale(100%) contrast(1.2);
-  }
-
-  .portrait-hero {
-    right: -5%;
-    top: 10%;
-    width: clamp(300px, 40vw, 600px);
-    opacity: 0;
-    animation: slowSubliminalFade 8s ease-in-out forwards;
-    animation-delay: 1s;
-  }
-
-  .portrait-threshold {
-    left: -10%;
-    top: -20%;
-    width: clamp(200px, 25vw, 400px);
-  }
-  .portrait-threshold.is-visible {
-    opacity: 0.18;
-  }
-
-  .portrait-quote {
-    right: -5%;
-    bottom: 0;
-    width: clamp(250px, 30vw, 500px);
-  }
-  .portrait-quote.is-visible {
-    opacity: 0.15;
-  }
-
-  @keyframes slowSubliminalFade {
-    to { opacity: 0.15; }
-  }
-
-  @media (max-width: 768px) {
-    .portrait-threshold, 
-    .portrait-quote {
-      display: none;
-    }
-    .portrait-hero {
-      right: -20%;
-      opacity: 0.10 !important;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .portrait-hero {
-      animation: none;
-      opacity: 0.15;
-    }
+  @media (max-width: 600px) {
+    .micro { display: none; }
+    .horizontal-track .glass-card-item { width: 75vw; }
   }
 </style>
+
+<script>
+  import '../scripts/immersive.js';
+</script>

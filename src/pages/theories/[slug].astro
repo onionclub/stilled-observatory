@@ -1,187 +1,412 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { syntheses } from '../../data/syntheses.js';
+import Head from '../../components/Head.astro';
+import { getSyntheses } from '../../data/syntheses.js';
 
-export function getStaticPaths() {
-  return syntheses.map(theory => ({
+export async function getStaticPaths() {
+  const theories = await getSyntheses();
+  return theories.map(theory => ({
     params: { slug: theory.slug },
-    props: { theory },
+    props: { theory, allTheories: theories },
   }));
 }
 
-const { theory } = Astro.props;
+const { theory, allTheories } = Astro.props;
+
+// Related: match on shared tags, exclude self, limit 2
+const related = allTheories
+  .filter(t => t.slug !== theory.slug)
+  .map(t => {
+    const sharedTags = (t.tags || []).filter(tt =>
+      (theory.tags || []).some(st => st.id === tt.id)
+    );
+    return { ...t, shared: sharedTags.length };
+  })
+  .filter(t => t.shared > 0)
+  .sort((a, b) => b.shared - a.shared)
+  .slice(0, 2);
+
+const ogImage = theory.featureImage || '/og-default.png';
+const readingMins = theory.readingTime || Math.ceil((theory.excerpt?.length || 500) / 1500);
 ---
 
-<Layout title={`Stilled | ${theory.title}`}>
-  <article class="synthesis-container container">
-    <div class="left-col">
-      <div class="sticky-wrapper">
-        <h1 class="theory-title">{theory.title}</h1>
-        <p class="theory-excerpt">{theory.excerpt}</p>
-        
-        <div class="media-container">
-          <div class="video-placeholder">
-            <span class="placeholder-icon">—</span>
-            <span class="placeholder-text">Archival record unlinked</span>
-          </div>
-        </div>
-        
-        <div class="diagram-container">
-          <img src={theory.diagramUrl} alt="Synthesis Diagram" loading="lazy" />
-        </div>
+<Layout title={`Stilled | ${theory.title}`} showNav={false}>
+  <Head slot="head" title={`${theory.title} — Stilled.`} description={theory.excerpt}
+        image={ogImage} type="article" publishedAt={theory.publishedAt} />
+
+  <article class="article">
+    <!-- Progress bar -->
+    <div class="progress" aria-hidden="true"><div class="progress-fill"></div></div>
+
+    <!-- Back link -->
+    <a href="/theories" class="back reveal">
+      <span class="back-arrow">←</span>
+      <span class="back-label">Theories</span>
+    </a>
+
+    <!-- Header — centered, narrow -->
+    <header class="header reveal">
+      <div class="meta-line">
+        <time class="date" datetime={theory.publishedAt}>
+          {theory.publishedAt ? new Date(theory.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Synthesized'}
+        </time>
+        <span class="meta-sep" aria-hidden="true">·</span>
+        <span class="reading-time">{readingMins} min read</span>
       </div>
+      <h1 class="title">{theory.title}</h1>
+      <p class="lede">{theory.excerpt}</p>
+    </header>
+
+    <!-- Feature image — full-bleed with fade -->
+    {theory.featureImage && (
+      <figure class="feature reveal">
+        <div class="feature-frame" data-reveal-clip="up">
+          <img src={theory.featureImage} alt={theory.title} loading="eager" />
+        </div>
+        <div class="feature-fade"></div>
+      </figure>
+    )}
+
+    <!-- Prose body -->
+    <div class="body" set:html={theory.html} />
+
+    <!-- Continue reading badge -->
+    <div class="continue-badge" id="continue-badge" aria-hidden="true">
+      <span class="continue-label">Continue reading ↓</span>
     </div>
-    
-    <div class="right-col prose" set:html={theory.bodyContent}>
-      <!-- Content injected here -->
-    </div>
+
+    <!-- Related -->
+    {related.length > 0 && (
+      <section class="related reveal">
+        <hr class="rule" />
+        <span class="related-label label">Related Reading</span>
+        <div class="related-grid">
+          {related.map(r => (
+            <a href={`/theories/${r.slug}`} class="related-card">
+              <time class="related-date">
+                {r.publishedAt ? new Date(r.publishedAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: '2-digit' }).replace(/,/g, '') : 'Synthesized'}
+              </time>
+              <h3 class="related-title">{r.title}</h3>
+              <p class="related-blurb">{r.excerpt.slice(0, 120)}…</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Footer -->
+    <footer class="footer reveal">
+      <hr class="rule" />
+      <a href="/theories" class="return-link">← All Theories</a>
+    </footer>
   </article>
-
-  <script>
-    // IntersectionObserver to gently fade in paragraphs
-    const paragraphs = document.querySelectorAll('.prose p, .prose h2, .prose h3');
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      rootMargin: '0px 0px -10% 0px',
-      threshold: 0.1
-    });
-
-    paragraphs.forEach(p => {
-      p.classList.add('fade-up-element');
-      observer.observe(p);
-    });
-  </script>
 </Layout>
 
+<link rel="stylesheet" href="/mouse-follower.css" />
+
 <style>
-  .synthesis-container {
+  .article { padding-bottom: var(--space-5xl); }
+
+  /* ── Progress Bar ─────────────────────── */
+  .progress {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 2px;
+    z-index: var(--z-nav); background: transparent;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    width: 0%; transition: width 0.1s linear;
+  }
+
+  /* ── Back Link ────────────────────────── */
+  .back {
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    padding: var(--space-lg) var(--page-pad-x);
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.35;
+    transition: opacity 0.35s;
+    position: fixed; top: 0; left: 0; z-index: calc(var(--z-nav) - 1);
+  }
+  .back:hover { opacity: 0.7; }
+  @media (max-width: 600px) {
+    .back { position: relative; padding-top: var(--space-2xl); }
+  }
+
+  /* ── Header ───────────────────────────── */
+  .header {
+    padding: var(--page-pad-top) var(--page-pad-x) 0;
+    max-width: var(--measure-base); margin: 0 auto; text-align: center;
+  }
+  .meta-line {
+    display: flex; justify-content: center; align-items: center;
+    gap: var(--space-sm); margin-bottom: var(--space-xl);
+  }
+  .date, .reading-time {
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.3;
+  }
+  .meta-sep { opacity: 0.2; font-size: var(--text-label); }
+  .title {
+    font-size: var(--text-display); font-weight: var(--weight-regular);
+    line-height: var(--leading-snug); letter-spacing: var(--tracking-tightest);
+    margin-bottom: var(--space-xl);
+  }
+  .lede {
+    font-size: var(--text-lead); line-height: var(--leading-relaxed);
+    color: var(--ink-dim); max-width: var(--measure-narrow);
+    margin: 0 auto; font-style: italic;
+  }
+
+  /* ── Feature Image ────────────────────── */
+  .feature {
+    margin: var(--space-3xl) auto 0;
+    max-width: var(--measure-full); padding: 0 var(--page-pad-x); position: relative;
+  }
+  .feature-frame { border: 1px solid var(--border-hairline); overflow: hidden; }
+  .feature-frame img { width: 100%; height: auto; display: block; }
+  .feature-fade {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(to bottom, transparent, var(--paper));
+    pointer-events: none;
+  }
+
+  /* ── Prose Body ───────────────────────── */
+  .body {
+    max-width: var(--measure-base); margin: var(--space-3xl) auto 0;
+    padding: 0 var(--page-pad-x); counter-reset: section;
+  }
+  .body :global(h2) {
+    font-size: var(--text-h1); font-weight: var(--weight-regular);
+    line-height: var(--leading-snug); letter-spacing: var(--tracking-tight);
+    margin: var(--space-4xl) 0 var(--space-lg); color: var(--ink);
+    position: relative;
+  }
+  .body :global(h2)::before {
+    counter-increment: section;
+    content: counter(section, decimal-leading-zero) '.';
+    display: block;
+    font-family: var(--font-sans); font-size: var(--text-label);
+    font-weight: var(--weight-regular); letter-spacing: var(--tracking-label);
+    opacity: 0.3; margin-bottom: var(--space-sm);
+  }
+  /* Anchor link — appears on hover */
+  .body :global(h2) .anchor,
+  .body :global(h3) .anchor {
+    position: absolute; left: -1.5rem;
+    opacity: 0; transition: opacity 0.25s;
+    font-size: var(--text-caption); color: var(--accent);
+    text-decoration: none;
+  }
+  .body :global(h2):hover .anchor,
+  .body :global(h3):hover .anchor { opacity: 0.5; }
+  .body :global(h2):hover .anchor:hover,
+  .body :global(h3):hover .anchor:hover { opacity: 1; }
+
+  .body :global(h3) {
+    font-size: var(--text-h2); font-weight: var(--weight-regular);
+    line-height: var(--leading-tight);
+    margin: var(--space-3xl) 0 var(--space-md); color: var(--ink);
+  }
+  .body :global(p) {
+    font-size: var(--text-body-lg); line-height: var(--leading-loose);
+    margin-bottom: var(--space-xl); color: var(--ink-dim); text-wrap: pretty;
+  }
+  .body :global(p:first-of-type) {
+    font-size: var(--text-lead); line-height: var(--leading-relaxed); color: var(--ink);
+  }
+  .body :global(blockquote) {
+    font-family: var(--font-serif); font-size: var(--text-h2);
+    font-style: italic; font-weight: var(--weight-regular);
+    line-height: var(--leading-snug); color: var(--ink);
+    margin: var(--space-3xl) calc(-1 * var(--page-pad-x));
+    padding: var(--space-2xl) var(--page-pad-x);
+    border-top: 1px solid var(--border-hairline);
+    border-bottom: 1px solid var(--border-hairline);
+    text-align: center;
+  }
+  .body :global(blockquote p) {
+    font-family: inherit; font-size: inherit; font-style: inherit;
+    line-height: inherit; color: inherit; margin: 0;
+  }
+  .body :global(img) {
+    width: 100%; height: auto; margin: var(--space-2xl) 0;
+    border: 1px solid var(--border-hairline);
+  }
+  .body :global(hr) {
+    border: 0; height: 1px; background: var(--border-hairline);
+    margin: var(--space-3xl) 0;
+  }
+  .body :global(a) {
+    color: var(--accent); text-decoration: underline;
+    text-underline-offset: 0.2em; text-decoration-color: var(--border-thin);
+  }
+  .body :global(a:hover) { text-decoration-color: var(--accent); opacity: 1; }
+
+  /* ── Progressive Reveal ──────────────── */
+  .body :global(.prose-reveal) {
+    opacity: 0; transform: translateY(1.5rem);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .body :global(.prose-reveal.visible) { opacity: 1; transform: translateY(0); }
+
+  /* ── Continue Badge ───────────────────── */
+  .continue-badge {
+    position: fixed; bottom: var(--space-xl); right: var(--space-xl);
+    z-index: var(--z-above);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0; transform: translateY(1rem);
+    transition: opacity 0.5s, transform 0.5s;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-hairline);
+    pointer-events: none;
+  }
+  .continue-badge.visible { opacity: 1; transform: translateY(0); }
+  @media (max-width: 600px) { .continue-badge { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .continue-badge { display: none; }
+  }
+
+  /* ── Related ──────────────────────────── */
+  .related {
+    max-width: var(--measure-wide); margin: var(--space-4xl) auto 0;
+    padding: 0 var(--page-pad-x);
+  }
+  .related-label { display: block; margin-bottom: var(--space-xl); }
+  .related-grid {
     display: grid;
-    grid-template-columns: 40% 60%;
-    gap: var(--spacing-massive);
-    padding-top: calc(var(--spacing-massive) + 4rem);
-    padding-bottom: var(--spacing-massive);
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+  .related-card {
+    display: block; padding: var(--space-lg) 0;
+    border-top: 1px solid var(--border-hairline);
+    transition: opacity 0.35s, padding 0.4s ease;
+  }
+  .related-card:hover { opacity: 0.5; padding-left: var(--space-xs); }
+  .related-date {
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.3;
+    display: block; margin-bottom: var(--space-xs);
+  }
+  .related-title {
+    font-size: var(--text-h2); font-weight: var(--weight-regular);
+    margin-bottom: var(--space-2xs);
+  }
+  .related-blurb {
+    font-size: var(--text-body); color: var(--ink-dim);
   }
 
-  /* Left Column: Sticky */
-  .left-col {
-    position: relative;
+  /* ── Footer ───────────────────────────── */
+  .footer {
+    max-width: var(--measure-base); margin: var(--space-4xl) auto 0;
+    padding: 0 var(--page-pad-x); text-align: center;
   }
+  .rule { border: 0; height: 1px; background: var(--border-hairline); margin-bottom: var(--space-xl); }
+  .footer .rule { margin-top: var(--space-3xl); }
+  .return-link {
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.35; transition: opacity 0.35s;
+  }
+  .return-link:hover { opacity: 0.7; }
 
-  .sticky-wrapper {
-    position: sticky;
-    top: 8rem; /* below nav */
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  /* ── Responsive ───────────────────────── */
+  @media (max-width: 768px) {
+    .header { text-align: left; }
+    .lede { margin: 0; }
+    .meta-line { justify-content: flex-start; }
+    .body { margin-top: var(--space-2xl); }
+    .body :global(blockquote) { margin: var(--space-2xl) 0; font-size: var(--text-h3); }
+    .body :global(p:first-of-type) { font-size: var(--text-body-lg); }
+    .related-grid { grid-template-columns: 1fr; }
   }
-
-  .theory-title {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    margin-bottom: 0.5rem;
-  }
-
-  .theory-excerpt {
-    font-size: 1.125rem;
-    opacity: 0.8;
-  }
-
-  .media-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 box */
-    height: 0;
-    overflow: hidden;
-    border: 1px solid rgba(200, 188, 168, 0.4);
-    background: rgba(26, 26, 26, 0.02);
-  }
-
-  .video-placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    opacity: 0.5;
-  }
-
-  .placeholder-icon {
-    font-size: 2rem;
-  }
-
-  .placeholder-text {
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  .diagram-container img {
-    width: 100%;
-    height: auto;
-    border: 1px solid rgba(26, 26, 26, 0.1);
-  }
-
-  /* Right Column: Flowing Text */
-  .right-col {
-    padding-top: 10vh;
-    padding-bottom: 20vh;
-  }
-
-  :global(.prose h2) {
-    font-size: 2.5rem;
-    margin-top: 4rem;
-    margin-bottom: 1.5rem;
-    font-family: var(--font-serif);
-    font-weight: 500;
-  }
-  
-  :global(.prose h3) {
-    font-size: 1.75rem;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-    font-family: var(--font-serif);
-    font-weight: 500;
-  }
-
-  :global(.prose p) {
-    font-size: 1.125rem;
-    line-height: 1.8;
-    margin-bottom: 2rem;
-    color: rgba(26, 26, 26, 0.85);
-  }
-
-  /* Animation classes applied via JS */
-  :global(.fade-up-element) {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  :global(.fade-up-element.visible) {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 1024px) {
-    .synthesis-container {
-      grid-template-columns: 1fr;
-    }
-    .sticky-wrapper {
-      position: static;
-    }
-    .right-col {
-      padding-top: 4rem;
-    }
+  @media (prefers-reduced-motion: reduce) {
+    .body :global(.prose-reveal) { transform: none; transition: opacity 0.4s ease; }
   }
 </style>
+
+<script>
+  // Reading progress bar
+  (function() {
+    const fill = document.querySelector('.progress-fill');
+    if (!fill) return;
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const h = document.documentElement;
+        const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+        fill.style.width = Math.min(pct, 100) + '%';
+        ticking = false;
+      });
+    }, { passive: true });
+  })();
+
+  // Progressive prose reveal + anchor injection
+  (function() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+
+    const prose = document.querySelector('.body');
+    if (!prose) return;
+
+    const els = prose.querySelectorAll('p, h2, h3, blockquote, img, hr');
+    els.forEach(el => {
+      el.classList.add('prose-reveal');
+      obs.observe(el);
+
+      // Inject anchor links on h2/h3
+      if (el.tagName === 'H2' || el.tagName === 'H3') {
+        const id = el.id || el.textContent?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        if (id) {
+          el.id = id;
+          const anchor = document.createElement('a');
+          anchor.href = '#' + id;
+          anchor.className = 'anchor';
+          anchor.setAttribute('aria-hidden', 'true');
+          anchor.textContent = '#';
+          el.prepend(anchor);
+        }
+      }
+    });
+  })();
+
+  import '../../scripts/immersive.js';
+
+  // Continue reading — scroll memory
+  (function() {
+    const badge = document.getElementById('continue-badge');
+    if (!badge) return;
+    const key = 'stilled_scroll_' + window.location.pathname;
+    const saved = sessionStorage.getItem(key);
+    if (saved) {
+      // Show badge briefly on load if returning
+      badge.classList.add('visible');
+      setTimeout(() => badge.classList.remove('visible'), 2500);
+    }
+    let lastSaved = 0;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total <= 0) return;
+      const pct = Math.round((y / total) * 100);
+      // Show badge when past 40% and scrolling
+      if (pct > 40) badge.classList.add('visible');
+      else badge.classList.remove('visible');
+      // Save every 10% increment
+      if (pct - lastSaved >= 10) {
+        lastSaved = pct;
+        sessionStorage.setItem(key, pct);
+      }
+    }, { passive: true });
+  })();
+</script>

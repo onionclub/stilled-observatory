@@ -1,0 +1,297 @@
+/* ══════════════════════════════════════════════════════
+   STILLED. — Editorial Design System v3
+   Lush, layered, volumetric. Jewel tones, glassmorphism, density.
+   ══════════════════════════════════════════════════════ */
+
+@layer tokens, layout, components, utilities;
+
+/* ── Typography Scale ───────────────────────── */
+
+@layer tokens {
+  :root {
+    --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Editorial fluid scale — dramatic jumps between levels */
+    --text-root: clamp(16px, 1vw + 0.5rem, 18px);
+    --text-label: clamp(0.625rem, 0.8vw, 0.6875rem);
+    --text-caption: clamp(0.75rem, 0.9vw, 0.8125rem);
+    --text-body: clamp(0.9375rem, 1vw + 0.3rem, 1.0625rem);
+    --text-body-lg: clamp(1.0625rem, 1.2vw + 0.3rem, 1.1875rem);
+    --text-lead: clamp(1.125rem, 1.4vw + 0.3rem, 1.375rem);
+    --text-h3: clamp(1.25rem, 1.6vw + 0.4rem, 1.625rem);
+    --text-h2: clamp(1.5rem, 2vw + 0.5rem, 2.25rem);
+    --text-h1: clamp(2rem, 3vw + 1rem, 3.5rem);
+    --text-display-sm: clamp(2.5rem, 5vw + 0.5rem, 4rem);
+    --text-display: clamp(3rem, 7vw + 0.5rem, 6rem);
+    --text-display-lg: clamp(3.5rem, 10vw, 8rem);
+
+    --leading-snug: 1.15;
+    --leading-tight: 1.25;
+    --leading-body: 1.6;
+    --leading-relaxed: 1.75;
+    --leading-loose: 2;
+
+    --tracking-tightest: -0.03em;
+    --tracking-tight: -0.015em;
+    --tracking-normal: 0;
+    --tracking-label: 0.12em;
+    --tracking-wide: 0.18em;
+    --tracking-widest: 0.25em;
+
+    --weight-light: 300;
+    --weight-book: 350;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+
+    --measure-narrow: 32ch;
+    --measure-base: 42ch;
+    --measure-wide: 58ch;
+    --measure-full: 72ch;
+  }
+}
+
+/* ── Colors — Jewel-Toned Depth (oklch) ──────── */
+
+@layer tokens {
+  :root {
+    color-scheme: dark;
+    --paper: oklch(0.12 0.02 260);
+    --paper-dim: oklch(0.09 0.02 260);
+    --paper-deep: oklch(0.06 0.01 260);
+    --ink: oklch(0.95 0 0);
+    --ink-dim: oklch(0.95 0 0 / 0.72);
+    --ink-faint: oklch(0.95 0 0 / 0.38);
+
+    /* Jewel accent tones — warm earth palette */
+    --accent: oklch(0.72 0.16 140);
+    --accent-glow: oklch(0.72 0.16 140 / 0.3);
+    --accent-soft: oklch(0.72 0.16 140 / 0.12);
+    --rose: oklch(0.68 0.18 25);
+    --rose-glow: oklch(0.68 0.18 25 / 0.25);
+    --amber: oklch(0.78 0.16 85);
+    --amber-glow: oklch(0.78 0.16 85 / 0.25);
+    --violet: oklch(0.6 0.12 100);
+    --violet-glow: oklch(0.6 0.12 100 / 0.25);
+    --teal: oklch(0.68 0.14 150);
+    --gold: oklch(0.82 0.14 85);
+
+    /* Glass surfaces — opaque enough for WCAG AA text */
+    --glass-bg: oklch(0.13 0.02 260 / 0.78);
+    --glass-border: oklch(0.92 0.01 95 / 0.1);
+    --glass-border-glow: oklch(0.72 0.16 140 / 0.15);
+    --glass-blur: 18px;
+
+    /* Volumetric shadows — warm */
+    --shadow-ambient: 0 0 60px oklch(0.72 0.16 140 / 0.06);
+    --shadow-float: 0 8px 40px oklch(0.12 0.02 260 / 0.4), 0 0 120px oklch(0.72 0.16 140 / 0.08);
+    --shadow-glow-accent: 0 0 30px oklch(0.72 0.16 140 / 0.2), 0 0 80px oklch(0.72 0.16 140 / 0.08);
+    --shadow-glow-rose: 0 0 30px oklch(0.68 0.18 25 / 0.2), 0 0 80px oklch(0.68 0.18 25 / 0.06);
+
+    /* Borders */
+    --border-hairline: oklch(0.92 0.01 95 / 0.06);
+    --border-thin: oklch(0.92 0.01 95 / 0.1);
+    --border-solid: oklch(0.92 0.01 95 / 0.16);
+    --border-emphasis: oklch(0.92 0.01 95 / 0.3);
+
+    /* Surface elevated */
+    --surface-elevated: oklch(0.14 0.02 260 / 0.85);
+
+    /* Mesh gradient colors — warm natural tones */
+    --mesh-1: oklch(0.75 0.15 140 / 0.1);
+    --mesh-2: oklch(0.7 0.18 45 / 0.1);
+    --mesh-3: oklch(0.68 0.16 80 / 0.08);
+    --mesh-4: oklch(0.72 0.12 25 / 0.07);
+  }
+}
+
+/* ── Depth, Glass & Atmosphere ──────────────── */
+
+@layer tokens {
+  :root {
+    --z-base: 0;
+    --z-above: 5;
+    --z-content: 10;
+    --z-nav: 100;
+    --z-glass: 200;
+    --z-overlay: 500;
+    --z-cursor: 9999;
+
+    --grain-opacity: 0.04;
+    --grain-blend: overlay;
+  }
+}
+
+/* ── Motion ──────────────────────────────── */
+
+@layer tokens {
+  :root {
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+    --dur-instant: 0.15s;
+    --dur-fast: 0.3s;
+    --dur-base: 0.45s;
+    --dur-slow: 0.7s;
+    --dur-glacial: 1s;
+  }
+}
+
+/* ── Spacing Scale ──────────────────────────── */
+
+@layer tokens {
+  :root {
+    --space-3xs: 0.125rem;
+    --space-2xs: 0.25rem;
+    --space-xs: 0.375rem;
+    --space-sm: 0.625rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2.5rem;
+    --space-2xl: 4rem;
+    --space-3xl: 6rem;
+    --space-4xl: 9rem;
+    --space-5xl: 14rem;
+
+    --section-gap-sm: clamp(4rem, 10vh, 6rem);
+    --section-gap: clamp(6rem, 16vh, 10rem);
+    --section-gap-lg: clamp(9rem, 22vh, 14rem);
+
+    --page-pad-x: clamp(1.5rem, 6vw, 4rem);
+    --page-pad-top: clamp(5rem, 12vh, 9rem);
+    --page-pad-bottom: clamp(4rem, 10vh, 7rem);
+  }
+}
+
+/* ── Grid System ────────────────────────────── */
+
+@layer layout {
+  .grid-main {
+    display: grid;
+    grid-template-columns:
+      [full-start] var(--page-pad-x)
+      [content-start] 1fr [content-end]
+      var(--page-pad-x) [full-end];
+  }
+  .grid-main > * {
+    grid-column: content;
+  }
+  .grid-main > .bleed {
+    grid-column: full;
+  }
+  .grid-wide {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, var(--measure-wide)) 1fr;
+  }
+  .grid-wide > * { grid-column: 2; }
+  .grid-narrow {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, var(--measure-base)) 1fr;
+  }
+  .grid-narrow > * { grid-column: 2; }
+}
+
+/* ── Global Reset ───────────────────────────── */
+
+@layer components {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: var(--text-root);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: var(--weight-light);
+    line-height: var(--leading-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    font-variation-settings: 'opsz' 14;
+  }
+
+  body { min-height: 100vh; }
+
+  img, video, svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.35s ease;
+  }
+  a:hover { opacity: 0.55; }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-serif);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+    margin-block: 0.25em 0.5em;
+  }
+
+  p {
+    text-wrap: pretty;
+    margin-bottom: 1em;
+    line-height: var(--leading-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+}
+
+/* ── Shared Utilities ───────────────────────── */
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .label {
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.5;
+    font-weight: var(--weight-regular);
+  }
+  .rule {
+    border: 0;
+    height: 1px;
+    background: var(--border-hairline);
+    margin: var(--section-gap-sm) 0;
+  }
+  /* scroll reveal — driven by Layout.astro observer */
+  .reveal {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transform: none; transition: opacity 0.4s ease; }
+    .reveal.visible { transform: none; }
+  }
+}

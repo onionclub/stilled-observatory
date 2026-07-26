@@ -1,40 +1,64 @@
 /**
- * Mock Data for Stilled: Syntheses Layer
+ * Ghost Content API data source for Stilled theories.
+ * Ghost posts tagged "theory" map to the Syntheses layer.
+ * Uses Cloudflare Access service token to bypass Zero Trust gate.
  */
-export const syntheses = [
-  {
-    slug: 'meaning-making',
-    title: 'The Architecture of Meaning',
-    excerpt: 'An investigation into how high-achievers construct and deconstruct their identity architecture in the absence of traditional mythos.',
-    youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Using a placeholder embed
-    diagramUrl: 'https://images.unsplash.com/photo-1544365558-35aa4afcf11f?auto=format&fit=crop&q=80&w=1000', // A minimal abstract architecture diagram
-    bodyContent: `
-      <h2>The Genesis of Exhaustion</h2>
-      <p>The pursuit of excellence often functions as a surrogate for intrinsic meaning. When professionals hit the apex of their fields, the structural integrity of this surrogate is tested.</p>
-      
-      <h2>Deconstruction of the Drive</h2>
-      <p>Fatigue from the superficial is not a clinical symptom; it is an epistemological crisis. You are allergic to standard self-help because it attempts to solve an architectural problem with decorative advice.</p>
-      
-      <h3>The Void of the Absolute</h3>
-      <p>Without a unifying mythos or objective narrative, the mind turns inward, cannibalizing its own energy trying to generate absolute meaning from relative success.</p>
-      
-      <p>We do not prescribe a cure. We simply illuminate the blueprint of the trap.</p>
-    `
-  },
-  {
-    slug: 'liminal-time',
-    title: 'Navigating Liminal Time',
-    excerpt: 'A forensic analysis of the involuntary 3 AM experience and the processing of identity dissolution.',
-    youtubeUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4', // Another placeholder
-    diagramUrl: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?auto=format&fit=crop&q=80&w=1000', // Ethereal glass or abstract
-    bodyContent: `
-      <h2>The Architecture of the Night Shift</h2>
-      <p>Liminal time strips away the performed identity. At 3 AM, the scaffolding of your professional and social constructs dissolves, leaving only raw consciousness confronting its own mortality.</p>
-      
-      <h2>The Illusion of Control</h2>
-      <p>The anxiety experienced during these periods is less about the content of one's thoughts and more about the structural absence of distraction. You cannot manage this with clinical sterility.</p>
-      
-      <p>To navigate this space, one must transition from attempting to control the environment to observing the mechanisms of the mind itself with rigorous objectivity.</p>
-    `
+
+const GHOST_URL = import.meta.env.GHOST_URL || 'https://admin.stilled.page';
+const GHOST_CONTENT_API_KEY = import.meta.env.GHOST_CONTENT_API_KEY;
+const CF_CLIENT_ID = import.meta.env.CF_ACCESS_CLIENT_ID;
+const CF_CLIENT_SECRET = import.meta.env.CF_ACCESS_CLIENT_SECRET;
+
+function getHeaders() {
+  const headers = {};
+  if (CF_CLIENT_ID && CF_CLIENT_SECRET) {
+    headers['CF-Access-Client-Id'] = CF_CLIENT_ID;
+    headers['CF-Access-Client-Secret'] = CF_CLIENT_SECRET;
   }
-];
+  return headers;
+}
+
+function mapPost(post) {
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt || post.custom_excerpt || '',
+    publishedAt: post.published_at,
+    featureImage: post.feature_image || null,
+    html: post.html || undefined,
+    readingTime: post.reading_time || 0,
+    tags: (post.tags || []).map(t => ({ id: t.id, slug: t.slug, name: t.name })),
+    primaryTag: post.primary_tag ? { id: post.primary_tag.id, slug: post.primary_tag.slug, name: post.primary_tag.name } : null,
+  };
+}
+
+export async function getSyntheses() {
+  if (!GHOST_CONTENT_API_KEY) {
+    console.warn('Ghost Content API key missing.');
+    return [];
+  }
+  try {
+    const url = `${GHOST_URL}/ghost/api/content/posts/?key=${GHOST_CONTENT_API_KEY}&filter=tag:theory&limit=all&fields=slug,title,excerpt,custom_excerpt,published_at,feature_image,reading_time&include=tags`;
+    const response = await fetch(url, { headers: getHeaders() });
+    const data = await response.json();
+    if (!data.posts) return [];
+    return data.posts.map(mapPost);
+  } catch (error) {
+    console.error('Error fetching syntheses:', error);
+    return [];
+  }
+}
+
+export async function getSynthesisBySlug(slug) {
+  if (!GHOST_CONTENT_API_KEY) return null;
+  try {
+    const url = `${GHOST_URL}/ghost/api/content/posts/slug/${slug}/?key=${GHOST_CONTENT_API_KEY}&fields=slug,title,excerpt,custom_excerpt,published_at,feature_image,reading_time&include=tags,html`;
+    const response = await fetch(url, { headers: getHeaders() });
+    const data = await response.json();
+    if (!data.posts || !data.posts[0]) return null;
+    return mapPost(data.posts[0]);
+  } catch (error) {
+    console.error(`Error fetching synthesis ${slug}:`, error);
+    return null;
+  }
+}

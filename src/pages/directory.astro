@@ -1,132 +1,62 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+const desc = 'Index of external sources, tools, and recommended reading.';
 ---
 
 <Layout title="Stilled | Directory">
-  <div class="container relative min-h-screen flex-col" style="padding-top: 12rem;">
-    <h1 class="text-massive animate-fade-up">Directory</h1>
-    <p class="text-subtle animate-fade-up delay-100 mb-12">Index of external sources, tools, and recommended reading.</p>
-    
-    <ul class="directory-list animate-fade-up delay-300">
-      <li>
-        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1544365558-35aa4afcf11f?w=400">
-          <span class="index">01</span>
-          <span class="title">The Structure of Scientific Revolutions</span>
-          <span class="author">Thomas S. Kuhn</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1604871000636-074fa5117945?w=400">
-          <span class="index">02</span>
-          <span class="title">Man's Search for Meaning</span>
-          <span class="author">Viktor E. Frankl</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="dir-link" data-img="https://images.unsplash.com/photo-1544365558-35aa4afcf11f?w=400">
-          <span class="index">03</span>
-          <span class="title">Thinking, Fast and Slow</span>
-          <span class="author">Daniel Kahneman</span>
-        </a>
-      </li>
-    </ul>
+  <Head slot="head" title="Stilled | Directory" description={desc} />
+  <link rel="stylesheet" href="/mouse-follower.css" />
 
-    <div id="hover-img-container"></div>
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
   </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">DIRECTORY</div>
+  <div class="micro micro-tr" aria-hidden="true">SOURCES</div>
 
-  <script>
-    const links = document.querySelectorAll('.dir-link');
-    const imgContainer = document.getElementById('hover-img-container');
-    
-    links.forEach(link => {
-      link.addEventListener('mouseenter', () => {
-        const imgSrc = link.getAttribute('data-img');
-        if (imgSrc) {
-          imgContainer.style.backgroundImage = `url(${imgSrc})`;
-          imgContainer.style.opacity = '1';
-        }
-      });
-      
-      link.addEventListener('mouseleave', () => {
-        imgContainer.style.opacity = '0';
-      });
-      
-      link.addEventListener('mousemove', (e) => {
-        imgContainer.style.left = e.clientX + 20 + 'px';
-        imgContainer.style.top = e.clientY + 20 + 'px';
-      });
-    });
-  </script>
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Directory</h1>
+      <p class="sub">Index of external sources, tools, and recommended reading.</p>
+    </header>
+    <ul class="list">
+      <li class="reveal"><a href="#" class="entry" data-cursor-text="View"><span class="idx">01</span><span class="title">The Structure of Scientific Revolutions</span><span class="author">Thomas S. Kuhn</span></a></li>
+      <li class="reveal delay-1"><a href="#" class="entry" data-cursor-text="View"><span class="idx">02</span><span class="title">Man's Search for Meaning</span><span class="author">Viktor E. Frankl</span></a></li>
+      <li class="reveal delay-2"><a href="#" class="entry" data-cursor-text="View"><span class="idx">03</span><span class="title">Thinking, Fast and Slow</span><span class="author">Daniel Kahneman</span></a></li>
+    </ul>
+  </section>
 </Layout>
 
 <style>
-  .mb-12 { margin-bottom: 4rem; }
-  
-  .directory-list {
-    list-style: none;
-    max-width: 900px;
-    padding-bottom: var(--spacing-massive);
-  }
-  
-  .dir-link {
-    display: flex;
-    align-items: baseline;
-    padding: 2.5rem 0;
-    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-    transition: color 0.3s ease, opacity 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .dir-link:hover {
-    opacity: 0.5;
-  }
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
 
-  .dir-link:active {
-    opacity: 0.8;
-    color: #8B7355;
-  }
-  
-  .index {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    opacity: 0.4;
-    width: 5rem;
-  }
-  
-  .title {
-    font-family: var(--font-serif);
-    font-size: 2.25rem;
-    flex-grow: 1;
-  }
-  
-  .author {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    opacity: 0.6;
-    text-align: right;
-  }
-  
-  #hover-img-container {
-    position: fixed;
-    width: 320px;
-    height: 420px;
-    background-size: cover;
-    background-position: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 100;
-  }
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 45vw; height: 45vw; background: var(--mesh-2); top: -15%; right: -10%; animation-delay: 0s; }
+  .blob-2 { width: 35vw; height: 35vw; background: var(--mesh-4); bottom: -10%; left: -5%; animation-delay: -10s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(5%,-8%) scale(1.1)} 50%{transform:translate(-3%,5%) scale(0.92)} 75%{transform:translate(-6%,-3%) scale(1.05)} }
 
-  @media (max-width: 768px) {
-    .dir-link {
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .index { width: auto; }
-    .author { text-align: left; }
-    #hover-img-container { display: none; }
-  }
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
+
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-4xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
+  .list { list-style: none; max-width: var(--measure-wide); }
+  .entry { display: flex; align-items: baseline; padding: var(--space-xl) 0; border-bottom: 1px solid var(--border-hairline); transition: opacity 0.35s, padding 0.4s, background 0.4s; border-radius: 2px; }
+  .entry:hover { opacity: 0.5; padding-left: var(--space-xs); background: var(--accent-soft); margin: 0 calc(-1 * var(--space-xs)); padding-right: var(--space-xs); }
+  .idx { font-size: var(--text-label); opacity: 0.25; width: 4rem; flex-shrink: 0; font-family: var(--font-mono,monospace); }
+  .title { font-family: var(--font-serif); font-size: var(--text-h2); flex: 1; }
+  .author { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; text-align: right; }
+  .delay-1 { transition-delay: 0.08s; }
+  .delay-2 { transition-delay: 0.16s; }
+  @media (max-width: 600px) { .entry { flex-direction: column; gap: var(--space-xs); } .idx { width: auto; } .author { text-align: left; } .micro { display: none; } }
 </style>

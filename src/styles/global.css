@@ -1,169 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..700&display=swap');
+/* Stilled. — Global Atmosphere & Shared Styles */
 
-:root {
-  color-scheme: light;
-  --alabaster-rgb: 247, 243, 232;
-  --alabaster: rgb(var(--alabaster-rgb));
-  --ivory: #FFFFF0;
-  --charcoal: #1A1A1A;
-  --off-black: #0F0F0F;
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
-  --spacing-base: 1rem;
-  --spacing-large: 4rem;
-  --spacing-massive: 8rem;
-  --transition-slow: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-  --transition-medium: 0.4s ease-out;
+/* ── Custom Cursor Visibility ───────────── */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+html.has-custom-cursor a,
+html.has-custom-cursor button,
+html.has-custom-cursor [data-cursor-pointer],
+html.has-custom-cursor [data-magnetic] {
+  cursor: none !important;
+}
+@media (pointer: coarse) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * { cursor: auto !important; }
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ── TEXT RENDERING SAFETY — FORCE READABLE ── */
+/* Neutralize any destructive CSS that breaks spacing or contrast */
+p, h1, h2, h3, h4, h5, blockquote, li,
+.glass-card *, .glass-card-item *,
+.prose *, .body *, .text-content * {
+  word-spacing: normal !important;
+  white-space: normal !important;
+  text-transform: none;
 }
-
-html,
+/* Force visible text color — no alpha-fade black holes */
+body, p, h1, h2, h3, h4, h5, a, span, blockquote, time, label, li {
+  mix-blend-mode: normal !important;
+}
+/* Guarantee white-on-dark base contrast */
 body {
-  background-color: var(--alabaster);
-  color: var(--charcoal);
-  font-family: var(--font-sans);
-  line-height: 1.6;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
+  color: oklch(0.95 0 0) !important;
+  background-color: oklch(0.08 0.01 260) !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  line-height: 1.2;
-  margin-bottom: var(--spacing-base);
-  letter-spacing: -0.02em;
+/* ── SVG Noise Grain Overlay ────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay, 998);
+  pointer-events: none;
+  opacity: var(--grain-opacity, 0.04);
+  mix-blend-mode: var(--grain-blend, overlay);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
 }
-
-p {
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-  max-width: 65ch;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: opacity var(--transition-medium);
-}
-
-a:hover {
-  opacity: 0.6;
-}
-
-/* Base layouts */
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 4vw;
-}
-
-.min-h-screen {
-  min-height: 100vh;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Typography Utilities */
-.text-massive {
-  font-size: clamp(4rem, 10vw, 8rem);
-  line-height: 1;
-}
-
-.text-subtle {
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-}
-
-/* Animations */
-@keyframes softFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 
- * IntersectionObserver Logic Setup 
- * Elements start hidden and translate down.
- * When .is-visible is attached by JS, animation triggers.
- */
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.animate-on-scroll.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .animate-on-scroll {
-    transform: none;
-    transition: opacity 0.5s ease;
-  }
-  .animate-on-scroll.is-visible {
-    transform: none;
-  }
+  body::after { display: none; }
 }
 
-/* Legacy Direct Load Animation */
-.animate-fade-up {
+/* ── Legibility over glass & mesh ─────────── */
+/* Guarantee readable text on all background layers */
+.glass-card p, .glass-card-item p,
+.glass-card h1, .glass-card-item h1,
+.glass-card h2, .glass-card-item h2,
+.glass-card h3, .glass-card-item h3,
+.glass-card h4, .glass-card-item h4,
+.glass-card span, .glass-card-item span,
+.glass-card time, .glass-card-item time,
+.glass-card blockquote, .glass-card-item blockquote {
+  text-shadow: 0 1px 3px oklch(0.06 0.01 260 / 0.6);
+}
+.glass-card, .glass-card-item {
+  line-height: var(--leading-body, 1.55);
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+
+/* Minimum readable opacity for supplementary text */
+time, .date, .card-date,
+.back, .back-label, .return-link,
+.label, .section-head .label,
+.card-meta, .card-meta time, .card-rt,
+.meta-line time, .reading-time {
+  opacity: max(0.55, inherit);
+}
+
+/* ── Scroll Reveal ──────────────────────── */
+.reveal {
   opacity: 0;
-  animation: softFadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  transform: translateY(2rem);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transform: none; transition: opacity 0.4s ease; }
+  .reveal.visible { transform: none; }
 }
 
-/* Stagger delays */
-.delay-100 {
-  animation-delay: 100ms;
-}
-
-.delay-300 {
-  animation-delay: 300ms;
-}
-
-.delay-500 {
-  animation-delay: 500ms;
-}
-
-/* Frosted glass utility */
-.frosted-glass {
-  background: rgba(var(--alabaster-rgb), 0.6);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+/* ── BRUTE-FORCE TEXT SAFETY ────────────── */
+/* Override any destructive CSS/JS text rendering. DO NOT REMOVE. */
+body, p, h1, h2, h3, h4, h5, h6, a, span, blockquote, li,
+.glass-card *, .glass-card-item *, .prose *, .text-content *, .body * {
+  word-spacing: 0.25em !important;
+  letter-spacing: normal !important;
+  white-space: normal !important;
+  text-transform: none !important;
+  color: #FFFFFF !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
 }

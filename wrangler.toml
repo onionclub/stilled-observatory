@@ -1,0 +1,7 @@
+name = "stilled"
+compatibility_date = "2026-05-29"
+pages_build_output_dir = "./dist"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+vars = { GHOST_URL = "", GHOST_CONTENT_API_KEY = "" }

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="og-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAF9F6"/>
+      <stop offset="100%" stop-color="#F0EDE4"/>
+    </linearGradient>
+    <filter id="og-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="3"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+
+  <!-- Decorative architectural lines -->
+  <line x1="80" y1="120" x2="80" y2="510" stroke="#C8BCA8" stroke-width="0.5" opacity="0.3"/>
+  <line x1="1120" y1="120" x2="1120" y2="510" stroke="#C8BCA8" stroke-width="0.5" opacity="0.3"/>
+  <line x1="80" y1="120" x2="1120" y2="120" stroke="#C8BCA8" stroke-width="0.5" opacity="0.2"/>
+  <line x1="80" y1="510" x2="1120" y2="510" stroke="#C8BCA8" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Central accent mark -->
+  <rect x="560" y="260" width="80" height="2" rx="1" fill="#8B7355" opacity="0.4"/>
+  <rect x="580" y="368" width="40" height="1" rx="0.5" fill="#8B7355" opacity="0.25"/>
+
+  <!-- Title -->
+  <text x="600" y="310" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="normal" letter-spacing="-0.02em" fill="#1A1A1A">Stilled.</text>
+
+  <!-- Tagline -->
+  <text x="600" y="400" text-anchor="middle" font-family="sans-serif" font-size="20" letter-spacing="0.15em" fill="#1A1A1A" opacity="0.5">PRECISION INSTRUMENTS FOR THE EXAMINED LIFE</text>
+
+  <!-- Subtle grain overlay -->
+  <rect width="1200" height="630" fill="none" filter="url(#og-grain)" opacity="0.2"/>
+</svg>

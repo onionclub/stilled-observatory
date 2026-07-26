@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" fill="none">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FAF9F6"/>
+      <stop offset="100%" stop-color="#F0EDE4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.35">
+      <stop offset="0%" stop-color="#8B7355" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FAF9F6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain2">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply" result="grain2"/>
+    </filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg2)"/>
+  <!-- liminal horizon -->
+  <rect x="0" y="420" width="800" height="160" fill="url(#glow)"/>
+  <line x1="100" y1="500" x2="700" y2="500" stroke="#C8BCA8" stroke-width="0.5" opacity="0.2"/>
+  <!-- floating elements — abstract portal frames -->
+  <rect x="220" y="280" width="360" height="440" rx="50%" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.08"/>
+  <rect x="260" y="320" width="280" height="360" rx="45%" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.06"/>
+  <rect x="300" y="360" width="200" height="280" rx="40%" stroke="#8B7355" stroke-width="0.5" fill="none" opacity="0.12"/>
+  <circle cx="400" cy="500" r="40" stroke="#1A1A1A" stroke-width="0.3" fill="none" opacity="0.08"/>
+  <!-- text -->
+  <text x="400" y="930" text-anchor="middle" font-family="Georgia, serif" font-size="14" letter-spacing="0.12em" fill="#1A1A1A" opacity="0.35">LIMINAL ENGINE</text>
+  <rect width="800" height="1000" fill="none" filter="url(#grain2)" opacity="0.25"/>
+</svg>

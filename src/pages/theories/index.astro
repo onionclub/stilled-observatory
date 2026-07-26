@@ -1,51 +1,109 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { syntheses } from '../../data/syntheses.js';
+import Head from '../../components/Head.astro';
+import { getSyntheses } from '../../data/syntheses.js';
+
+const theories = await getSyntheses();
+const desc = 'Forensic synthesis of experience and meaning. Published theories from Stilled.';
 ---
+
 <Layout title="Stilled | Theories">
-  <div class="container relative min-h-screen flex-col" style="padding-top: 12rem;">
-    <h1 class="text-massive animate-fade-up">Theories</h1>
-    <p class="text-subtle animate-fade-up delay-100 mb-12">Forensic synthesis of experience and meaning.</p>
-    
-    <div class="theories-list animate-fade-up delay-300">
-      {syntheses.map((theory) => (
-        <a href={`/theories/${theory.slug}`} class="theory-card">
-          <h2 class="title">{theory.title}</h2>
-          <p class="excerpt">{theory.excerpt}</p>
-        </a>
-      ))}
-    </div>
+  <Head slot="head" title="Stilled | Theories" description={desc} />
+  <link rel="stylesheet" href="/mouse-follower.css" />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
   </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">THEORIES</div>
+  <div class="micro micro-tr" aria-hidden="true">{theories.length} SYNTHESES</div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Theories</h1>
+      <p class="subtitle">Forensic synthesis of experience and meaning.</p>
+    </header>
+
+    {theories.length > 0 ? (
+      <div class="spread" id="theory-spread">
+        {theories.map((t, i) => (
+          <a href={`/theories/${t.slug}`} class={`card reveal delay-${Math.min(i, 3)}`} data-cursor-text="Read">
+            <span class="index">{(i + 1).toString().padStart(2, '0')}</span>
+            <div class="card-body">
+              <h2>{t.title}</h2>
+              <p>{t.excerpt}</p>
+              <div class="card-meta">
+                <time>{t.publishedAt ? new Date(t.publishedAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: '2-digit' }).replace(/,/g, '') : 'Synthesized'}</time>
+                {t.readingTime > 0 && <span class="card-rt">{t.readingTime} min read</span>}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="empty reveal">
+        <div class="empty-inner">
+          <span class="empty-mark" aria-hidden="true">—</span>
+          <p class="empty-text">No syntheses yet. Theories emerge through forensic observation.</p>
+          <a href="/home" class="empty-link" data-cursor-text="Home">Return home</a>
+        </div>
+      </div>
+    )}
+  </section>
 </Layout>
 
 <style>
-  .mb-12 { margin-bottom: 4rem; }
-  .theories-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    max-width: 800px;
-  }
-  .theory-card {
-    display: block;
-    padding: 2.5rem;
-    border: 1px solid rgba(26, 26, 26, 0.1);
-    transition: all var(--transition-medium);
-  }
-  .theory-card:hover {
-    border-color: rgba(26, 26, 26, 0.4);
-    background: rgba(26, 26, 26, 0.02);
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-  .title {
-    font-size: 1.75rem;
-    margin-bottom: 0.75rem;
-  }
-  .excerpt {
-    opacity: 0.7;
-    margin: 0;
-    max-width: 100%;
-    line-height: 1.6;
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 22s ease-in-out infinite; }
+  .blob-1 { width: 50vw; height: 50vw; background: var(--mesh-1); top: -15%; right: -10%; animation-delay: 0s; }
+  .blob-2 { width: 40vw; height: 40vw; background: var(--mesh-2); bottom: -10%; left: -10%; animation-delay: -8s; }
+  .blob-3 { width: 35vw; height: 35vw; background: var(--mesh-3); top: 40%; left: 40%; animation-delay: -15s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(6%,-10%) scale(1.12)} 50%{transform:translate(-4%,6%) scale(0.9)} 75%{transform:translate(-8%,-4%) scale(1.06)} }
+
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
+
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-4xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .subtitle { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
+
+  .spread { display: flex; flex-direction: column; }
+  .card { display: grid; grid-template-columns: 4rem 1fr; gap: var(--space-xl); padding: var(--space-xl) 0; border-top: 1px solid var(--border-hairline); transition: opacity 0.35s, padding 0.4s ease, background 0.4s; }
+  .card:hover { opacity: 0.6; padding-left: var(--space-xs); background: var(--accent-soft); margin: 0 calc(-1 * var(--space-xs)); padding-right: var(--space-xs); border-radius: 2px; }
+  .index { font-size: var(--text-label); opacity: 0.25; padding-top: 0.35rem; font-family: var(--font-mono,monospace); }
+  .card-body h2 { font-size: var(--text-h1); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-2xs); }
+  .card-body > p { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-sm); max-width: var(--measure-base); }
+  .card-meta { display: flex; gap: var(--space-md); align-items: center; }
+  .card-meta time, .card-rt { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
+
+  .empty { min-height: 50vh; display: flex; align-items: center; justify-content: center; }
+  .empty-inner { text-align: center; max-width: var(--measure-narrow); }
+  .empty-mark { display: block; font-family: var(--font-serif); font-size: var(--text-display-lg); color: var(--ink-faint); margin-bottom: var(--space-lg); line-height: 1; }
+  .empty-text { font-size: var(--text-lead); font-style: italic; color: var(--ink-dim); margin-bottom: var(--space-xl); }
+  .empty-link { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; transition: opacity 0.35s; }
+  .empty-link:hover { opacity: 0.8; }
+
+  .delay-1 { transition-delay: 0.08s; }
+  .delay-2 { transition-delay: 0.16s; }
+  .delay-3 { transition-delay: 0.24s; }
+
+  @media (max-width: 600px) {
+    .card { grid-template-columns: 1fr; gap: var(--space-sm); }
+    .index { display: none; }
+    .micro { display: none; }
   }
 </style>
+
+<script>
+  import '../../scripts/immersive.js';
+</script>

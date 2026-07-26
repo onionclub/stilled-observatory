@@ -1,76 +1,241 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import CursorMask from '../components/CursorMask.jsx';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Head from '../components/Head.astro';
 ---
 
-<Layout title="Stilled" showNav={false}>
-  <div class="video-container">
-    <video autoplay loop muted playsinline class="bg-video" transition:persist="bg-video">
-      <source src="/bg.mp4" type="video/mp4" />
-    </video>
-    <div class="video-overlay"></div>
-  </div>
+<html lang="en">
+  <head>
+    <Head
+      title="Stilled."
+      description="Precision instruments for the examined life. Forensic synthesis of consciousness, paradox, and identity."
+      type="website"
+    />
+    <link rel="stylesheet" href="/mouse-follower.css" />
+    <style>
+      body {
+        margin: 0;
+        overflow-x: hidden;
+        background: oklch(0.04 0.01 260);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-weight: var(--weight-light);
+      }
 
-  <div class="landing-container min-h-screen relative flex-center flex-col">
-    <CursorMask client:load />
-    
-    <div class="content relative text-center animate-fade-up">
-      <h1 class="text-massive">Stilled.</h1>
-      <a href="/home" class="enter-link delay-300 animate-fade-up">Enter</a>
+      /* ── ANIMATED MESH GRADIENT BLOBS ──────── */
+      .mesh-layer {
+        position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        overflow: hidden;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(120px);
+        animation: drift 20s ease-in-out infinite;
+      }
+      .blob-1 {
+        width: 60vw; height: 60vw;
+        background: oklch(0.75 0.15 140 / 0.05);
+        top: -20%; left: -10%;
+        animation-delay: 0s;
+      }
+      .blob-2 {
+        width: 50vw; height: 50vw;
+        background: oklch(0.7 0.18 45 / 0.04);
+        top: 50%; right: -15%;
+        animation-delay: -7s;
+      }
+      .blob-3 {
+        width: 40vw; height: 40vw;
+        background: oklch(0.68 0.16 80 / 0.03);
+        bottom: -10%; left: 30%;
+        animation-delay: -14s;
+      }
+      .blob-4 {
+        width: 35vw; height: 35vw;
+        background: oklch(0.72 0.12 25 / 0.03);
+        top: 10%; right: 40%;
+        animation-delay: -3s;
+      }
+
+      @keyframes drift {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25%      { transform: translate(8%, -12%) scale(1.15); }
+        50%      { transform: translate(-5%, 8%) scale(0.9); }
+        75%      { transform: translate(-10%, -5%) scale(1.08); }
+      }
+
+      /* ── GEOMETRIC GRID LINES ──────────────── */
+      .grid-lines {
+        position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background-image:
+          linear-gradient(oklch(0.92 0.01 95 / 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, oklch(0.92 0.01 95 / 0.015) 1px, transparent 1px);
+        background-size: 80px 80px;
+        mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 5%, transparent 55%);
+      }
+
+      /* ── CORNER MICRO-TYPOGRAPHY ───────────── */
+      .micro {
+        position: fixed;
+        z-index: var(--z-above);
+        font-family: var(--font-mono, monospace);
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        opacity: 0.3;
+        pointer-events: none;
+        color: var(--ink-dim);
+        transition: opacity 1.5s;
+      }
+      .micro-tl { top: 1.2rem; left: 1.5rem; }
+      .micro-tr { top: 1.2rem; right: 1.5rem; }
+      .micro-bl { bottom: 1.2rem; left: 1.5rem; }
+      .micro-br { bottom: 1.2rem; right: 1.5rem; }
+
+      /* ── VIDEO — bleeds right ──────────────── */
+      .video-bleed {
+        position: fixed; top: 0; right: 0;
+        width: 55%; height: 100%;
+        z-index: 2; overflow: hidden;
+      }
+      .video-bleed video {
+        width: 100%; height: 100%; object-fit: cover;
+        filter: brightness(0.4) saturate(0.5) contrast(1.15);
+      }
+      .video-bleed::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(
+          to left,
+          oklch(0.06 0.01 260 / 0) 25%,
+          oklch(0.06 0.01 260 / 0.7) 80%,
+          oklch(0.06 0.01 260 / 0.95) 100%
+        );
+      }
+
+      /* ── GLASS CARD — foreground ───────────── */
+      .glass-card {
+        position: relative; z-index: 10;
+        min-height: 100vh;
+        display: flex; align-items: center;
+        padding: clamp(3rem, 8vw, 6rem);
+      }
+      .glass-inner {
+        background: oklch(0.2 0.04 80 / 0.85);
+        backdrop-filter: blur(var(--glass-blur, 18px));
+        -webkit-backdrop-filter: blur(var(--glass-blur, 18px));
+        border: 1px solid var(--glass-border);
+        border-radius: 2px;
+        padding: clamp(2.5rem, 6vw, 4rem);
+        max-width: 520px;
+        box-shadow: var(--shadow-float);
+        position: relative;
+      }
+      .glass-inner::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 3px;
+        padding: 1px;
+        background: linear-gradient(135deg, var(--glass-border-glow), transparent 50%, var(--glass-border-glow) 100%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: -1;
+      }
+      .mark {
+        display: block; width: 48px; height: 1px;
+        background: var(--accent); margin-bottom: 2rem; opacity: 0.6;
+      }
+      .glass-inner h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(3.5rem, 10vw, 7.5rem);
+        font-weight: var(--weight-regular);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+        color: var(--ink);
+      }
+      .glass-inner h1 span { display: inline-block; }
+      .tagline {
+        font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+        line-height: 1.7;
+        color: var(--ink-dim);
+        max-width: 36ch;
+        margin-bottom: 2.5rem;
+      }
+      .enter {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        font-size: 0.6875rem; font-weight: var(--weight-regular);
+        text-transform: uppercase; letter-spacing: 0.22em;
+        padding: 0.6rem 0; color: var(--ink);
+        border-bottom: 1px solid var(--border-solid);
+        transition: border-color 0.4s, box-shadow 0.4s;
+        border-radius: 0;
+      }
+      .enter:hover {
+        border-color: var(--accent);
+        box-shadow: var(--shadow-glow-accent);
+      }
+      .enter::after { content: '→'; }
+
+      @media (max-width: 900px) {
+        .video-bleed { width: 100%; }
+        .video-bleed::after {
+          background: linear-gradient(
+            to top,
+            oklch(0.06 0.01 260 / 0.1) 20%,
+            oklch(0.06 0.01 260 / 0.8) 100%
+          );
+        }
+        .glass-card { align-items: flex-end; padding-bottom: 4rem; padding: 1.5rem; }
+        .glass-inner { padding: 2rem; }
+        .micro-tl, .micro-tr, .micro-bl, .micro-br { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated mesh gradient blobs -->
+    <div class="mesh-layer" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="blob blob-4"></div>
     </div>
-  </div>
-</Layout>
 
-<style>
-  .video-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-  }
+    <!-- Geometric grid -->
+    <div class="grid-lines" aria-hidden="true"></div>
 
-  .bg-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    <!-- Micro-typography density -->
+    <div class="micro micro-tl" aria-hidden="true">INDEX 01</div>
+    <div class="micro micro-tr" aria-hidden="true">51°30′N 0°07′W</div>
+    <div class="micro micro-bl" aria-hidden="true">SYS:OPERATIONAL</div>
+    <div class="micro micro-br" aria-hidden="true">PRECISION · INSTRUMENTS</div>
 
-  .video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(var(--alabaster-rgb), 0.4);
-    mix-blend-mode: multiply;
-  }
+    <!-- Video -->
+    <div class="video-bleed">
+      <video autoplay loop muted playsinline poster="/bg-poster.webp">
+        <source src="/bg_720p.mp4" type="video/mp4" />
+      </video>
+    </div>
 
-  .landing-container {
-    z-index: 1;
-    overflow: hidden;
-  }
-  
-  .content {
-    z-index: 20;
-    pointer-events: auto;
-  }
+    <!-- Glass card foreground -->
+    <main class="glass-card">
+      <div class="glass-inner">
+        <span class="mark" aria-hidden="true"></span>
+        <h1 data-split="chars">Stilled.</h1>
+        <p class="tagline" data-split="words">
+          A forensic analyst of consciousness, paradox, and identity. Precision instruments for the examined life.
+        </p>
+        <a href="/home" class="enter" data-cursor-text="Enter">Enter</a>
+      </div>
+    </main>
 
-  .enter-link {
-    display: inline-block;
-    margin-top: var(--spacing-large);
-    padding: 0.75rem 2.5rem;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    border: 1px solid rgba(26, 26, 26, 0.15);
-    transition: all var(--transition-medium);
-  }
-  
-  .enter-link:hover {
-    border-color: rgba(26, 26, 26, 0.5);
-    background-color: rgba(26, 26, 26, 0.05);
-  }
-</style>
+    <script>
+      import '../scripts/immersive.js';
+    </script>
+  </body>
+</html>

@@ -1,86 +1,73 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+const desc = 'High-level consulting and 1-on-1 synthesis. Intimate, forensic, and objective.';
 ---
 
 <Layout title="Stilled | Counsel">
-  <div class="container relative min-h-screen flex-center flex-col" style="padding-top: 8rem; padding-bottom: 8rem;">
-    <div class="counsel-wrapper animate-fade-up text-center">
-      <h1 class="text-massive">Counsel</h1>
-      <p class="counsel-intro delay-100 animate-fade-up">
-        High-level consulting and 1-on-1 synthesis. Intimate, forensic, and objective.
-      </p>
+  <Head slot="head" title="Stilled | Counsel" description={desc} />
+  <link rel="stylesheet" href="/mouse-follower.css" />
 
-      <form class="contact-form delay-300 animate-fade-up flex-col" onsubmit="event.preventDefault();">
-        <div class="input-group">
-          <input type="text" id="name" required placeholder="Name" />
-        </div>
-        <div class="input-group">
-          <input type="email" id="email" required placeholder="Email address" />
-        </div>
-        <div class="input-group">
-          <textarea id="inquiry" rows="4" required placeholder="Nature of inquiry..."></textarea>
-        </div>
-        <button type="submit" class="submit-btn text-subtle">Submit Request</button>
-      </form>
-    </div>
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
   </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">COUNSEL</div>
+  <div class="micro micro-tr" aria-hidden="true">CONSULTING</div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Counsel</h1>
+      <p class="sub">High-level consulting and 1-on-1 synthesis. Intimate, forensic, and objective.</p>
+    </header>
+    <form class="form reveal delay-1">
+      <label class="field">
+        <span class="field-label">Name</span>
+        <input type="text" required placeholder="Your name" />
+      </label>
+      <label class="field">
+        <span class="field-label">Email</span>
+        <input type="email" required placeholder="you@example.com" />
+      </label>
+      <label class="field">
+        <span class="field-label">Inquiry</span>
+        <textarea rows="5" required placeholder="Nature of inquiry..."></textarea>
+      </label>
+      <button type="submit" class="btn" data-cursor-text="Send">Submit Request</button>
+    </form>
+  </section>
 </Layout>
 
 <style>
-  .counsel-wrapper {
-    max-width: 600px;
-    width: 100%;
-  }
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
 
-  .counsel-intro {
-    opacity: 0.8;
-    margin-bottom: 4rem;
-    font-size: 1.125rem;
-  }
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 40vw; height: 40vw; background: var(--mesh-3); top: -10%; right: -10%; animation-delay: 0s; }
+  .blob-2 { width: 30vw; height: 30vw; background: var(--mesh-2); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
 
-  .contact-form {
-    gap: 2rem;
-    text-align: left;
-  }
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
 
-  .input-group {
-    width: 100%;
-  }
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
 
-  input, textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(26, 26, 26, 0.2);
-    padding: 1rem 0;
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    color: var(--charcoal);
-    transition: border-color var(--transition-medium);
-    resize: vertical;
-  }
-
-  input:focus, textarea:focus {
-    outline: none;
-    border-bottom-color: rgba(26, 26, 26, 0.8);
-  }
-  
-  input::placeholder, textarea::placeholder {
-    color: rgba(26, 26, 26, 0.4);
-  }
-
-  .submit-btn {
-    align-self: flex-start;
-    background: transparent;
-    border: 1px solid rgba(26, 26, 26, 0.2);
-    padding: 1rem 3rem;
-    cursor: pointer;
-    transition: all var(--transition-medium);
-    margin-top: 1rem;
-  }
-
-  .submit-btn:hover {
-    background: rgba(26, 26, 26, 0.05);
-    border-color: rgba(26, 26, 26, 0.6);
-  }
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-lead); color: var(--ink-dim); }
+  .form { display: flex; flex-direction: column; gap: var(--space-xl); }
+  .field { display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .field-label { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
+  input, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-thin); padding: var(--space-sm) 0; font-family: var(--font-sans); font-size: var(--text-body); color: var(--ink); transition: border-color 0.4s ease; resize: vertical; outline: none; }
+  input:focus, textarea:focus { border-color: var(--accent); }
+  input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+  .btn { align-self: flex-start; background: transparent; color: var(--ink); border: 1px solid var(--border-thin); padding: var(--space-sm) var(--space-2xl); font-family: var(--font-sans); font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); cursor: pointer; transition: all 0.4s ease; margin-top: var(--space-md); border-radius: 2px; }
+  .btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow-accent); }
+  .delay-1 { transition-delay: 0.1s; }
+  @media (max-width: 600px) { .micro { display: none; } }
 </style>

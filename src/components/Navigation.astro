@@ -1,55 +1,80 @@
----
----
-<header class="main-nav">
-  <div class="container nav-container">
-    <a href="/home" class="logo">Stilled.</a>
-    <nav class="links">
-      <a href="/theories">Theories</a>
-      <a href="/directory">Directory</a>
-      <a href="/artifacts">Artifacts</a>
-      <a href="/counsel">Counsel</a>
-    </nav>
-  </div>
+<header class="nav" id="nav">
+  <a href="/home" class="nav-logo">Stilled.</a>
+  <nav class="nav-links">
+    <a href="/theories">Theories</a>
+    <a href="/directory">Directory</a>
+    <a href="/artifacts">Artifacts</a>
+    <a href="/counsel">Counsel</a>
+  </nav>
 </header>
+
 <style>
-  .main-nav {
+  .nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    /* Create solid/blurred background to prevent text collision */
-    background: rgba(250, 249, 246, 0.95); /* Brand Alabaster slightly transparent */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: clamp(1rem, 3vh, 2rem) 0;
-    z-index: 100; /* Ensure on top of all page content */
-    border-bottom: 1px solid rgba(200, 188, 168, 0.15); /* Subtle visual break */
-  }
-
-  .nav-container {
+    top: 0; left: 0; right: 0;
+    z-index: var(--z-nav);
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+    align-items: baseline;
+    padding: clamp(1rem, 3vh, 1.5rem) var(--page-pad-x);
+    transition: transform 0.45s ease, opacity 0.45s ease, background 0.4s ease;
   }
-
-  .logo {
+  .nav.scrolled {
+    background: var(--surface-elevated);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .nav.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  .nav-logo {
     font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight);
+    transition: opacity 0.35s;
   }
-
-  /* FIX 2: Mobile Overflow logic */
-  .links {
+  .nav-logo:hover { opacity: 0.55; }
+  .nav-links {
     display: flex;
-    flex-wrap: wrap;
-    /* Use fluid gap to collapse tight on mobile but breathe on desktop */
-    gap: clamp(0.75rem, 2vw, 3rem);
-    /* Scale font very slightly down on ultra-small screens */
-    font-size: clamp(0.6rem, 2vw, 0.875rem);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+  .nav-links a {
+    font-size: var(--text-label);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    opacity: 0.85;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.5;
+    transition: opacity 0.35s ease;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid transparent;
+  }
+  .nav-links a:hover { opacity: 0.9; border-color: var(--ink-faint); }
+  @media (max-width: 600px) {
+    .nav-links { gap: 1rem; }
   }
 </style>
+
+<script>
+  (function() {
+    let lastScroll = 0;
+    const nav = document.getElementById('nav');
+    if (!nav) return;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        nav.classList.toggle('scrolled', y > 40);
+        if (y < 80) nav.classList.remove('hidden');
+        else if (y > lastScroll + 25) nav.classList.add('hidden');
+        else if (y < lastScroll - 10) nav.classList.remove('hidden');
+        lastScroll = y;
+        ticking = false;
+      });
+    }, { passive: true });
+  })();
+</script>
