@@ -1,7 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Head from '../components/Head.astro';
-const desc = 'Digital and physical products from Stilled. Instruments, editions, and tools.';
+import artifacts, { bundle } from '../data/artifacts.js';
+
+const desc = 'Self-guided digital products and study resources from Stilled. Frameworks, text syntheses, and instruments for the examined life.';
+const notes = artifacts.filter(a => a.category === 'author-notes');
 ---
 
 <Layout title="Stilled | Artifacts">
@@ -13,7 +16,7 @@ const desc = 'Digital and physical products from Stilled. Instruments, editions,
   </div>
   <div class="grid-lines" aria-hidden="true"></div>
   <div class="micro micro-tl" aria-hidden="true">ARTIFACTS</div>
-  <div class="micro micro-tr" aria-hidden="true">FORTHCOMING</div>
+  <div class="micro micro-tr" aria-hidden="true">DIGITAL LIBRARY</div>
 
   <section class="page">
     <header class="page-header reveal">
@@ -21,11 +24,52 @@ const desc = 'Digital and physical products from Stilled. Instruments, editions,
       <h1>Artifacts</h1>
       <p class="sub">{desc}</p>
     </header>
-    <div class="empty reveal">
-      <span class="empty-mark" aria-hidden="true">—</span>
-      <p class="empty-text">No artifacts are available yet. Digital editions, physical instruments, and tools are in development.</p>
-      <a href="/home" class="empty-link">Return home</a>
-    </div>
+
+    <!-- Master Guidebook -->
+    {artifacts.filter(a => a.slug === 'master-guidebook').map(a => (
+      <section class="featured reveal">
+        <article class="featured-card">
+          <h2 class="featured-name">{a.name}</h2>
+          <p class="featured-tagline">{a.tagline}</p>
+          <p class="featured-price">{a.price}</p>
+          <div class="featured-formats">
+            {a.formats.map(f => <span class="format-tag">{f}</span>)}
+          </div>
+          <p class="featured-overview">{a.overview}</p>
+          <ul class="featured-features">
+            {a.features.map(f => <li>{f}</li>)}
+          </ul>
+        </article>
+      </section>
+    ))}
+
+    <!-- Author Study Notes -->
+    <section class="notes-section reveal">
+      <h2 class="section-heading">Metaphysical Author Study Notes</h2>
+      <p class="section-sub">Concise, high-density syntheses of complex metaphysical texts — distilled into practical, accessible insights. Each note is a standalone PDF.</p>
+
+      <!-- Bundle card -->
+      <article class="bundle-card">
+        <div class="bundle-badge">Best Value</div>
+        <h3 class="bundle-name">{bundle.name}</h3>
+        <p class="bundle-tagline">{bundle.tagline}</p>
+        <p class="bundle-price">{bundle.price}</p>
+        {bundle.note && <p class="bundle-note">{bundle.note}</p>}
+      </article>
+
+      <!-- Individual notes -->
+      <div class="notes-grid">
+        {notes.map(n => (
+          <article class="note-card">
+            <h3 class="note-name">{n.name}</h3>
+            <p class="note-tagline">{n.tagline}</p>
+            <p class="note-overview">{n.overview}</p>
+            <p class="note-price">{n.price}</p>
+            <span class="note-format">{n.formats.join('')}</span>
+          </article>
+        ))}
+      </div>
+    </section>
   </section>
 </Layout>
 
@@ -44,17 +88,147 @@ const desc = 'Digital and physical products from Stilled. Instruments, editions,
   .micro-tl { top: 1.2rem; left: 1.5rem; }
   .micro-tr { top: 1.2rem; right: 1.5rem; }
 
-  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); position: relative; z-index: 2; }
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-wide); margin: 0 auto; position: relative; z-index: 2; }
   .page-header { margin-bottom: var(--space-4xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
 
-  .empty { min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  .empty-mark { display: block; font-family: var(--font-serif); font-size: var(--text-display-lg); color: var(--ink-faint); margin-bottom: var(--space-lg); line-height: 1; }
-  .empty-text { font-size: var(--text-lead); font-style: italic; color: var(--ink-dim); margin-bottom: var(--space-xl); max-width: var(--measure-narrow); }
-  .empty-link { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; transition: opacity 0.35s; }
-  .empty-link:hover { opacity: 0.8; }
+  /* ── Featured (Master Guidebook) ───── */
+  .featured { margin-bottom: var(--space-4xl); }
+  .featured-card {
+    border: 1px solid var(--border-hairline);
+    padding: var(--space-2xl);
+    transition: border-color 0.45s, box-shadow 0.45s, background 0.45s;
+  }
+  .featured-card:hover {
+    border-color: var(--glass-border-glow);
+    box-shadow: var(--shadow-glow-accent);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+  .featured-name { font-size: var(--text-h1); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
+  .featured-tagline { font-size: var(--text-lead); color: var(--ink-dim); margin-bottom: var(--space-md); font-style: italic; }
+  .featured-price {
+    font-family: var(--font-mono);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-light);
+    color: var(--accent);
+    margin-bottom: var(--space-md);
+    letter-spacing: var(--tracking-tight);
+  }
+  .featured-formats { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); }
+  .format-tag {
+    display: inline-block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink-dim);
+    border: 1px solid var(--border-thin);
+    padding: 0.1em 0.6em;
+  }
+  .featured-overview {
+    font-size: var(--text-body);
+    color: var(--ink);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .featured-features { list-style: none; display: flex; flex-direction: column; gap: var(--space-sm); }
+  .featured-features li {
+    font-size: var(--text-body);
+    color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+    padding-left: var(--space-lg);
+    position: relative;
+  }
+  .featured-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
 
-  @media (max-width: 600px) { .micro { display: none; } }
+  /* ── Study Notes Section ───────────── */
+  .notes-section { }
+  .section-heading { font-size: var(--text-h2); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
+  .section-sub { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-xl); max-width: var(--measure-base); }
+
+  /* ── Bundle Card ───────────────────── */
+  .bundle-card {
+    border: 1px solid var(--accent-soft);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition: border-color 0.45s, box-shadow 0.45s;
+  }
+  .bundle-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
+  .bundle-badge {
+    display: inline-block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    padding: 0.15em 0.75em;
+    margin-bottom: var(--space-md);
+  }
+  .bundle-name { font-size: var(--text-h2); font-weight: var(--weight-regular); margin-bottom: var(--space-xs); }
+  .bundle-tagline { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-md); font-style: italic; }
+  .bundle-price {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-light);
+    color: var(--accent);
+    margin-bottom: var(--space-xs);
+  }
+  .bundle-note { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; opacity: 0.7; }
+
+  /* ── Notes Grid ────────────────────── */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-lg);
+  }
+  .note-card {
+    border: 1px solid var(--border-hairline);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.35s, box-shadow 0.35s;
+  }
+  .note-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
+  .note-name { font-family: var(--font-sans); font-size: var(--text-body); font-weight: var(--weight-medium); margin-bottom: var(--space-2xs); letter-spacing: 0; }
+  .note-tagline { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; margin-bottom: var(--space-sm); flex-grow: 0; }
+  .note-overview { font-size: var(--text-caption); color: var(--ink-dim); line-height: var(--leading-relaxed); margin-bottom: var(--space-md); flex-grow: 1; }
+  .note-price {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-light);
+    color: var(--accent);
+    margin-bottom: var(--space-2xs);
+  }
+  .note-format {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.4;
+  }
+
+  @media (max-width: 900px) {
+    .notes-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .notes-grid { grid-template-columns: 1fr; }
+    .micro { display: none; }
+  }
 </style>

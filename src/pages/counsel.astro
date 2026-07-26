@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Head from '../components/Head.astro';
-import services from '../data/counsel-services.js';
+import services, { addOns } from '../data/counsel-services.js';
 
-const desc = 'Email counseling — precision instruments for the examined life. Private, forensic, one-on-one correspondence.';
+const desc = 'Quiet, deliberate written guidance for internal clarity, assumption, and self-concept. Asynchronous, essay-style consultations — no live calls or scheduling required.';
 ---
 
 <Layout title="Stilled | Counsel">
@@ -24,6 +24,7 @@ const desc = 'Email counseling — precision instruments for the examined life. 
       <p class="sub">{desc}</p>
     </header>
 
+    <!-- Services -->
     <div class="services">
       {services.map((s, i) => (
         <article class={`service reveal delay-${i}`}>
@@ -31,6 +32,8 @@ const desc = 'Email counseling — precision instruments for the examined life. 
           <h2 class="name">{s.name}</h2>
           <p class="tagline">{s.tagline}</p>
           <p class="price">{s.price}</p>
+          {s.note && <p class="note">{s.note}</p>}
+          <p class="overview">{s.overview}</p>
           <ul class="features">
             {s.features.map(f => <li>{f}</li>)}
           </ul>
@@ -38,10 +41,27 @@ const desc = 'Email counseling — precision instruments for the examined life. 
       ))}
     </div>
 
+    <!-- Add-Ons -->
+    <section class="addons reveal">
+      <hr class="rule" />
+      <h2 class="section-heading">Consultation Add‑Ons</h2>
+      <p class="section-sub">Available at checkout with any written consultation.</p>
+      <div class="addon-grid">
+        {addOns.map(a => (
+          <div class="addon-card">
+            <h3 class="addon-name">{a.name}</h3>
+            <p class="addon-price">{a.price}</p>
+            <p class="addon-desc">{a.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Inquiry -->
     <div class="form-section reveal">
       <hr class="rule" />
-      <h2 class="form-heading">Inquire</h2>
-      <p class="form-sub">Tell me what you are navigating. No cost to inquire.</p>
+      <h2 class="section-heading">Inquire</h2>
+      <p class="section-sub">Not sure which service fits? Tell me what you're navigating. No cost to inquire.</p>
       <form
         class="form"
         action="https://formspree.io/f/your-form-id"
@@ -89,21 +109,20 @@ const desc = 'Email counseling — precision instruments for the examined life. 
   .micro-tl { top: 1.2rem; left: 1.5rem; }
   .micro-tr { top: 1.2rem; right: 1.5rem; }
 
-  /* ── Page Header ─────────────────────── */
   .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-wide); margin: 0 auto; position: relative; z-index: 2; }
   .page-header { margin-bottom: var(--space-4xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
 
-  /* ── Service Cards ───────────────────── */
-  .services { display: flex; flex-direction: column; gap: var(--space-2xl); margin-bottom: var(--space-4xl); }
+  /* ── Service Cards ─────────────────── */
+  .services { display: flex; flex-direction: column; gap: var(--space-2xl); margin-bottom: var(--space-3xl); }
 
   .service {
     border: 1px solid var(--border-hairline);
     padding: var(--space-2xl);
     position: relative;
-    transition: border-color 0.45s ease, box-shadow 0.45s ease;
+    transition: border-color 0.45s ease, box-shadow 0.45s ease, background 0.45s ease;
   }
   .service:hover {
     border-color: var(--glass-border-glow);
@@ -123,7 +142,6 @@ const desc = 'Email counseling — precision instruments for the examined life. 
     padding: 0.15em 0.75em;
     margin-bottom: var(--space-md);
   }
-
   .name { font-size: var(--text-h1); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
   .tagline { font-size: var(--text-lead); color: var(--ink-dim); margin-bottom: var(--space-md); font-style: italic; }
   .price {
@@ -131,10 +149,24 @@ const desc = 'Email counseling — precision instruments for the examined life. 
     font-size: var(--text-h2);
     font-weight: var(--weight-light);
     color: var(--accent);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-sm);
     letter-spacing: var(--tracking-tight);
   }
-
+  .note {
+    font-size: var(--text-caption);
+    color: var(--ink-dim);
+    font-style: italic;
+    margin-bottom: var(--space-lg);
+    opacity: 0.7;
+  }
+  .overview {
+    font-size: var(--text-body);
+    color: var(--ink);
+    margin-bottom: var(--space-lg);
+    line-height: var(--leading-relaxed);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border-hairline);
+  }
   .features { list-style: none; display: flex; flex-direction: column; gap: var(--space-sm); }
   .features li {
     font-size: var(--text-body);
@@ -154,12 +186,30 @@ const desc = 'Email counseling — precision instruments for the examined life. 
     opacity: 0.5;
   }
 
-  /* ── Form Section ────────────────────── */
-  .form-section { }
+  /* ── Add-Ons ───────────────────────── */
+  .addons { margin-bottom: var(--space-3xl); }
   .rule { border: 0; height: 1px; background: var(--border-hairline); margin-bottom: var(--space-2xl); }
-  .form-heading { font-size: var(--text-h2); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
-  .form-sub { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-xl); }
+  .section-heading { font-size: var(--text-h2); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
+  .section-sub { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-xl); }
+  .addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); }
+  .addon-card {
+    border: 1px solid var(--border-hairline);
+    padding: var(--space-lg);
+    transition: border-color 0.35s, box-shadow 0.35s;
+  }
+  .addon-card:hover { border-color: var(--glass-border-glow); box-shadow: var(--shadow-glow-accent); }
+  .addon-name { font-family: var(--font-sans); font-size: var(--text-body); font-weight: var(--weight-medium); margin-bottom: var(--space-2xs); letter-spacing: 0; }
+  .addon-price {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-light);
+    color: var(--accent);
+    margin-bottom: var(--space-sm);
+  }
+  .addon-desc { font-size: var(--text-caption); color: var(--ink-dim); line-height: var(--leading-relaxed); }
 
+  /* ── Form ──────────────────────────── */
+  .form-section { }
   .form { display: flex; flex-direction: column; gap: var(--space-xl); }
   .field { display: flex; flex-direction: column; gap: var(--space-2xs); }
   .field-label { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; }
@@ -202,6 +252,9 @@ const desc = 'Email counseling — precision instruments for the examined life. 
   .delay-1 { transition-delay: 0.1s; }
   .delay-2 { transition-delay: 0.2s; }
 
+  @media (max-width: 768px) {
+    .addon-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 600px) {
     .service { padding: var(--space-xl); }
     .micro { display: none; }
