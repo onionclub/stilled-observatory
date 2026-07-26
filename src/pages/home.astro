@@ -45,19 +45,15 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
           <a href="/counsel" data-cursor-text="Counsel">Counsel</a>
         </nav>
       </div>
+      <a href="https://ai-os-alpha.vercel.app/" class="archive-mini" target="_blank" rel="noopener noreferrer">
+        <span class="archive-mini-label">Stilled. Archive</span>
+        <span class="archive-mini-text">Private tools for self-inquiry — your story, your patterns, your timeline. Built outside the attention economy by a single person who left it.</span>
+        <span class="archive-mini-cta">Open →</span>
+      </a>
     </div>
   </section>
 
 
-	  <!-- ARCHIVE — external app link -->
-	  <section class="archive-callout">
-	    <a href="https://ai-os-alpha.vercel.app/" class="archive-card" target="_blank" rel="noopener noreferrer">
-	      <span class="archive-label">Stilled. Archive</span>
-	      <h2 class="archive-title">Tools, stories, and the examined life.</h2>
-	      <p class="archive-desc">A private workspace for self-inquiry — your timeline, your patterns, your archive. Nothing harvested. Nothing sold.</p>
-	      <span class="archive-cta">Open the Archive →</span>
-	    </a>
-	  </section>
   <!-- THEORIES -->
   {theories.length > 1 ? (
     <section class="horizontal-section" data-horizontal-pin>
@@ -226,6 +222,37 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   }
   .hero-nav a:hover { opacity: 1; border-color: var(--accent); }
   .hero-portrait {
+
+  /* ── ARCHIVE MINI (inside hero) ───────── */
+  .archive-mini {
+    display: block;
+    margin-top: 1rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--border-hairline);
+    transition: border-color 0.35s, box-shadow 0.35s;
+    max-width: 38rem;
+  }
+  .archive-mini:hover { border-color: var(--accent-soft); box-shadow: var(--shadow-glow-accent); opacity: 1; }
+  .archive-mini-label {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    font-weight: var(--weight-medium);
+    margin-right: 0.5rem;
+  }
+  .archive-mini-text {
+    font-size: var(--text-caption);
+    color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+  }
+  .archive-mini-cta {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: var(--text-label);
+    color: var(--accent);
+    font-weight: var(--weight-medium);
+  }
     grid-column: portrait;
     grid-row: 1;
     min-height: 90vh; overflow: hidden; position: relative;
@@ -234,66 +261,6 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
     width: 100%; height: 100%; object-fit: cover;
     filter: grayscale(100%) contrast(1.15) brightness(0.65) saturate(0.45);
     mix-blend-mode: multiply; opacity: 0.25;
-  }
-
-  /* ── ARCHIVE CALLOUT ──────────────────── */
-  .archive-callout {
-    padding: 0 var(--page-pad-x);
-    margin-bottom: var(--section-gap-lg);
-    position: relative; z-index: 2;
-  }
-  .archive-card {
-    display: block;
-    border: 1px solid var(--accent-soft);
-    padding: clamp(2rem, 4vw, 3rem);
-    max-width: var(--measure-wide);
-    transition: border-color 0.45s, box-shadow 0.45s, background 0.45s;
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-  }
-  .archive-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-glow-accent);
-    opacity: 1;
-  }
-  .archive-label {
-    display: inline-block;
-    font-size: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent);
-    border: 1px solid var(--accent-soft);
-    padding: 0.15em 0.75em;
-    margin-bottom: var(--space-md);
-    font-weight: var(--weight-medium);
-  }
-  .archive-title {
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: var(--weight-regular);
-    letter-spacing: var(--tracking-tight);
-    margin-bottom: var(--space-sm);
-    color: var(--ink);
-  }
-  .archive-desc {
-    font-size: var(--text-body);
-    color: var(--ink-dim);
-    line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-lg);
-    max-width: var(--measure-base);
-  }
-  .archive-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    font-size: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent);
-    font-weight: var(--weight-medium);
-    padding-bottom: 0.25rem;
-    border-bottom: 1px solid var(--accent);
   }
 
   /* ── SECTION HEAD ─────────────────────── */
