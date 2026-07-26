@@ -46,10 +46,10 @@
     --weight-medium: 500;
     --weight-semibold: 600;
 
-    --measure-narrow: 32ch;
-    --measure-base: 42ch;
-    --measure-wide: 58ch;
-    --measure-full: 72ch;
+    --measure-narrow: 44ch;
+    --measure-base: 60ch;
+    --measure-wide: 84ch;
+    --measure-full: 96ch;
   }
 }
 
@@ -160,9 +160,9 @@
     --section-gap: clamp(6rem, 16vh, 10rem);
     --section-gap-lg: clamp(9rem, 22vh, 14rem);
 
-    --page-pad-x: clamp(1.5rem, 6vw, 4rem);
-    --page-pad-top: clamp(5rem, 12vh, 9rem);
-    --page-pad-bottom: clamp(4rem, 10vh, 7rem);
+    --page-pad-x: clamp(2rem, 8vw, 6rem);
+    --page-pad-top: clamp(5rem, 10vh, 8rem);
+    --page-pad-bottom: clamp(4rem, 8vh, 6rem);
   }
 }
 

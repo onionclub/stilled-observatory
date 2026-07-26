@@ -158,7 +158,7 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
   /* ── Study Notes Section ───────────── */
   .notes-section { }
   .section-heading { font-size: var(--text-h2); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-xs); }
-  .section-sub { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-xl); max-width: var(--measure-base); }
+  .section-sub { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-xl); }
 
   /* ── Bundle Card ───────────────────── */
   .bundle-card {
@@ -196,7 +196,7 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
   /* ── Notes Grid ────────────────────── */
   .notes-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-lg);
   }
   .note-card {
@@ -224,10 +224,7 @@ const notes = artifacts.filter(a => a.category === 'author-notes');
     opacity: 0.4;
   }
 
-  @media (max-width: 900px) {
-    .notes-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .notes-grid { grid-template-columns: 1fr; }
     .micro { display: none; }
   }
