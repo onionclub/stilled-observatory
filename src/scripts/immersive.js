@@ -124,6 +124,9 @@ function init() {
 }
 
 function reset() {
+  // Restore native cursor before destroying custom one —
+  // prevents invisible cursor when navigating to pages without immersive.js
+  document.documentElement.classList.remove('has-custom-cursor');
   ScrollTrigger.getAll().forEach((st) => st.kill());
   ScrollTrigger.refresh();
   if (cursor) { cursor.destroy(); cursor = null; }
