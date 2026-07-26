@@ -222,6 +222,15 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   }
   .hero-nav a:hover { opacity: 1; border-color: var(--accent); }
   .hero-portrait {
+    grid-column: portrait;
+    grid-row: 1;
+    min-height: 90vh; overflow: hidden; position: relative;
+  }
+  .hero-portrait img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) contrast(1.15) brightness(0.65) saturate(0.45);
+    mix-blend-mode: multiply; opacity: 0.25;
+  }
 
   /* ── ARCHIVE MINI (inside hero) ───────── */
   .archive-mini {
@@ -252,10 +261,6 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
     font-size: var(--text-label);
     color: var(--accent);
     font-weight: var(--weight-medium);
-  }
-    grid-column: portrait;
-    grid-row: 1;
-    min-height: 90vh; overflow: hidden; position: relative;
   }
   .hero-portrait img {
     width: 100%; height: 100%; object-fit: cover;
