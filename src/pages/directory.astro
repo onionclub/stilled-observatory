@@ -1,12 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Head from '../components/Head.astro';
-const desc = 'Index of external sources, tools, and recommended reading.';
+import readings, { categories } from '../data/readings.js';
+
+const desc = 'A curated index of spiritual, esoteric, and religious readings — organized by tradition.';
+
+// Group readings by category
+const grouped = {};
+for (const r of readings) {
+  if (!grouped[r.category]) grouped[r.category] = [];
+  grouped[r.category].push(r);
+}
+const catKeys = Object.keys(grouped);
 ---
 
 <Layout title="Stilled | Directory">
   <Head slot="head" title="Stilled | Directory" description={desc} />
-  <link rel="stylesheet" href="/mouse-follower.css" />
 
   <div class="mesh-layer" aria-hidden="true">
     <div class="blob blob-1"></div>
@@ -14,19 +23,41 @@ const desc = 'Index of external sources, tools, and recommended reading.';
   </div>
   <div class="grid-lines" aria-hidden="true"></div>
   <div class="micro micro-tl" aria-hidden="true">DIRECTORY</div>
-  <div class="micro micro-tr" aria-hidden="true">SOURCES</div>
+  <div class="micro micro-tr" aria-hidden="true">{readings.length} READINGS</div>
 
   <section class="page">
     <header class="page-header reveal">
       <span class="mark" aria-hidden="true"></span>
       <h1>Directory</h1>
-      <p class="sub">Index of external sources, tools, and recommended reading.</p>
+      <p class="sub">{desc}</p>
     </header>
-    <ul class="list">
-      <li class="reveal"><a href="#" class="entry" data-cursor-text="View"><span class="idx">01</span><span class="title">The Structure of Scientific Revolutions</span><span class="author">Thomas S. Kuhn</span></a></li>
-      <li class="reveal delay-1"><a href="#" class="entry" data-cursor-text="View"><span class="idx">02</span><span class="title">Man's Search for Meaning</span><span class="author">Viktor E. Frankl</span></a></li>
-      <li class="reveal delay-2"><a href="#" class="entry" data-cursor-text="View"><span class="idx">03</span><span class="title">Thinking, Fast and Slow</span><span class="author">Daniel Kahneman</span></a></li>
-    </ul>
+
+    {catKeys.map(key => (
+      <section class="category reveal">
+        <header class="cat-header">
+          <h2 class="cat-name">{categories[key].name}</h2>
+          <p class="cat-desc">{categories[key].description}</p>
+        </header>
+        <ul class="cat-list">
+          {grouped[key].map((r, i) => (
+            <li class={`entry delay-${Math.min(i, 4)}`}>
+              <span class="idx">{(i + 1).toString().padStart(2, '0')}</span>
+              <div class="entry-body">
+                <h3 class="entry-title">
+                  {r.link ? (
+                    <a href={r.link} target="_blank" rel="noopener noreferrer">{r.title}</a>
+                  ) : (
+                    r.title
+                  )}
+                </h3>
+                <span class="entry-author">{r.author}</span>
+                {r.note && <p class="entry-note">{r.note}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
   </section>
 </Layout>
 
@@ -45,18 +76,73 @@ const desc = 'Index of external sources, tools, and recommended reading.';
   .micro-tl { top: 1.2rem; left: 1.5rem; }
   .micro-tr { top: 1.2rem; right: 1.5rem; }
 
-  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); position: relative; z-index: 2; }
+  /* ── Page Header ─────────────────────── */
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-wide); margin: 0 auto; position: relative; z-index: 2; }
   .page-header { margin-bottom: var(--space-4xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
-  .list { list-style: none; max-width: var(--measure-wide); }
-  .entry { display: flex; align-items: baseline; padding: var(--space-xl) 0; border-bottom: 1px solid var(--border-hairline); transition: opacity 0.35s, padding 0.4s, background 0.4s; border-radius: 2px; }
-  .entry:hover { opacity: 0.5; padding-left: var(--space-xs); background: var(--accent-soft); margin: 0 calc(-1 * var(--space-xs)); padding-right: var(--space-xs); }
-  .idx { font-size: var(--text-label); opacity: 0.25; width: 4rem; flex-shrink: 0; font-family: var(--font-mono,monospace); }
-  .title { font-family: var(--font-serif); font-size: var(--text-h2); flex: 1; }
-  .author { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; text-align: right; }
-  .delay-1 { transition-delay: 0.08s; }
-  .delay-2 { transition-delay: 0.16s; }
-  @media (max-width: 600px) { .entry { flex-direction: column; gap: var(--space-xs); } .idx { width: auto; } .author { text-align: left; } .micro { display: none; } }
+
+  /* ── Categories ──────────────────────── */
+  .category { margin-bottom: var(--space-4xl); }
+  .cat-header { margin-bottom: var(--space-xl); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-hairline); }
+  .cat-name { font-size: var(--text-h2); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-2xs); }
+  .cat-desc { font-size: var(--text-caption); color: var(--ink-dim); font-style: italic; }
+
+  /* ── Entry List ──────────────────────── */
+  .cat-list { list-style: none; display: flex; flex-direction: column; }
+  .entry {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--border-hairline);
+    transition: background 0.35s, padding 0.35s;
+  }
+  .entry:hover { background: var(--accent-soft); margin: 0 calc(-1 * var(--space-sm)); padding-left: var(--space-sm); padding-right: var(--space-sm); }
+  .idx {
+    font-size: var(--text-label);
+    opacity: 0.2;
+    padding-top: 0.25rem;
+    font-family: var(--font-mono, monospace);
+  }
+  .entry-body { }
+  .entry-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-3xs);
+  }
+  .entry-title a {
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.35s;
+  }
+  .entry-title a:hover { border-color: var(--accent); opacity: 1; }
+  .entry-author {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.4;
+    display: block;
+    margin-bottom: var(--space-xs);
+  }
+  .entry-note {
+    font-size: var(--text-caption);
+    color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+    max-width: var(--measure-base);
+  }
+
+  .delay-0 { transition-delay: 0s; }
+  .delay-1 { transition-delay: 0.06s; }
+  .delay-2 { transition-delay: 0.12s; }
+  .delay-3 { transition-delay: 0.18s; }
+  .delay-4 { transition-delay: 0.24s; }
+
+  @media (max-width: 600px) {
+    .entry { grid-template-columns: 1fr; gap: var(--space-xs); }
+    .idx { display: none; }
+    .micro { display: none; }
+  }
 </style>

@@ -85,31 +85,6 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
     </section>
   )}
 
-  <!-- ARTIFACTS — glass bento -->
-  <section class="artifacts">
-    <header class="section-head">
-      <span class="label">Artifacts</span>
-      <h2 class="section-title">Artifacts</h2>
-    </header>
-    <div class="bento-row">
-      <a href="/artifacts" class="glass-card-item bento-main" data-cursor-text="View" data-reveal-clip="left">
-        <div class="bento-visual"><img src="/artifacts/meta-framework.svg" alt="" loading="lazy" /></div>
-        <div class="bento-text">
-          <h3>The Meta‑Framework</h3>
-          <p>A comprehensive guide to identity reconstruction.</p>
-          <span class="bento-price">$40.00</span>
-        </div>
-      </a>
-      <a href="/artifacts" class="glass-card-item bento-side" data-cursor-text="View" data-reveal-clip="right">
-        <div class="bento-visual"><img src="/artifacts/liminal-engine.svg" alt="" loading="lazy" /></div>
-        <div class="bento-text">
-          <h3>Liminal Engine</h3>
-          <p>A browser environment for analytical reading and attention management.</p>
-          <span class="bento-price">$12.00 / mo</span>
-        </div>
-      </a>
-    </div>
-  </section>
 
   <!-- QUOTE — glass pull -->
   <section class="quote">
@@ -310,21 +285,6 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
   .fallback p { color: var(--ink-dim); }
   .empty { color: var(--ink-dim); font-style: italic; }
 
-  /* ── BENTO ────────────────────────────── */
-  .artifacts { margin-bottom: 12rem; position: relative; z-index: 2; }
-  .bento-row {
-    display: grid;
-    grid-template-columns: [full] var(--page-pad-x) [main] 1.2fr [gap] 0.8fr [side] 1fr [end] var(--page-pad-x);
-    gap: clamp(1.5rem, 3vw, 3rem);
-  }
-  .bento-main { grid-column: main / gap; padding: 2rem; margin-top: 0; }
-  .bento-side  { grid-column: side / end; padding: 2rem; margin-top: 4rem; }
-  .bento-visual { width: 100%; aspect-ratio: 4/5; overflow: hidden; margin-bottom: 1.5rem; border-radius: 1px; }
-  .bento-visual img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--border-hairline); }
-  .bento-text h3 { font-size: clamp(1.3rem,2.2vw,1.8rem); font-weight:var(--weight-regular); margin-bottom:.25rem; }
-  .bento-text p { font-size:.8125rem; color: var(--ink-dim); margin-bottom:.75rem; }
-  .bento-price { font-size:.625rem; text-transform:uppercase; letter-spacing:.15em; opacity:.3; display:inline-block; padding-top:.5rem; border-top:1px solid var(--border-thin); color: var(--accent); }
-
   /* ── QUOTE ────────────────────────────── */
   .quote {
     min-height: 50vh; display: flex; align-items: center; justify-content: center;
@@ -348,8 +308,6 @@ const desc = 'Precision instruments for the examined life. Forensic synthesis of
     .hero { grid-template-columns: 1fr; }
     .hero-portrait { height: 40vh; order: -1; }
     .hero-portrait img { opacity: 0.1; }
-    .bento-row { grid-template-columns: var(--page-pad-x) 1fr var(--page-pad-x); }
-    .bento-main, .bento-side { grid-column: 2; margin-top: 0; }
   }
   @media (max-width: 600px) {
     .micro { display: none; }

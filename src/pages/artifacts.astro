@@ -1,45 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Head from '../components/Head.astro';
-const desc = 'Digital products, analytical tools, and published works from Stilled.';
+const desc = 'Digital and physical products from Stilled. Instruments, editions, and tools.';
 ---
 
 <Layout title="Stilled | Artifacts">
   <Head slot="head" title="Stilled | Artifacts" description={desc} />
-  <link rel="stylesheet" href="/mouse-follower.css" />
 
   <div class="mesh-layer" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
   </div>
   <div class="grid-lines" aria-hidden="true"></div>
   <div class="micro micro-tl" aria-hidden="true">ARTIFACTS</div>
-  <div class="micro micro-tr" aria-hidden="true">INSTRUMENTS</div>
+  <div class="micro micro-tr" aria-hidden="true">FORTHCOMING</div>
 
   <section class="page">
     <header class="page-header reveal">
       <span class="mark" aria-hidden="true"></span>
       <h1>Artifacts</h1>
-      <p class="sub">Digital products, analytical tools, and published works.</p>
+      <p class="sub">{desc}</p>
     </header>
-    <div class="items">
-      <div class="item reveal">
-        <div class="item-visual"><img src="/artifacts/meta-framework.svg" alt="Abstract architectural composition for The Meta-Framework" loading="lazy" /></div>
-        <div class="item-text">
-          <h2>The Meta‑Framework</h2>
-          <p>A comprehensive guide to identity reconstruction. Physical edition.</p>
-          <span class="price">$40.00</span>
-        </div>
-      </div>
-      <div class="item reveal delay-1">
-        <div class="item-visual"><img src="/artifacts/liminal-engine.svg" alt="Abstract portal composition for Liminal Engine" loading="lazy" /></div>
-        <div class="item-text">
-          <h2>Liminal Engine</h2>
-          <p>A browser environment for analytical reading and attention management.</p>
-          <span class="price">$12.00 / mo</span>
-        </div>
-      </div>
+    <div class="empty reveal">
+      <span class="empty-mark" aria-hidden="true">—</span>
+      <p class="empty-text">No artifacts are available yet. Digital editions, physical instruments, and tools are in development.</p>
+      <a href="/home" class="empty-link">Return home</a>
     </div>
   </section>
 </Layout>
@@ -50,8 +35,7 @@ const desc = 'Digital products, analytical tools, and published works from Still
   .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
   .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 22s ease-in-out infinite; }
   .blob-1 { width: 45vw; height: 45vw; background: var(--mesh-1); top: -20%; left: -10%; animation-delay: 0s; }
-  .blob-2 { width: 38vw; height: 38vw; background: var(--mesh-3); top: 50%; right: -15%; animation-delay: -8s; }
-  .blob-3 { width: 30vw; height: 30vw; background: var(--mesh-4); bottom: -10%; left: 30%; animation-delay: -16s; }
+  .blob-2 { width: 38vw; height: 38vw; background: var(--mesh-3); bottom: -10%; right: -15%; animation-delay: -8s; }
   @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(7%,-10%) scale(1.12)} 50%{transform:translate(-5%,7%) scale(0.9)} 75%{transform:translate(-9%,-5%) scale(1.06)} }
 
   .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
@@ -65,14 +49,12 @@ const desc = 'Digital products, analytical tools, and published works from Still
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); max-width: var(--measure-narrow); }
-  .items { display: flex; flex-direction: column; gap: var(--section-gap); }
-  .item { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 8vw, 6rem); align-items: center; }
-  .item:nth-child(even) .item-visual { order: 2; }
-  .item-visual img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border: 1px solid var(--border-hairline); border-radius: 2px; transition: border-color 0.4s; }
-  .item:hover .item-visual img { border-color: var(--accent-soft); }
-  .item-text h2 { font-size: var(--text-h1); font-weight: var(--weight-regular); margin-bottom: var(--space-sm); }
-  .item-text p { font-size: var(--text-body); color: var(--ink-dim); margin-bottom: var(--space-lg); max-width: var(--measure-narrow); }
-  .price { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; display: inline-block; padding-top: var(--space-sm); border-top: 1px solid var(--border-thin); }
-  .delay-1 { transition-delay: 0.1s; }
-  @media (max-width: 768px) { .item { grid-template-columns: 1fr; gap: var(--space-xl); } .item:nth-child(even) .item-visual { order: 0; } .micro { display: none; } }
+
+  .empty { min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .empty-mark { display: block; font-family: var(--font-serif); font-size: var(--text-display-lg); color: var(--ink-faint); margin-bottom: var(--space-lg); line-height: 1; }
+  .empty-text { font-size: var(--text-lead); font-style: italic; color: var(--ink-dim); margin-bottom: var(--space-xl); max-width: var(--measure-narrow); }
+  .empty-link { font-size: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); opacity: 0.45; transition: opacity 0.35s; }
+  .empty-link:hover { opacity: 0.8; }
+
+  @media (max-width: 600px) { .micro { display: none; } }
 </style>
