@@ -93,14 +93,9 @@ time, .date, .card-date,
 }
 
 /* ── BRUTE-FORCE TEXT SAFETY ────────────── */
-/* Override any destructive CSS/JS text rendering. DO NOT REMOVE. */
-body, p, h1, h2, h3, h4, h5, h6, a, span, blockquote, li,
+/* Override any destructive JS text-rendering mutations. */
+body, p, h1, h2, h3, h4, h5, h6, span, blockquote, li,
 .glass-card *, .glass-card-item *, .prose *, .text-content *, .body * {
-  word-spacing: 0.25em !important;
-  letter-spacing: normal !important;
   white-space: normal !important;
   text-transform: none !important;
-  color: #FFFFFF !important;
-  mix-blend-mode: normal !important;
-  background: transparent !important;
 }
