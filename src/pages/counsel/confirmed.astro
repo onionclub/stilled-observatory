@@ -29,12 +29,6 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
       <span class="ref-note">Include this number in your inquiry subject line. Stripe will also email you a receipt with this same reference.</span>
     </div>
 
-    <!-- Inquiry address card -->
-    <div class="email-card reveal">
-      <span class="email-label">Send your inquiry to</span>
-      <a href="mailto:concierge@stilled.page" class="email-address">concierge@stilled.page</a>
-      <span class="email-note">Save this address. All correspondence for your order happens here.</span>
-    </div>
 
     <!-- Service-specific instructions (rendered by JS) -->
     <div class="instructions reveal" id="instructions"></div>
@@ -44,15 +38,15 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
       <div class="step-card">
         <span class="step-num">1</span>
         <div class="step-body">
-          <h3>Send your inquiry</h3>
-          <p>Email the address above with your situation and questions. Include your order reference number in the subject line.</p>
+          <h3>Check your email</h3>
+          <p>You'll receive a confirmation with the inquiry address and full instructions shortly. Stripe will also send a receipt.</p>
         </div>
       </div>
       <div class="step-card">
         <span class="step-num">2</span>
         <div class="step-body">
           <h3>Receive your response</h3>
-          <p>A custom written response will arrive in your inbox within 3 business days.</p>
+          <p>A custom written response will arrive in your inbox within 3 business days of sending your inquiry.</p>
         </div>
       </div>
     </div>
@@ -230,7 +224,7 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 
     if (service === 'single-inquiry') {
       const steps = [
-        { title: 'Compose your inquiry', body: 'Send one email to the address above — up to 750 words — detailing your situation and up to 3 specific questions. Put your order reference number in the subject line.' },
+        { title: 'Compose your inquiry', body: 'You\'ll receive an email shortly with the inquiry address and full instructions. Send your situation — up to 750 words with up to 3 questions — and include your order reference number in the subject line.' },
         { title: 'Receive your response', body: `A comprehensive, custom essay-style response will arrive in your inbox <strong>${timeline}</strong>.${hasAudio ? ' It will be accompanied by a 5–7 minute personalized audio voice memo elaborating on key themes.' : ''} It will address your questions directly, with perspective shift and practical integration steps.` },
       ];
       return { name: 'The Single Inquiry', steps };
@@ -238,7 +232,7 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 
     if (service === 'three-letter-series') {
       const steps = [
-        { title: 'Send your first letter', body: 'Write your opening letter to the address above — up to 750 words with up to 3 questions. Put your order reference number in the subject line. You have 60 days to use all three exchanges at your own pace.' },
+        { title: 'Send your first letter', body: 'You\'ll receive an email with the inquiry address and instructions. Write your opening letter — up to 750 words with up to 3 questions. Put your order reference number in the subject line. You have 60 days to use all three exchanges at your own pace.' },
         { title: 'The arc begins', body: `Your first response arrives <strong>${timeline}</strong>.${hasAudio ? ' Each of your three letters will include a 5–7 minute personalized audio voice memo alongside the written response.' : ''} After you reply, the second and third exchanges build on what came before — each one deepening the inquiry.` },
       ];
       return { name: 'The 3-Letter Series', steps };
@@ -246,7 +240,7 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 
     if (service === 'monthly-rhythm') {
       const steps = [
-        { title: 'Your first week', body: 'Send your first deep-dive letter to the address above. Your weekly cadence begins: you write Monday–Tuesday, receive a response Wednesday, then a brief mid-week check-in Friday–Saturday. Four full cycles per month.' },
+        { title: 'Your first week', body: 'You\'ll receive a welcome email with the inquiry address and your schedule. Your weekly cadence: write Monday–Tuesday, receive a response Wednesday, then a brief mid-week check-in Friday–Saturday. Four full cycles per month.' },
         { title: 'Ongoing access', body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal or by contacting us. All correspondence up to cancellation remains yours.' },
       ];
       return { name: 'The Monthly Rhythm', steps };
