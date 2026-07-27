@@ -118,29 +118,39 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const successUrl = `${origin}/counsel/confirmed?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/counsel`;
 
-  // Create Stripe Checkout Session
+  // Build form-encoded body (Stripe requires this content type)
+  const params = new URLSearchParams();
+  params.append('mode', svc.mode);
+  params.append('success_url', successUrl);
+  params.append('cancel_url', cancelUrl);
+  params.append('metadata[service]', service);
+  params.append('metadata[addons]', validAddons.join(','));
+
+  lineItems.forEach((item, i) => {
+    params.append(`line_items[${i}][price_data][currency]`, 'usd');
+    params.append(`line_items[${i}][price_data][product_data][name]`, item.price_data.product_data.name);
+    if (item.price_data.product_data.description) {
+      params.append(`line_items[${i}][price_data][product_data][description]`, item.price_data.product_data.description);
+    }
+    params.append(`line_items[${i}][price_data][product_data][tax_code]`, 'txcd_10000000');
+    params.append(`line_items[${i}][price_data][unit_amount]`, String(item.price_data.unit_amount));
+    params.append(`line_items[${i}][quantity]`, String(item.quantity));
+    if (item.price_data.recurring?.interval) {
+      params.append(`line_items[${i}][price_data][recurring][interval]`, item.price_data.recurring.interval);
+    }
+  });
+
+  if (svc.mode === 'subscription') {
+    params.append('subscription_data[metadata][service]', service);
+  }
+
   const resp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: new URLSearchParams({
-      mode: svc.mode,
-      line_items: JSON.stringify(lineItems.map(li => ({
-        price_data: li.price_data,
-        quantity: li.quantity,
-      }))),
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: JSON.stringify({
-        service,
-        addons: validAddons.join(','),
-      }),
-      ...(svc.mode === 'subscription'
-        ? { subscription_data: JSON.stringify({ metadata: { service, addons: validAddons.join(',') } }) }
-        : {}),
-    }),
+    body: params,
   });
 
   if (!resp.ok) {
