@@ -26,7 +26,7 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
     <div class="ref-card reveal">
       <span class="ref-label">Order Reference</span>
       <span class="ref-number" id="ref-number">—</span>
-      <span class="ref-note">Save this number. Include it when you email your inquiry so we can verify your order.</span>
+      <span class="ref-note">This number has also been emailed to you. Include it in your inquiry subject line so we can verify your order and route it correctly.</span>
     </div>
 
     <!-- Service-specific instructions (rendered by JS) -->
@@ -107,7 +107,18 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
     display: block;
     font-size: var(--text-caption);
     color: var(--ink-dim);
-    font-style: italic;
+  }
+  .addon-tags {
+    display: flex; gap: var(--space-sm); flex-wrap: wrap;
+    margin-bottom: var(--space-md); justify-content: center;
+  }
+  .addon-tag {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    padding: 0.15em 0.75em;
   }
 
   /* ── Instructions ────────────────────── */
@@ -165,64 +176,52 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 </style>
 
 <script>
-  const INSTRUCTIONS: Record<string, { name: string; steps: { title: string; body: string }[] }> = {
-    'single-inquiry': {
-      name: 'The Single Inquiry',
-      steps: [
-        {
-          title: 'Check your email',
-          body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. If you don\'t see it within a few minutes, check your spam folder.',
-        },
-        {
-          title: 'Send your context',
-          body: 'Write one email — up to 750 words — detailing your situation and up to 3 specific questions. Include your order reference number (above) in the subject line or at the top of your email.',
-        },
-        {
-          title: 'Receive your response',
-          body: 'A comprehensive, custom essay-style response will arrive in your inbox within 3 business days. It will address your questions directly, with perspective shift and practical integration steps.',
-        },
-      ],
-    },
-    'three-letter-series': {
-      name: 'The 3-Letter Series',
-      steps: [
-        {
-          title: 'Check your email',
-          body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. Save this — you\'ll use the same address for all three exchanges.',
-        },
-        {
-          title: 'Send your first letter',
-          body: 'Write your opening letter — up to 750 words with up to 3 questions. Include your order reference number. You have 60 days to use all three exchanges at your own pace.',
-        },
-        {
-          title: 'The arc begins',
-          body: 'Your first response arrives within 3 business days. After you reply, the second and third exchanges build on what came before — each one deepening the inquiry.',
-        },
-      ],
-    },
-    'monthly-rhythm': {
-      name: 'The Monthly Rhythm',
-      steps: [
-        {
-          title: 'Check your email',
-          body: 'You\'ll receive a receipt from Stripe and a welcome email with the inquiry address and your weekly schedule. This is where the container begins.',
-        },
-        {
-          title: 'Your weekly cadence',
-          body: 'Each week: you send a deep-dive letter (Monday–Tuesday), receive a response (Wednesday), then a brief mid-week check-in (Friday–Saturday). Four full cycles per month.',
-        },
-        {
-          title: 'Ongoing access',
-          body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal or by contacting us. All correspondence up to cancellation remains yours.',
-        },
-      ],
-    },
+  const ADDON_LABELS: Record<string, string> = {
+    'rush-delivery': '24-Hour Rush Delivery',
+    'audio-reflection': 'Audio Voice Reflection',
   };
+
+  function buildSteps(service: string, addons: string[]) {
+    const hasRush = addons.includes('rush-delivery');
+    const hasAudio = addons.includes('audio-reflection');
+    const timeline = hasRush ? 'within 24 hours' : 'within 3 business days';
+
+    if (service === 'single-inquiry') {
+      const steps = [
+        { title: 'Check your email', body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. If you don\'t see it within a few minutes, check your spam folder.' },
+        { title: 'Send your context', body: 'Write one email — up to 750 words — detailing your situation and up to 3 specific questions. Include your order reference number in the subject line.' },
+        { title: 'Receive your response', body: `A comprehensive, custom essay-style response will arrive in your inbox <strong>${timeline}</strong>.${hasAudio ? ' It will be accompanied by a 5–7 minute personalized audio voice memo elaborating on key themes.' : ''} It will address your questions directly, with perspective shift and practical integration steps.` },
+      ];
+      return { name: 'The Single Inquiry', steps };
+    }
+
+    if (service === 'three-letter-series') {
+      const steps = [
+        { title: 'Check your email', body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. Save this — you\'ll use the same address for all three exchanges.' },
+        { title: 'Send your first letter', body: 'Write your opening letter — up to 750 words with up to 3 questions. Include your order reference number. You have 60 days to use all three exchanges at your own pace.' },
+        { title: 'The arc begins', body: `Your first response arrives <strong>${timeline}</strong>.${hasAudio ? ' Each of your three letters will include a 5–7 minute personalized audio voice memo alongside the written response.' : ''} After you reply, the second and third exchanges build on what came before — each one deepening the inquiry.` },
+      ];
+      return { name: 'The 3-Letter Series', steps };
+    }
+
+    if (service === 'monthly-rhythm') {
+      const steps = [
+        { title: 'Check your email', body: 'You\'ll receive a receipt from Stripe and a welcome email with the inquiry address and your weekly schedule. This is where the container begins.' },
+        { title: 'Your weekly cadence', body: 'Each week: you send a deep-dive letter (Monday–Tuesday), receive a response (Wednesday), then a brief mid-week check-in (Friday–Saturday). Four full cycles per month.' },
+        { title: 'Ongoing access', body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal or by contacting us. All correspondence up to cancellation remains yours.' },
+      ];
+      return { name: 'The Monthly Rhythm', steps };
+    }
+
+    return null;
+  }
 
   (function() {
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
     const service = params.get('service');
+    const addonParam = params.get('addons') || '';
+    const addons = addonParam ? addonParam.split(',') : [];
 
     if (sessionId) {
       document.getElementById('ref-number')!.textContent = sessionId;
@@ -232,21 +231,30 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
     const instructions = document.getElementById('instructions');
     if (!instructions) return;
 
-    if (service && INSTRUCTIONS[service]) {
-      const data = INSTRUCTIONS[service];
-      let html = `<div class="service-name">${data.name}</div>`;
-      data.steps.forEach((s, i) => {
-        html += `
-          <div class="step-card delay-${i}">
-            <span class="step-num">${i + 1}</span>
-            <div class="step-body">
-              <h3>${s.title}</h3>
-              <p>${s.body}</p>
-            </div>
-          </div>`;
-      });
-      instructions.innerHTML = html;
-      if (fallback) fallback.style.display = 'none';
+    if (service) {
+      const data = buildSteps(service, addons);
+      if (data) {
+        let html = `<div class="service-name">${data.name}</div>`;
+        if (addons.length > 0) {
+          html += '<div class="addon-tags">';
+          addons.forEach(a => {
+            html += `<span class="addon-tag">+ ${ADDON_LABELS[a] || a}</span>`;
+          });
+          html += '</div>';
+        }
+        data.steps.forEach((s, i) => {
+          html += `
+            <div class="step-card delay-${i}">
+              <span class="step-num">${i + 1}</span>
+              <div class="step-body">
+                <h3>${s.title}</h3>
+                <p>${s.body}</p>
+              </div>
+            </div>`;
+        });
+        instructions.innerHTML = html;
+        if (fallback) fallback.style.display = 'none';
+      }
     }
   })();
 </script>

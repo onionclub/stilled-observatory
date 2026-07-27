@@ -115,7 +115,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // Determine success/cancel URLs
-  const successUrl = `${origin}/counsel/confirmed?session_id={CHECKOUT_SESSION_ID}&service=${encodeURIComponent(service)}`;
+  const addonParam = validAddons.length ? `&addons=${encodeURIComponent(validAddons.join(','))}` : '';
+  const successUrl = `${origin}/counsel/confirmed?session_id={CHECKOUT_SESSION_ID}&service=${encodeURIComponent(service)}${addonParam}`;
   const cancelUrl = `${origin}/counsel`;
 
   // Build form-encoded body (Stripe requires this content type)
