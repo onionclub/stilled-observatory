@@ -224,15 +224,17 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 
     if (service === 'single-inquiry') {
       const steps = [
-        { title: 'Compose your inquiry', body: 'You\'ll receive an email shortly with the inquiry address and full instructions. Send your situation — up to 750 words with up to 3 questions — and include your order reference number in the subject line.' },
-        { title: 'Receive your response', body: `A comprehensive, custom essay-style response will arrive in your inbox <strong>${timeline}</strong>.${hasAudio ? ' It will be accompanied by a 5–7 minute personalized audio voice memo elaborating on key themes.' : ''} It will address your questions directly, with perspective shift and practical integration steps.` },
+        { title: 'Check your email', body: 'A confirmation has been sent to your inbox with the inquiry address and full instructions. If you don\'t see it within a few minutes, check your spam folder. Stripe will also send a receipt.' },
+        { title: 'Compose your inquiry', body: 'Write one email — up to 750 words — detailing your situation and up to 3 specific questions. Include your order reference number in the subject line so your message is routed correctly.' },
+        { title: 'Receive your response', body: `A comprehensive, custom essay-style response will arrive in your inbox <strong>${timeline}</strong>.${hasAudio ? ' It will be accompanied by a 5–7 minute personalized audio voice memo elaborating on key themes in spoken cadence.' : ''} It addresses your questions directly, with forensic depth and practical integration steps.` },
       ];
       return { name: 'The Single Inquiry', steps };
     }
 
     if (service === 'three-letter-series') {
       const steps = [
-        { title: 'Send your first letter', body: 'You\'ll receive an email with the inquiry address and instructions. Write your opening letter — up to 750 words with up to 3 questions. Put your order reference number in the subject line. You have 60 days to use all three exchanges at your own pace.' },
+        { title: 'Check your email', body: 'A confirmation has been sent with the inquiry address and instructions. Save this — you\'ll use the same address for all three exchanges over the next 60 days.' },
+        { title: 'Send your first letter', body: 'Write your opening letter — up to 750 words with up to 3 questions. Put your order reference number in the subject line. Take your time. You have 60 days to use all three exchanges at your own pace.' },
         { title: 'The arc begins', body: `Your first response arrives <strong>${timeline}</strong>.${hasAudio ? ' Each of your three letters will include a 5–7 minute personalized audio voice memo alongside the written response.' : ''} After you reply, the second and third exchanges build on what came before — each one deepening the inquiry.` },
       ];
       return { name: 'The 3-Letter Series', steps };
@@ -240,8 +242,9 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
 
     if (service === 'monthly-rhythm') {
       const steps = [
-        { title: 'Your first week', body: 'You\'ll receive a welcome email with the inquiry address and your schedule. Your weekly cadence: write Monday–Tuesday, receive a response Wednesday, then a brief mid-week check-in Friday–Saturday. Four full cycles per month.' },
-        { title: 'Ongoing access', body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal or by contacting us. All correspondence up to cancellation remains yours.' },
+        { title: 'Check your email', body: 'A welcome email has been sent with the inquiry address and your weekly schedule. This is where the container begins.' },
+        { title: 'Your weekly cadence', body: 'Each week: you send a deep-dive letter (Monday–Tuesday), receive a full response (Wednesday), then a brief mid-week check-in (Friday–Saturday). Four full cycles per month. Predictable, structured, quiet.' },
+        { title: 'Ongoing access', body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal. All correspondence up to cancellation remains yours — nothing is lost.' },
       ];
       return { name: 'The Monthly Rhythm', steps };
     }
