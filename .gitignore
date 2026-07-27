@@ -22,6 +22,9 @@ pnpm-debug.log*
 .env.cloudflare
 .dev.vars
 
+# local payment log
+.local-payment-log.json
+
 # macOS-specific files
 .DS_Store
 

@@ -48,6 +48,16 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
           <ul class="features">
             {s.features.map(f => <li>{f}</li>)}
           </ul>
+          {s.slug !== 'monthly-rhythm' && (
+            <div class="addon-checks">
+              {addOns.map(a => (
+                <label class="addon-check">
+                  <input type="checkbox" name={`addon-${s.slug}`} value={a.slug} data-service={s.slug} />
+                  <span class="addon-check-label">{a.name} <span class="addon-check-price">{a.price}</span></span>
+                </label>
+              ))}
+            </div>
+          )}
           <button class="order-btn" data-service={s.slug}>Purchase — {s.price}</button>
         </article>
       ))}
@@ -195,6 +205,24 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   }
   .order-btn:hover { opacity: 0.7; border-color: transparent; }
 
+  .addon-checks {
+    display: flex; flex-direction: column; gap: var(--space-xs);
+    margin-bottom: var(--space-lg); padding-top: var(--space-md);
+    border-top: 1px solid var(--border-hairline);
+  }
+  .addon-check {
+    display: flex; align-items: center; gap: var(--space-sm);
+    cursor: pointer; font-size: var(--text-caption);
+  }
+  .addon-check input[type="checkbox"] {
+    accent-color: var(--accent); width: auto;
+  }
+  .addon-check-label { color: var(--ink-dim); }
+  .addon-check-price {
+    font-family: var(--font-mono); font-size: var(--text-caption);
+    color: var(--accent);
+  }
+
   /* ── Add-Ons ───────────────────────── */
   .addons { margin-bottom: var(--space-3xl); }
   .rule { border: 0; height: 1px; background: var(--border-hairline); margin-bottom: var(--space-2xl); }
@@ -255,6 +283,10 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
         const service = btn.dataset.service;
         if (!service) return;
 
+        // Gather selected add-ons for this service
+        const addonChecks = document.querySelectorAll(`input[data-service="${service}"]:checked`);
+        const addons = Array.from(addonChecks).map((el: any) => el.value);
+
         btn.disabled = true;
         btn.textContent = "Redirecting to Stripe...";
         if (errorEl) errorEl.style.display = "none";
@@ -263,7 +295,7 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
           const resp = await fetch("/api/checkout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ service }),
+            body: JSON.stringify({ service, addons }),
           });
 
           const data = await resp.json();
