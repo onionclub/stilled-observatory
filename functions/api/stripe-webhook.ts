@@ -39,21 +39,21 @@ function buildEmailHtml(
   // --- Package block ---
   const packages: Record<string, string> = {
     'single-inquiry':
-      'You have chosen The Single Inquiry. We will explore one specific situation. I will return to you with a comprehensive, essay-style reflection designed to offer deep clarity and a shift in perspective.',
+      'You have chosen <strong style="color: #2C3E33;">The Single Inquiry</strong>. We will explore <strong>one specific situation</strong>. I will return to you with a comprehensive, essay-style reflection designed to offer <strong>deep clarity</strong> and a <strong>shift in perspective</strong>.',
     'three-letter-series':
-      'You have chosen The 3-Letter Series. Over the next 60 days, we will have three full exchanges. This is a short arc of sustained correspondence. It allows you to reflect, apply insights, and write back as your situation evolves. You may use your letters at your own pace.',
+      'You have chosen <strong style="color: #2C3E33;">The 3-Letter Series</strong>. Over the next <strong>60 days</strong>, we will have <strong>three full exchanges</strong>. This is a short arc of sustained correspondence. It allows you to reflect, apply insights, and write back as your situation evolves. You may use your letters <strong>at your own pace</strong>.',
     'monthly-rhythm':
-      'You have joined The Monthly Rhythm. I am deeply honored to be one of the eight people holding this space for you this month. We will establish a steady, quiet accountability through our weekly deep-dives and mid-week check-ins. This will accompany you through your daily integration without the friction of live calls.',
+      'You have joined <strong style="color: #2C3E33;">The Monthly Rhythm</strong>. I am deeply honored to be one of the <strong>eight people</strong> holding this space for you this month. We will establish a steady, quiet accountability through our weekly deep-dives and mid-week check-ins. This will accompany you through your daily integration <strong>without the friction of live calls</strong>.',
   };
   const packageBlock = packages[service] || '';
 
   // --- Add-on blocks ---
   let addonBlock = '';
   if (hasRush) {
-    addonBlock += '<p style="margin: 0 0 0.75rem 0;">I also see you have chosen the 24-Hour Rush Delivery. I will make your words my immediate priority to ensure your response is delivered swiftly.</p>';
+    addonBlock += '<p style="margin: 0 0 0.75rem 0;">I also see you have chosen the <strong>24-Hour Rush Delivery</strong>. I will make your words my immediate priority to ensure your response is delivered <strong>swiftly</strong>.</p>';
   }
   if (hasAudio) {
-    addonBlock += '<p style="margin: 0 0 0.75rem 0;">You have also included the Audio Voice Reflection. Alongside my written words, you will hear my voice in a five to seven minute personalized memo with each response. This offers another layer of nuance and care.</p>';
+    addonBlock += '<p style="margin: 0 0 0.75rem 0;">You have also included the <strong>Audio Voice Reflection</strong>. Alongside my written words, you will hear my voice in a <strong>five to seven minute personalized memo</strong> with each response. This offers another layer of <strong>nuance and care</strong>.</p>';
   }
 
   // --- Timeline/cadence block ---
@@ -61,16 +61,16 @@ function buildEmailHtml(
   if (service === 'monthly-rhythm') {
     const monday = nextMonday();
     timelineBlock = `<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">How our rhythm works</p>
-<p style="margin: 0 0 0.75rem 0;">Each week, we will have two touchpoints.</p>
-<p style="margin: 0 0 0.75rem 0;">On Monday, write to guidance@stilled.page with ${reference} in the subject line. Share your core context for the week. I will return your comprehensive response on Wednesday.</p>
-<p style="margin: 0 0 0.75rem 0;">On Friday, send a brief note to the same address sharing how you are integrating the insights. I will return a focused response on Saturday to keep you aligned for the weekend.</p>
-<p style="margin: 0 0 0 0;">Your first Monday deep-dive begins on ${monday}.</p>`;
+<p style="margin: 0 0 0.75rem 0;">Each week, we will have <strong>two touchpoints</strong>.</p>
+<p style="margin: 0 0 0.75rem 0;">On <strong>Monday</strong>, write to <a href="mailto:${counselEmail}" style="color: #2C3E33;">${counselEmail}</a> with ${reference} in the subject line. Share your core context for the week. I will return your comprehensive response on <strong>Wednesday</strong>.</p>
+<p style="margin: 0 0 0.75rem 0;">On <strong>Friday</strong>, send a brief note to the same address sharing how you are integrating the insights. I will return a focused response on <strong>Saturday</strong> to keep you aligned for the weekend.</p>
+<p style="margin: 0 0 0 0;">Your first Monday deep-dive begins on <strong>${monday}</strong>.</p>`;
   } else if (hasRush) {
     timelineBlock = `<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">When you will hear back</p>
-<p style="margin: 0 0 0 0;">Because you chose the 24-hour option, I will prioritize your inquiry and return your custom response within 24 hours of receiving your email.</p>`;
+<p style="margin: 0 0 0 0;">Because you chose the 24-hour option, I will prioritize your inquiry and return your custom response within <strong>24 hours</strong> of receiving your email.</p>`;
   } else {
     timelineBlock = `<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">When you will hear back</p>
-<p style="margin: 0 0 0 0;">I will sit with your words and return to you with your custom response within 3 business days. Take your time writing. I will take my time reflecting.</p>`;
+<p style="margin: 0 0 0 0;">I will sit with your words and return to you with your custom response within <strong>3 business days</strong>. Take your time writing. I will take my time reflecting.</p>`;
   }
 
   const nameGreeting = firstName ? `${firstName},` : '';
@@ -83,7 +83,7 @@ function buildEmailHtml(
 
   <p style="font-size: 16px; margin: 0 0 1.25rem 0;">${nameGreeting}</p>
 
-  <p style="font-size: 16px; margin: 0 0 1.25rem 0;">Thank you for trusting me with your thoughts. Your payment is received, and your space for inquiry is now open.</p>
+  <p style="font-size: 16px; margin: 0 0 1.25rem 0;">Thank you for trusting me with your thoughts. Your payment is received, and your inquiry is now open.</p>
 
   <p style="margin: 0 0 0.75rem 0;">${packageBlock}</p>
   ${addonBlock ? addonBlock + '\n' : ''}
@@ -93,12 +93,12 @@ function buildEmailHtml(
     <p style="font-family: 'Courier New', monospace; font-size: 14px; color: #2C3E33; margin: 0 0 1.25rem 0; word-break: break-all;">${reference}</p>
 
     <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">How to begin</p>
-    <p style="margin: 0 0 0.75rem 0;">There is no rush. Take a breath. When you feel ready, write to <a href="mailto:${counselEmail}" style="color: #2C3E33; text-decoration: underline;">${counselEmail}</a>.</p>
-    <p style="margin: 0 0 0.75rem 0;">To keep our space organized, please put your reference number (${reference}) in the subject line of your email.</p>
+    <p style="margin: 0 0 0.75rem 0;">There is no rush. <strong>Take a breath.</strong> When you feel ready, write to <a href="mailto:${counselEmail}" style="color: #2C3E33; text-decoration: underline;">${counselEmail}</a>.</p>
+    <p style="margin: 0 0 0.75rem 0;">To keep our space organized, please put your reference number <strong>(${reference})</strong> in the subject line of your email.</p>
     <p style="margin: 0 0 0.75rem 0;">In the body of the message, please share:</p>
     <ul style="margin: 0 0 1.25rem 0; padding-left: 1.5rem;">
-      <li>The context of your situation (up to 750 words, or as much as feels right).</li>
-      <li>Up to 3 specific questions you would like us to explore.</li>
+      <li>The <strong>context</strong> of your situation (up to 750 words, or as much as feels right).</li>
+      <li>Up to <strong>3 specific questions</strong> you would like us to explore.</li>
     </ul>
 
     ${timelineBlock}
@@ -106,13 +106,16 @@ function buildEmailHtml(
   </div>
 
   <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 2rem 0 0.35rem 0;">A quiet note before you write</p>
-  <p style="margin: 0 0 0.75rem 0;">I want you to feel secure in what you are stepping into. I have spent over five years and more than ten thousand hours immersed in this work. I do not follow a single path or repeat one teacher's framework. I have studied multiple traditions of manifestation and tested their principles exhaustively. I understand the underlying mechanics with the precision of a science and the depth of a lived practice.</p>
-  <p style="margin: 0 0 0.75rem 0;">What you receive from me is not surface encouragement or recycled advice. It is a response shaped by a deep, tested understanding of what actually creates shift, and what does not. You are in careful hands.</p>
-  <p style="margin: 0 0 0.75rem 0;">This is a quiet, private correspondence between you and one person. Your inquiry will be read slowly and held with care. The response you receive will be written with the same depth of attention you brought to the asking. The quality of the answer should honor the courage it took to ask.</p>
-  <p style="margin: 0 0 1.75rem 0;">If you have any questions before you send your inquiry, simply reply to this email. I am here.</p>
+  <p style="margin: 0 0 0.75rem 0;">I want you to feel <strong>secure</strong> in what you are stepping into. I have spent over <strong>five years</strong> and more than <strong>ten thousand hours</strong> immersed in this work. I do not follow a single path or repeat one teacher's framework. I have studied multiple traditions of manifestation and tested their principles exhaustively. I understand the underlying mechanics with the <strong>precision of a science</strong> and the <strong>depth of a lived practice</strong>.</p>
+  <p style="margin: 0 0 0.75rem 0;">What you receive from me is not surface encouragement or recycled advice. It is a response shaped by a deep, tested understanding of what <strong>actually creates shift</strong>, and what does not. You are in <strong>careful hands</strong>.</p>
+  <p style="margin: 0 0 0.75rem 0;">This is a quiet, private correspondence between you and one person. Your inquiry will be read <strong>slowly</strong> and held with <strong>care</strong>. The response you receive will be written with the same depth of attention you brought to the asking. <strong>The quality of the answer should honor the courage it took to ask.</strong></p>
+  <p style="margin: 0 0 1.75rem 0;">If you have any questions before you send your inquiry, simply reply to this email. <strong>I am here.</strong></p>
 
-  <p style="margin: 0 0 0.25rem 0;">ness</p>
-  <p style="font-size: 13px; color: #999; margin: 0;">stilled.</p>
+  <p style="margin: 0 0 0.25rem 0;">ness,</p>
+
+  <img src="https://stilled.page/signature.png" alt="ness" style="width: 140px; height: auto; margin: 0 0 1rem 0; display: block;" />
+
+  <p style="font-size: 15px; margin: 1rem 0 0 0; color: #1A1A1A;">Stilled.</p>
 
 </body>
 </html>`;
@@ -150,7 +153,7 @@ async function sendConfirmationEmail(
       body: JSON.stringify({
         from: 'Stilled. <noreply@stilled.page>',
         to: [customerEmail],
-        subject: `Welcome to Stilled. Your space is ready. (Ref: ${reference})`,
+        subject: `Your order instructions (Ref: ${reference})`,
         html,
       }),
     });
