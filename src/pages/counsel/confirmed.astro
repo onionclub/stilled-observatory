@@ -15,41 +15,43 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
   <div class="grid-lines" aria-hidden="true"></div>
   <div class="micro micro-tl" aria-hidden="true">CONFIRMED</div>
 
-  <section class="page">
+  <section class="page" id="confirmed-page">
     <header class="page-header reveal">
       <span class="mark" aria-hidden="true"></span>
       <h1>Order confirmed.</h1>
-      <p class="sub">Your payment has been received. Here's what happens next.</p>
+      <p class="sub">Your payment has been received. Below are your next steps.</p>
     </header>
 
-    <div class="instructions reveal">
+    <!-- Reference card -->
+    <div class="ref-card reveal">
+      <span class="ref-label">Order Reference</span>
+      <span class="ref-number" id="ref-number">—</span>
+      <span class="ref-note">Save this number. Include it when you email your inquiry so we can verify your order.</span>
+    </div>
+
+    <!-- Service-specific instructions (rendered by JS) -->
+    <div class="instructions reveal" id="instructions"></div>
+
+    <!-- Default static fallback (hidden by JS if session data is present) -->
+    <div class="instructions reveal" id="fallback">
       <div class="step-card">
         <span class="step-num">1</span>
         <div class="step-body">
           <h3>Check your email</h3>
-          <p>You'll receive a receipt from Stripe and a confirmation with the inquiry address. If you don't see it within a few minutes, check your spam folder.</p>
+          <p>You'll receive a receipt from Stripe. The inquiry address and instructions are in that email.</p>
         </div>
       </div>
-
-      <div class="step-card reveal delay-1">
+      <div class="step-card">
         <span class="step-num">2</span>
         <div class="step-body">
           <h3>Send your inquiry</h3>
-          <p>Write an email up to 750 words describing your situation and up to 3 specific questions. Include your order reference number from the Stripe receipt so your message is routed correctly.</p>
-        </div>
-      </div>
-
-      <div class="step-card reveal delay-2">
-        <span class="step-num">3</span>
-        <div class="step-body">
-          <h3>Receive your response</h3>
-          <p>A comprehensive, custom essay-style response will arrive in your inbox within 3 business days. If you added Rush Delivery, expect it within 24 hours.</p>
+          <p>Include your order reference number in your email so we can route your message correctly.</p>
         </div>
       </div>
     </div>
 
     <div class="back-link reveal">
-      <a href="/home">← Return home</a>
+      <a href="/home">Return home</a>
     </div>
   </section>
 </Layout>
@@ -64,26 +66,58 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
   @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
 
   .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
-
   .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
   .micro-tl { top: 1.2rem; left: 1.5rem; }
 
   .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
-  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header { margin-bottom: var(--space-2xl); }
   .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
   .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
   .sub { font-size: var(--text-lead); color: var(--ink-dim); }
 
+  /* ── Reference Card ──────────────────── */
+  .ref-card {
+    border: 1px solid var(--accent-soft);
+    padding: var(--space-xl);
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+  .ref-label {
+    display: block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.45;
+    margin-bottom: var(--space-sm);
+  }
+  .ref-number {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: clamp(0.9rem, 2vw, 1.25rem);
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    word-break: break-all;
+    margin-bottom: var(--space-sm);
+    font-weight: var(--weight-regular);
+  }
+  .ref-note {
+    display: block;
+    font-size: var(--text-caption);
+    color: var(--ink-dim);
+    font-style: italic;
+  }
+
+  /* ── Instructions ────────────────────── */
   .instructions { display: flex; flex-direction: column; gap: var(--space-xl); margin-bottom: var(--space-3xl); }
   .step-card {
     display: flex; gap: var(--space-lg); align-items: flex-start;
     padding: var(--space-xl); border: 1px solid var(--border-hairline);
     transition: border-color 0.4s, background 0.4s;
   }
-  .step-card:hover {
-    border-color: var(--glass-border-glow);
-    background: var(--glass-bg);
-  }
+  .step-card:hover { border-color: var(--glass-border-glow); background: var(--glass-bg); }
   .step-num {
     display: flex; align-items: center; justify-content: center;
     width: 2rem; height: 2rem; flex-shrink: 0;
@@ -91,14 +125,25 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
     font-family: var(--font-mono); font-size: var(--text-caption);
     color: var(--accent); font-weight: var(--weight-medium);
   }
+  .step-body { flex: 1; }
   .step-body h3 {
     font-family: var(--font-sans); font-size: var(--text-body);
     font-weight: var(--weight-medium); letter-spacing: 0;
-    margin-bottom: var(--space-2xs);
+    margin-bottom: var(--space-2xs); color: var(--ink);
   }
   .step-body p {
     font-size: var(--text-caption); color: var(--ink-dim);
     line-height: var(--leading-relaxed);
+  }
+  .service-name {
+    display: inline-block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    padding: 0.15em 0.75em;
+    margin-bottom: var(--space-md);
   }
 
   .back-link { }
@@ -115,5 +160,93 @@ const desc = 'Your order has been confirmed. Here is what happens next.';
   @media (max-width: 600px) {
     .micro { display: none; }
     .step-card { padding: var(--space-lg); }
+    .ref-number { font-size: 0.8rem; }
   }
 </style>
+
+<script>
+  const INSTRUCTIONS: Record<string, { name: string; steps: { title: string; body: string }[] }> = {
+    'single-inquiry': {
+      name: 'The Single Inquiry',
+      steps: [
+        {
+          title: 'Check your email',
+          body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. If you don\'t see it within a few minutes, check your spam folder.',
+        },
+        {
+          title: 'Send your context',
+          body: 'Write one email — up to 750 words — detailing your situation and up to 3 specific questions. Include your order reference number (above) in the subject line or at the top of your email.',
+        },
+        {
+          title: 'Receive your response',
+          body: 'A comprehensive, custom essay-style response will arrive in your inbox within 3 business days. It will address your questions directly, with perspective shift and practical integration steps.',
+        },
+      ],
+    },
+    'three-letter-series': {
+      name: 'The 3-Letter Series',
+      steps: [
+        {
+          title: 'Check your email',
+          body: 'You\'ll receive a receipt from Stripe and a confirmation with the inquiry address. Save this — you\'ll use the same address for all three exchanges.',
+        },
+        {
+          title: 'Send your first letter',
+          body: 'Write your opening letter — up to 750 words with up to 3 questions. Include your order reference number. You have 60 days to use all three exchanges at your own pace.',
+        },
+        {
+          title: 'The arc begins',
+          body: 'Your first response arrives within 3 business days. After you reply, the second and third exchanges build on what came before — each one deepening the inquiry.',
+        },
+      ],
+    },
+    'monthly-rhythm': {
+      name: 'The Monthly Rhythm',
+      steps: [
+        {
+          title: 'Check your email',
+          body: 'You\'ll receive a receipt from Stripe and a welcome email with the inquiry address and your weekly schedule. This is where the container begins.',
+        },
+        {
+          title: 'Your weekly cadence',
+          body: 'Each week: you send a deep-dive letter (Monday–Tuesday), receive a response (Wednesday), then a brief mid-week check-in (Friday–Saturday). Four full cycles per month.',
+        },
+        {
+          title: 'Ongoing access',
+          body: 'This is a recurring subscription. You can cancel anytime through your Stripe customer portal or by contacting us. All correspondence up to cancellation remains yours.',
+        },
+      ],
+    },
+  };
+
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const service = params.get('service');
+
+    if (sessionId) {
+      document.getElementById('ref-number')!.textContent = sessionId;
+    }
+
+    const fallback = document.getElementById('fallback');
+    const instructions = document.getElementById('instructions');
+    if (!instructions) return;
+
+    if (service && INSTRUCTIONS[service]) {
+      const data = INSTRUCTIONS[service];
+      let html = `<div class="service-name">${data.name}</div>`;
+      data.steps.forEach((s, i) => {
+        html += `
+          <div class="step-card delay-${i}">
+            <span class="step-num">${i + 1}</span>
+            <div class="step-body">
+              <h3>${s.title}</h3>
+              <p>${s.body}</p>
+            </div>
+          </div>`;
+      });
+      instructions.innerHTML = html;
+      if (fallback) fallback.style.display = 'none';
+    }
+  })();
+</script>
