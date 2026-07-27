@@ -14,7 +14,7 @@ vars = { GHOST_URL = "", GHOST_CONTENT_API_KEY = "" }
 # STRIPE_SECRET_KEY=sk_test_xxx
 # STRIPE_WEBHOOK_SECRET=whsec_xxx
 
-# Payment log KV (create in Cloudflare dashboard, bind here)
-# [[kv_namespaces]]
-# binding = "PAYMENT_LOG"
-# id = "xxx"
+
+[[kv_namespaces]]
+binding = "PAYMENT_LOG"
+id = "local-dev-preview"

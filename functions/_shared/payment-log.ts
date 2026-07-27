@@ -1,9 +1,7 @@
 /**
- * Shared payment log — KV in production, JSON file in local dev.
+ * Shared payment log — Cloudflare KV.
+ * In local dev, wrangler provides a preview KV namespace automatically.
  */
-
-import { writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
 
 export interface PaymentEntry {
   id: string;
@@ -20,56 +18,26 @@ export interface PaymentEntry {
 }
 
 const KV_PREFIX = 'payment:';
-const LOCAL_DB_PATH = join(process.cwd(), '.local-payment-log.json');
-
-function readLocalDb(): PaymentEntry[] {
-  try {
-    if (!existsSync(LOCAL_DB_PATH)) return [];
-    const raw = readFileSync(LOCAL_DB_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-function writeLocalDb(entries: PaymentEntry[]): void {
-  try {
-    writeFileSync(LOCAL_DB_PATH, JSON.stringify(entries, null, 2), 'utf-8');
-  } catch {
-    console.error('[PAYMENT LOG] Failed to write local DB');
-  }
-}
 
 export async function getAllPayments(kv?: KVNamespace): Promise<PaymentEntry[]> {
-  if (kv) {
-    const list = await kv.list({ prefix: KV_PREFIX });
-    const entries: PaymentEntry[] = [];
-    for (const key of list.keys) {
-      const raw = await kv.get(key.name);
-      if (raw) {
-        try { entries.push(JSON.parse(raw)); } catch { /* skip */ }
-      }
+  if (!kv) return [];
+  const list = await kv.list({ prefix: KV_PREFIX });
+  const entries: PaymentEntry[] = [];
+  for (const key of list.keys) {
+    const raw = await kv.get(key.name);
+    if (raw) {
+      try { entries.push(JSON.parse(raw)); } catch { /* skip corrupt */ }
     }
-    return entries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
   }
-
-  return readLocalDb().sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+  return entries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 }
 
 export async function writePayment(entry: PaymentEntry, kv?: KVNamespace): Promise<void> {
-  if (kv) {
-    await kv.put(`${KV_PREFIX}${entry.id}`, JSON.stringify(entry));
+  if (!kv) {
+    console.log('[PAYMENT LOG] No KV — payment not persisted:', entry.id);
     return;
   }
-
-  const db = readLocalDb();
-  const idx = db.findIndex(e => e.id === entry.id);
-  if (idx >= 0) {
-    db[idx] = entry;
-  } else {
-    db.push(entry);
-  }
-  writeLocalDb(db);
+  await kv.put(`${KV_PREFIX}${entry.id}`, JSON.stringify(entry));
   console.log(`[PAYMENT LOG] ${entry.customerEmail} — ${entry.service} — $${(entry.amountTotal / 100).toFixed(2)}`);
 }
 
