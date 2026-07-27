@@ -56,13 +56,6 @@ const desc = 'Video essays and guided explorations. Full transcripts, timestamps
               {v.topics.map(t => <span class="topic-tag">{t}</span>)}
             </div>
 
-            <details class="transcript-toggle">
-              <summary class="transcript-summary">Read transcript</summary>
-              <div class="transcript">
-                {v.transcript.split('\n\n').map(p => <p>{p.trim()}</p>)}
-              </div>
-            </details>
-
             <a
               href={`https://youtube.com/watch?v=${v.id}`}
               target="_blank"
@@ -168,44 +161,6 @@ const desc = 'Video essays and guided explorations. Full transcripts, timestamps
     border: 1px solid var(--accent-soft);
     padding: 0.1em 0.6em;
   }
-
-  /* ── Transcript ─────────────────────── */
-  .transcript-toggle { margin-bottom: var(--space-lg); }
-  .transcript-summary {
-    font-size: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--ink-dim);
-    cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.35s;
-    list-style: none;
-  }
-  .transcript-summary::-webkit-details-marker { display: none; }
-  .transcript-summary::before {
-    content: '+ ';
-    font-family: var(--font-mono);
-  }
-  details[open] .transcript-summary::before { content: '- '; }
-  .transcript-summary:hover { opacity: 0.8; }
-
-  .transcript {
-    margin-top: var(--space-lg);
-    padding: var(--space-xl);
-    border: 1px solid var(--border-hairline);
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    max-height: 480px;
-    overflow-y: auto;
-  }
-  .transcript p {
-    font-size: var(--text-body);
-    color: var(--ink-dim);
-    line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-md);
-  }
-  .transcript p:last-child { margin-bottom: 0; }
 
   /* ── Watch Link ─────────────────────── */
   .watch-link {
