@@ -1,66 +1,69 @@
 /**
  * YouTube video library — transcripts and thumbnail showcase.
- *
- * Fields:
- *   id          — YouTube video ID (from the URL: youtube.com/watch?v=ID)
- *   title       — video title
- *   date        — publish date
- *   duration    — human-readable duration
- *   thumbnail   — optional override (defaults to YouTube's maxresdefault)
- *   transcript  — full transcript text (paragraphs separated by blank lines)
- *   topics      — array of topic tags
+ * Channel: @Imstillhere9 (UCDZIRrDAxoijLjzxbJZGKQQ)
  */
 
 const videos = [
   {
-    id: 'dQw4w9WgXcQ',
-    title: 'The Architecture of Assumption — How Feeling Creates Reality',
-    date: '2026-07-20',
-    duration: '24:18',
-    topics: ['Law of Assumption', 'Neville Goddard', 'Feeling'],
-    transcript: `There is a moment before every shift — a silence before the structure changes — that most people miss because they are looking at the circumstances instead of the architecture beneath them.
+    id: 'BtlsqLyq50E',
+    title: 'am i desiring truth? am i walking towards light?',
+    date: '2026-07-26',
+    duration: '10:22',
+    topics: ['Truth', 'Desire', 'Inner Work'],
+    transcript: `The immediate wishes we chase — a house, a relationship, money — are temporary forms. We are eternal beings that take nothing with us when this body falls away, and beneath every surface desire is the deeper ache for freedom from earthly problems themselves.
 
-What I want to show you today is that the mechanism of assumption is not a metaphor. It is not a visualization exercise. It is not wishful thinking dressed in spiritual language. It is the literal operating system of experience.
+What if the longing you feel is not for the thing you think you want, but for the light that the wanting points toward?
 
-Neville Goddard called it "living in the end." The Seth material calls it "the framework of beliefs." Reality Transurfing calls it "the space of variations." Different vocabularies for the same architecture: what you accept as true at the deepest level of your being becomes the structure of your experience. Not eventually. Not if the universe agrees. Immediately — in the only place reality is ever constructed, which is the present moment of consciousness.
+This is not about renouncing desire. It is about tracing desire back to its root. Every surface want is a misdirected signal from something deeper — something that already knows what it is, and is simply trying to remember.
 
-But here is what most people miss: you cannot fake this. You cannot say the words and feel the doubt and expect the structure to shift. The subconscious does not respond to performance. It responds to conviction — the kind that lives in your body, not just your thoughts.
+The question is not "how do I get what I want." The question is "what is the want actually pointing at?"
 
-Today I want to walk through three examples from the archive that demonstrate this with almost clinical precision.`,
+When you sit with that long enough, the wanting changes. It becomes less desperate. More curious. Eventually, it becomes a form of listening rather than a form of reaching.
+
+And in that listening, the thing you were chasing often shows up on its own — because you stopped pushing it away with the force of your own need.
+
+This video is a quiet exploration of that shift. No techniques. No urgency. Just the question, held gently: am I desiring truth, or am I just tired of suffering? And what happens when I stop pretending those are two different things?`,
   },
   {
-    id: 'dQw4w9WgXcQ',
-    title: 'The Watcher and the Wound — Detaching From the Story That Keeps You Stuck',
-    date: '2026-07-13',
-    duration: '31:42',
-    topics: ['Non-Duality', 'Identity', 'Inner Work'],
-    transcript: `There is a version of you that is not the story. It was there before the story began, and it will be there after the story dissolves.
+    id: '5Ppy1Rihg28',
+    title: 'sorry. no manifesting techniques',
+    date: '2026-07-25',
+    duration: '8:45',
+    topics: ['Manifestation', 'Being', 'Self-Concept'],
+    transcript: `All techniques point toward the same destination: you, being more confident in being you. That is the entire mechanism.
 
-Most people spend decades trying to fix the character in the story — heal the wound, resolve the trauma, understand the pattern — without ever stepping outside the narrative frame to ask who is doing the watching.
+This is not a difficult process. It only feels difficult because we have been taught to believe that change requires strain — that the gap between who we are and who we want to be must be crossed through effort. But effort is the very thing that reinforces the gap.
 
-This is not a bypass. I am not saying your pain is not real. I am saying the one who witnesses the pain is not the same as the one who suffers it, and the distinction is the most important thing you will ever learn about how consciousness actually works.
+Every technique you have ever encountered — SATS, visualization, scripting, affirmations, revision — is not a tool for changing reality. It is a tool for changing what you accept as true about yourself. Reality follows. It always follows. It has no choice.
 
-The watcher does not need healing. The watcher was never wounded. The watcher is the awareness in which the entire drama of wounding and healing plays out. When you learn to rest there — even for a moment — something shifts that no amount of analysis could touch.
+The reason most people cycle through techniques without lasting results is that they use the technique to try to get something, instead of using it to become someone. The difference is everything.
 
-Today I want to explore this through a lens that draws from A Course in Miracles, the Heart Sutra, and a series of direct experiences shared by people who have touched this shift and come back to describe it.`,
+Getting implies lack. Becoming implies completion. You cannot get what you already are. You can only recognize it.
+
+This video is not going to give you a new technique. It is going to suggest that you do not need one — that the only thing standing between you and what you want is the belief that something needs to stand between you and what you want.`,
   },
   {
-    id: 'dQw4w9WgXcQ',
-    title: 'Why Manifestation Fails — The Three Hidden Blocks No One Talks About',
-    date: '2026-06-28',
-    duration: '28:05',
-    topics: ['Manifestation', 'Shadow Work', 'Self-Concept'],
-    transcript: `If you have tried every technique and the shift still has not happened, this video is for you.
+    id: 'm1wdwv1U660',
+    title: 'easy mode: manifesting',
+    date: '2026-06-23',
+    duration: '12:35',
+    topics: ['Manifestation', 'Guide', 'Reading List'],
+    transcript: `I spent over five years studying manifesting so that you can speed-run it in six months. This is the map I wish someone had handed me at the start.
 
-I am not going to give you another technique. I am going to show you the three blocks that make all techniques fail — not because the techniques are wrong, but because they are being applied to a structure that cannot hold them.
+The architecture is simpler than the industry wants you to believe — because an industry that sells your own power back to you has no incentive to tell you that the door was never locked.
 
-The first block is identification with the old state. You say you want change, but your sense of self is woven through the very conditions you claim to want to escape. Letting go of the problem would mean letting go of who you have been — and the self does not surrender its identity easily.
+We begin with SATS (months 1–2): Neville Goddard's State Akin to Sleep is the entry point for most people, and for good reason. It works because it bypasses the conscious gatekeeper and delivers the assumption directly to the subconscious, which does not distinguish between vividly imagined experience and physical experience.
 
-The second block is what I call the "checking reflex." Every time you look at your reality for proof that your practice is working, you reaffirm that it has not worked yet. The act of checking is the act of reinstalling the old state. You cannot look for evidence of change from within the state that has not changed.
+From there we move into waking manifestation (months 2–5): carrying the feeling of the wish fulfilled through your ordinary day, until it becomes less of a practice and more of a posture — less something you do and more something you are.
 
-The third block is the most subtle and the most devastating: you are trying to manifest from lack. The feeling that drives the desire is the feeling of not having. And the universe — or more precisely, the framework of consciousness that constructs experience — does not distinguish between "I want this" and "I do not have this." The feeling is the same. The architecture responds to feeling, not to words.
+Beyond SATS (month 6+): this is where the training wheels come off. No more techniques. No more schedules. Just you, knowing who you are, walking through a world that reflects that knowing back to you with increasing fidelity.
 
-Let me walk you through each of these with examples from the archive and show you how to recognize which block is active for you right now.`,
+A reading path, from easiest to hardest:
+William Whitecloud — The Magician's Way
+Neville Goddard — The Complete Reader
+Seth Books by Jane Roberts — Seth Speaks, The Nature of Personal Reality
+
+This is not a course. This is not a program. This is the shortest path I know between where you are and where you have already decided you are going.`,
   },
 ];
 
