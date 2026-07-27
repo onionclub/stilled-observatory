@@ -1,0 +1,184 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Head from '../../components/Head.astro';
+import videos from '../../data/youtube.js';
+
+export function getStaticPaths() {
+  return videos.map(v => ({ params: { id: v.id } }));
+}
+
+const { id } = Astro.params;
+const video = videos.find(v => v.id === id);
+
+if (!video) {
+  return Astro.redirect('/library');
+}
+
+const paragraphs = video.transcript.split('\n\n').map(p => p.trim()).filter(Boolean);
+const formattedDate = new Date(video.date).toLocaleDateString('en-US', {
+  month: 'long', day: 'numeric', year: 'numeric',
+});
+---
+
+<Layout title={`Stilled | ${video.title}`}>
+  <Head slot="head" title={`${video.title} — Stilled.`} description={`Transcript and companion notes for ${video.title}.`} />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="micro micro-tl" aria-hidden="true">LIBRARY</div>
+  <div class="micro micro-tr" aria-hidden="true">TRANSCRIPT</div>
+
+  <article class="page">
+    <header class="page-header reveal">
+      <a href="/library" class="back-link">← Library</a>
+      <span class="mark" aria-hidden="true"></span>
+      <h1>{video.title}</h1>
+      <div class="meta">
+        <time datetime={video.date}>{formattedDate}</time>
+        <span class="sep" aria-hidden="true">·</span>
+        <span>{video.duration}</span>
+      </div>
+      <div class="topics">
+        {video.topics.map(t => <span class="topic-tag">{t}</span>)}
+      </div>
+    </header>
+
+    <!-- Video embed -->
+    <div class="embed-wrap reveal">
+      <iframe
+        src={`https://www.youtube.com/embed/${video.id}`}
+        title={video.title}
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- Transcript -->
+    <section class="transcript reveal">
+      <div class="transcript-header">
+        <span class="transcript-label">Full Transcript</span>
+        <a
+          href={`https://youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="youtube-link"
+        >Watch on YouTube ↗</a>
+      </div>
+
+      <div class="transcript-body">
+        {paragraphs.map((p, i) => (
+          <p class={`para delay-${Math.min(i, 5)}`}>{p}</p>
+        ))}
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 22s ease-in-out infinite; }
+  .blob-1 { width: 40vw; height: 40vw; background: var(--mesh-3); top: -15%; right: -10%; animation-delay: 0s; }
+  .blob-2 { width: 30vw; height: 30vw; background: var(--mesh-2); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-image: linear-gradient(var(--border-hairline) 1px,transparent 1px),linear-gradient(90deg,var(--border-hairline) 1px,transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 50% 40% at 50% 50%,black 15%,transparent 60%); }
+
+  .micro { position: fixed; z-index: var(--z-above); font-family: var(--font-mono,monospace); font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.35; pointer-events: none; color: var(--ink-dim); }
+  .micro-tl { top: 1.2rem; left: 1.5rem; }
+  .micro-tr { top: 1.2rem; right: 1.5rem; }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+
+  .back-link {
+    display: inline-block; margin-bottom: var(--space-xl);
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.35;
+    transition: opacity 0.35s;
+  }
+  .back-link:hover { opacity: 0.7; }
+
+  .page-header { margin-bottom: var(--space-2xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); line-height: var(--leading-tight); }
+  .meta {
+    display: flex; align-items: center; gap: var(--space-sm);
+    font-size: var(--text-label); text-transform: uppercase;
+    letter-spacing: var(--tracking-label); opacity: 0.45;
+    margin-bottom: var(--space-md);
+  }
+  .sep { opacity: 0.4; }
+
+  .topics { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .topic-tag {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    padding: 0.1em 0.6em;
+  }
+
+  .embed-wrap {
+    position: relative; width: 100%; padding-top: 56.25%;
+    margin-bottom: var(--space-3xl);
+  }
+  .embed-wrap iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 1px solid var(--border-hairline); background: #000;
+  }
+
+  .transcript { margin-bottom: var(--space-3xl); }
+  .transcript-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .transcript-label {
+    font-size: var(--text-h2);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight);
+  }
+  .youtube-link {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.4;
+    transition: opacity 0.35s;
+  }
+  .youtube-link:hover { opacity: 0.7; }
+
+  .transcript-body {
+    display: flex; flex-direction: column; gap: var(--space-lg);
+  }
+  .para {
+    font-size: var(--text-body);
+    color: var(--ink-dim);
+    line-height: 1.85;
+    max-width: var(--measure-base);
+  }
+  .para:first-child {
+    font-size: var(--text-lead);
+    color: var(--ink);
+    line-height: var(--leading-relaxed);
+  }
+
+  .delay-0 { transition-delay: 0s; }
+  .delay-1 { transition-delay: 0.06s; }
+  .delay-2 { transition-delay: 0.12s; }
+  .delay-3 { transition-delay: 0.18s; }
+  .delay-4 { transition-delay: 0.24s; }
+  .delay-5 { transition-delay: 0.30s; }
+
+  @media (max-width: 600px) {
+    .micro { display: none; }
+    .page-header h1 { font-size: var(--text-h1); }
+  }
+</style>

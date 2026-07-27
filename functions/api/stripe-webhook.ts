@@ -113,7 +113,7 @@ function buildEmailHtml(
 
   <p style="margin: 0 0 0.25rem 0;">ness,</p>
 
-  <img src="https://stilled.page/signature.png" alt="ness" style="width: 140px; height: auto; margin: 0 0 1rem 0; display: block;" />
+  <div style="background: #FFF; display: inline-block; padding: 0.5rem 0.75rem; border-radius: 2px; margin: 0 0 1rem 0;"><img src="https://stilled.page/signature.png" alt="ness" style="width: 140px; height: auto; display: block;" /></div>
 
   <p style="font-size: 15px; margin: 1rem 0 0 0; color: #1A1A1A;">Stilled.</p>
 

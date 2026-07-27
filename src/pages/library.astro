@@ -51,7 +51,7 @@ const desc = 'Video essays and guided explorations. Full transcripts, timestamps
                 {new Date(v.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
               </time>
             </div>
-            <h2 class="video-title">{v.title}</h2>
+            <a href={`/library/${v.id}`} class="video-link"><h2 class="video-title">{v.title}</h2></a>
             <div class="topics">
               {v.topics.map(t => <span class="topic-tag">{t}</span>)}
             </div>
@@ -145,12 +145,16 @@ const desc = 'Video essays and guided explorations. Full transcripts, timestamps
     letter-spacing: var(--tracking-label);
     opacity: 0.4;
   }
+  .video-link { display: block; }
+  .video-link:hover { opacity: 1; }
+  .video-link:hover .video-title { opacity: 0.7; }
   .video-title {
     font-size: var(--text-h2);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-tight);
     margin: var(--space-sm) 0 var(--space-sm);
     line-height: var(--leading-tight);
+    transition: opacity 0.35s;
   }
   .topics {
     display: flex; flex-wrap: wrap; gap: var(--space-xs);
