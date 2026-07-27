@@ -17,4 +17,4 @@ vars = { GHOST_URL = "", GHOST_CONTENT_API_KEY = "" }
 
 [[kv_namespaces]]
 binding = "PAYMENT_LOG"
-id = "local-dev-preview"
+id = "00dcca40debe4ccfab5b82bf381453b0"
