@@ -42,13 +42,49 @@ const ADDONS: Record<string, { name: string; amount: number }> = {
   'audio-reflection': { name: 'Audio Voice Reflection', amount: 4700 },
 };
 
+function corsHeaders(origin: string) {
+  const allowed = ['https://stilled.page', 'https://www.stilled.page', 'http://localhost:8788', 'http://localhost:4323', 'http://localhost:4324'];
+  const allowOrigin = allowed.includes(origin) ? origin : 'https://stilled.page';
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
+  };
+}
+
+// Simple in-memory rate limiter (per-edge, not shared — good enough for abuse prevention)
+const rateMap = new Map<string, { count: number; reset: number }>();
+function checkRate(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (!entry || now > entry.reset) {
+    rateMap.set(ip, { count: 1, reset: now + 60_000 });
+    return true;
+  }
+  if (entry.count >= 10) return false; // max 10 checkout requests per minute
+  entry.count++;
+  return true;
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const origin = new URL(request.url).origin;
+  const url = new URL(request.url);
+  const origin = url.origin;
+  const cors = corsHeaders(origin);
+
+  // Rate limiting
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (!checkRate(ip)) {
+    return new Response(JSON.stringify({ error: 'Too many requests. Please try again shortly.' }), {
+      status: 429,
+      headers: { ...cors, 'Content-Type': 'application/json' },
+    });
+  }
 
   if (!env.STRIPE_SECRET_KEY) {
     return new Response(JSON.stringify({ error: 'Payment service not configured.' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
@@ -58,7 +94,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request body.' }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
@@ -67,7 +103,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!service || !CATALOG[service]) {
     return new Response(JSON.stringify({ error: 'Invalid service selected.' }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
@@ -78,7 +114,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (addons.length !== validAddons.length) {
     return new Response(JSON.stringify({ error: 'Invalid add-on selected.' }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
@@ -164,13 +200,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     console.error('Stripe error:', err);
     return new Response(JSON.stringify({ error: 'Could not create checkout session.' }), {
       status: 502,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
   const session = await resp.json() as { url: string; id: string };
   return new Response(JSON.stringify({ url: session.url }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...cors, 'Content-Type': 'application/json' },
   });
 };
