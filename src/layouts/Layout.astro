@@ -21,6 +21,7 @@ const { title = 'Stilled', showNav = true } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;1,14..32,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/mouse-follower.css" />
     <title>{title}</title>
     <ClientRouter />
     <slot name="head" />
@@ -98,4 +99,25 @@ function initReveal() {
   }
   initReveal();
   document.addEventListener('astro:after-swap', initReveal);
+
+  // Global custom cursor — runs on pages without immersive.js
+  document.documentElement.classList.add('has-custom-cursor');
+  let _layoutCursor = null;
+  function initLayoutCursor() {
+    if (typeof MouseFollower === 'undefined') return;
+    if (window.__immersiveCursorActive) return; // page has its own cursor
+    if (_layoutCursor) { _layoutCursor.destroy(); _layoutCursor = null; }
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) { document.documentElement.classList.remove('has-custom-cursor'); return; }
+    _layoutCursor = new MouseFollower({
+      container: document.body,
+      speed: 0.55,
+      ease: 'expo.out',
+      innerAlpha: 0.35,
+      skewing: 0,
+      hideOnLeave: true,
+    });
+  }
+  if (window.MouseFollower) { initLayoutCursor(); }
+  document.addEventListener('astro:after-swap', () => { setTimeout(() => { if (window.MouseFollower && !window.__immersiveCursorActive) { initLayoutCursor(); } }, 50); });
 </script>

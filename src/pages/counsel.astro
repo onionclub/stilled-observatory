@@ -236,14 +236,23 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
   }
 
   .order-btn {
-    display: inline-flex; align-items: center; gap: 0.4em;
+    display: inline-flex; align-items: center; gap: 0.5em;
     font-size: var(--text-label); text-transform: uppercase;
-    letter-spacing: var(--tracking-label); color: var(--accent);
+    letter-spacing: var(--tracking-label); color: var(--ink);
     font-weight: var(--weight-medium);
-    padding-bottom: 0.25rem; border-bottom: 1px solid var(--accent);
-    transition: opacity 0.35s, border-color 0.35s;
+    background: transparent; border: 1px solid var(--border-thin);
+    padding: var(--space-sm) var(--space-xl);
+    cursor: pointer; font-family: var(--font-sans);
+    transition: border-color 0.4s, box-shadow 0.4s, background 0.4s, color 0.4s;
   }
-  .order-btn:hover { opacity: 0.7; border-color: transparent; }
+  .order-btn:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-glow-accent);
+    color: var(--accent);
+  }
+  .order-btn:disabled {
+    opacity: 0.4; cursor: not-allowed;
+  }
 
   .addon-checks {
     display: flex; flex-direction: column; gap: var(--space-xs);

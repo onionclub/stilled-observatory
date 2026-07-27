@@ -17,6 +17,7 @@ function initCursor() {
   // Native cursor hidden via class on <html>
   if (window.matchMedia('(pointer: fine)').matches) {
     document.documentElement.classList.add('has-custom-cursor');
+    window.__immersiveCursorActive = true;
   }
   if (window.matchMedia('(pointer: coarse)').matches) return;
 
@@ -127,6 +128,7 @@ function reset() {
   // Restore native cursor before destroying custom one —
   // prevents invisible cursor when navigating to pages without immersive.js
   document.documentElement.classList.remove('has-custom-cursor');
+  window.__immersiveCursorActive = false;
   ScrollTrigger.getAll().forEach((st) => st.kill());
   ScrollTrigger.refresh();
   if (cursor) { cursor.destroy(); cursor = null; }
