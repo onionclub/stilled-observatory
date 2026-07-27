@@ -38,7 +38,7 @@ async function sendConfirmationEmail(
   sessionId: string,
 ) {
   const apiKey = env.RESEND_API_KEY;
-  const counselEmail = env.COUNSEL_EMAIL || 'concierge@stilled.page';
+  const counselEmail = env.COUNSEL_EMAIL || 'guidance@stilled.page';
 
   if (!apiKey) {
     console.log('[EMAIL] No RESEND_API_KEY set — skipping email to', customerEmail);
@@ -48,33 +48,57 @@ async function sendConfirmationEmail(
   const svc = SERVICE_INFO[service] || { name: service, instructions: 'Reply to this email with your situation and questions.' };
   const shortRef = sessionId.replace('cs_', '').slice(0, 14);
 
-  const addonLines = addons.length
-    ? addons.map(a => a === 'rush-delivery' ? '  + 24-Hour Rush Delivery' : '  + Audio Voice Reflection').join('\n')
+  const hasRush = addons.includes('rush-delivery');
+  const hasAudio = addons.includes('audio-reflection');
+  const timeline = hasRush ? 'within 24 hours' : 'within 3 business days';
+
+  const addonSummary = addons.length
+    ? addons.map(a => a === 'rush-delivery'
+        ? '<li>24-Hour Rush Delivery — your response will arrive within 24 hours of each inquiry.</li>'
+        : '<li>Audio Voice Reflection — each written response will include a 5–7 minute personalized voice memo elaborating on key themes in spoken cadence.</li>'
+      ).join('')
     : '';
+
+  const greeting = customerName ? `Dear ${customerName.split(' ')[0]},` : 'Thank you for your order.';
 
   const html = `<!DOCTYPE html>
 <html>
-<body style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; padding: 2rem; color: #1A1A1A; background: #F4F4F0;">
-  <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 1.5rem;">Stilled. — Order Confirmed</p>
+<body style="font-family: Georgia, 'Times New Roman', serif; max-width: 580px; margin: 0 auto; padding: 2.5rem 2rem; color: #1A1A1A; background: #F4F4F0; line-height: 1.75;">
 
-  <p>${customerName ? customerName + ',' : 'Thank you.'}</p>
+  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: #999; margin: 0 0 2rem 0;">Stilled.</p>
 
-  <p>Your payment for <strong>${svc.name}</strong> has been received.${addonLines ? '\n' + addonLines : ''}</p>
+  <p style="font-size: 16px; margin: 0 0 1.25rem 0;">${greeting}</p>
 
-  <hr style="border: none; border-top: 1px solid #ddd; margin: 1.5rem 0;">
+  <p style="font-size: 16px; margin: 0 0 1.25rem 0;">Your payment has been received. This confirms your order for <strong style="color: #2C3E33;">${svc.name}</strong>.</p>
 
-  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 0.25rem;">Order Reference</p>
-  <p style="font-family: monospace; font-size: 15px; color: #2C3E33; margin-top: 0;">${shortRef}</p>
+  ${addonSummary ? `
+  <p style="font-size: 14px; margin: 0 0 1rem 0; color: #555;">Your order includes:</p>
+  <ul style="font-size: 14px; margin: 0 0 1.5rem 0; padding-left: 1.5rem; color: #555;">
+    ${addonSummary}
+  </ul>` : ''}
 
-  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 0.25rem;">Send your inquiry to</p>
-  <p style="font-family: monospace; font-size: 15px; color: #2C3E33; margin-top: 0;">${counselEmail}</p>
+  <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 4px; padding: 1.5rem; margin: 1.75rem 0;">
 
-  <hr style="border: none; border-top: 1px solid #ddd; margin: 1.5rem 0;">
+    <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">Order Reference</p>
+    <p style="font-family: 'Courier New', monospace; font-size: 14px; color: #2C3E33; margin: 0 0 1.25rem 0; word-break: break-all;">${shortRef}</p>
 
-  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 0.25rem;">Next Steps</p>
-  <p style="line-height: 1.7;">${svc.instructions}</p>
+    <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">What to do now</p>
+    <p style="font-size: 15px; margin: 0 0 1.25rem 0;">Write to <a href="mailto:${counselEmail}" style="color: #2C3E33; text-decoration: underline;">${counselEmail}</a> with your situation — up to 750 words — and up to 3 specific questions. Put your order reference <strong>${shortRef}</strong> in the subject line so your message is routed correctly.</p>
 
-  <p style="margin-top: 2rem; font-size: 13px; color: #888;">— Stilled.</p>
+    <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 0 0 0.35rem 0;">When you'll hear back</p>
+    <p style="font-size: 15px; margin: 0 0 0 0;">A comprehensive, custom essay-style response will arrive in your inbox <strong>${timeline}</strong>.${hasAudio ? ' Each response will be accompanied by a 5–7 minute audio voice memo.' : ''}</p>
+
+  </div>
+
+  <p style="font-size: 14px; margin: 1.75rem 0 0.75rem 0; color: #555;">This is a quiet, private correspondence between you and one person. Your inquiry will be read carefully, and your response will be written with the same attention you brought to the asking.</p>
+
+  <p style="font-size: 14px; margin: 0 0 1.75rem 0; color: #555;">If you have questions before sending your inquiry, reply to this email.</p>
+
+  <hr style="border: none; border-top: 1px solid #E5E5E5; margin: 1.75rem 0;">
+
+  <p style="font-size: 13px; color: #999; margin: 0 0 0.25rem 0;">Stilled.</p>
+  <p style="font-size: 11px; color: #BBB; margin: 0;">Your order reference: ${shortRef}</p>
+
 </body>
 </html>`;
 
