@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+---
+
+<Layout title="Stilled | Privacy Policy">
+  <Head slot="head" title="Privacy Policy — Stilled." description="How Stilled handles your data." />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Privacy Policy</h1>
+      <p class="sub">Effective Date: July 26, 2026</p>
+    </header>
+
+    <div class="prose reveal">
+
+      <h2>1. What We Collect</h2>
+      <p>When you purchase a service, Stripe collects your payment information and shares your name and email address with us for order fulfillment. We do not receive or store your full credit card number.</p>
+      <p>When you email us for a consultation, we receive the content of your email and any information you choose to share about your situation. This correspondence is kept private and used solely for providing the service you requested.</p>
+      <p>We do not use tracking cookies, analytics scripts, or advertising pixels on this site. There are no third-party trackers. We do not collect browsing behavior, device fingerprints, or any data beyond what you explicitly provide.</p>
+
+      <h2>2. How We Use Your Information</h2>
+      <p>Your name and email are used to deliver the services you purchased, send order confirmations, and communicate about your consultation. Your correspondence content is read only by the service provider for the purpose of writing your response.</p>
+      <p>Payment records (order amount, date, service type, and email) are stored in a private log accessible only to the site operator. This log exists to verify that email inquiries come from paying customers.</p>
+
+      <h2>3. Data Storage</h2>
+      <p>Payment records are stored in Cloudflare KV, a secure key-value store. Email correspondence is stored in the service provider's email account. We retain correspondence for the duration of the client relationship and for a reasonable period afterward for reference.</p>
+      <p>You may request deletion of your correspondence at any time by emailing us. Payment records may be retained for tax and accounting purposes as required by law.</p>
+
+      <h2>4. Data Sharing</h2>
+      <p>We do not sell, rent, trade, or share your personal information with third parties. Your data is never used for marketing, advertising, or any purpose other than providing the service you requested.</p>
+      <p>The only third party with access to your payment information is Stripe, our payment processor, which handles transactions under its own privacy policy and security standards (PCI-DSS Level 1).</p>
+
+      <h2>5. Your Rights</h2>
+      <p>You may request a copy of the personal data we hold about you, request corrections, or request deletion by emailing us. We will respond within 30 days.</p>
+
+      <h2>6. Contact</h2>
+      <p>For privacy-related questions or requests, contact <a href="mailto:privacy@stilled.page">privacy@stilled.page</a>.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 35vw; height: 35vw; background: var(--mesh-2); top: -10%; right: -10%; }
+  .blob-2 { width: 25vw; height: 25vw; background: var(--mesh-4); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-caption); color: var(--ink-dim); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+
+  .prose h2 {
+    font-size: var(--text-h2); font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight); margin: var(--space-2xl) 0 var(--space-sm);
+    padding-top: var(--space-lg); border-top: 1px solid var(--border-hairline);
+  }
+  .prose p {
+    font-size: var(--text-body); line-height: var(--leading-relaxed);
+    color: var(--ink-dim); margin-bottom: var(--space-md);
+  }
+  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+</style>

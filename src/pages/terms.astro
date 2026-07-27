@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+---
+
+<Layout title="Stilled | Terms of Service">
+  <Head slot="head" title="Terms of Service — Stilled." description="Terms governing the use of Stilled services and website." />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Terms of Service</h1>
+      <p class="sub">Effective Date: July 26, 2026</p>
+    </header>
+
+    <div class="prose reveal">
+
+      <h2>1. Overview</h2>
+      <p>These Terms of Service ("Terms") govern your use of the Stilled website (stilled.page) and any services, products, or consultations purchased through the site (collectively, the "Services"). The Services are operated by the individual proprietor behind Stilled ("we," "our," or "us").</p>
+      <p>By accessing the site or purchasing a Service, you agree to be bound by these Terms. If you do not agree, please do not use the Services.</p>
+
+      <h2>2. Services Description</h2>
+      <p>Stilled offers written email-based consultations and mentorship services. These are asynchronous, essay-style correspondence services. No live calls, video sessions, or in-person meetings are included unless explicitly stated in the service description.</p>
+      <p>Each service listing on the Counsel page describes the specific deliverables, turnaround time, and scope. By purchasing, you acknowledge you have read and understood the service description.</p>
+
+      <h2>3. Payment</h2>
+      <p>All payments are processed securely through Stripe. Prices are listed in USD and are subject to change. The price at the time of purchase is the price you will be charged.</p>
+      <p>For one-time services, payment is due in full at the time of order. For recurring mentorship (The Monthly Rhythm), payment is charged monthly until canceled. You may cancel the recurring mentorship at any time through your Stripe customer portal or by contacting us directly.</p>
+
+      <h2>4. Delivery</h2>
+      <p>After payment is confirmed, you will receive an email with the inquiry address and instructions for submitting your context. Written responses are delivered via email within the timeframe specified in your service tier (typically within 3 business days for standard delivery, or 24 hours with Rush Delivery).</p>
+      <p>Delivery timelines begin when we receive your complete context and any required information. Incomplete submissions may delay delivery.</p>
+
+      <h2>5. Refund Policy</h2>
+      <p>Our refund policy is detailed in full on the Refund Policy page. In summary: one-time services may be refunded before the written response has been delivered. Once a written response has been sent, the service is considered delivered and non-refundable. Recurring charges may be canceled at any time.</p>
+
+      <h2>6. Intellectual Property</h2>
+      <p>The written responses, frameworks, and materials provided through the Services are for your personal use only. You may not reproduce, distribute, sell, or publicly share the written content provided to you without express written permission.</p>
+      <p>All content on the stilled.page website — including text, design, images, and code — is protected by copyright and may not be reproduced without permission.</p>
+
+      <h2>7. Disclaimer</h2>
+      <p>The Services provide perspective, analysis, and written guidance. They do not constitute therapy, medical advice, legal advice, or financial advice. If you are experiencing a mental health crisis, please contact a licensed professional or emergency services.</p>
+      <p>We make no guarantees regarding specific outcomes. The value of written consultation depends on your engagement, honesty, and application of the insights provided.</p>
+
+      <h2>8. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, Stilled and its proprietor shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Services. Our total liability for any claim arising from the Services shall not exceed the amount you paid for the specific service at issue.</p>
+
+      <h2>9. Privacy</h2>
+      <p>Your privacy is important. Please review our Privacy Policy for details on how your information is handled. We do not sell, rent, or share your personal data with third parties for marketing purposes.</p>
+
+      <h2>10. Contact</h2>
+      <p>For questions about these Terms, contact us at <a href="mailto:legal@stilled.page">legal@stilled.page</a>.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 35vw; height: 35vw; background: var(--mesh-2); top: -10%; right: -10%; }
+  .blob-2 { width: 25vw; height: 25vw; background: var(--mesh-4); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-caption); color: var(--ink-dim); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+
+  .prose h2 {
+    font-size: var(--text-h2); font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight); margin: var(--space-2xl) 0 var(--space-sm);
+    padding-top: var(--space-lg); border-top: 1px solid var(--border-hairline);
+  }
+  .prose p {
+    font-size: var(--text-body); line-height: var(--leading-relaxed);
+    color: var(--ink-dim); margin-bottom: var(--space-md);
+  }
+  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+</style>

@@ -30,11 +30,62 @@ const { title = 'Stilled', showNav = true } = Astro.props;
     <main>
       <slot />
     </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span class="footer-brand">Stilled.</span>
+        <nav class="footer-links">
+          <a href="/terms">Terms</a>
+          <a href="/refunds">Refunds</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/counsel">Counsel</a>
+        </nav>
+        <span class="footer-contact">Contact: <a href="mailto:concierge@stilled.page">concierge@stilled.page</a></span>
+      </div>
+    </footer>
   </body>
 </html>
 
+<style>
+  .site-footer {
+  border-top: 1px solid var(--border-hairline);
+  padding: var(--space-xl) var(--page-pad-x) var(--space-2xl);
+  position: relative; z-index: 2;
+}
+.footer-inner {
+  max-width: var(--measure-wide); margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-lg) var(--space-2xl);
+}
+.footer-brand {
+  font-family: var(--font-serif);
+  font-size: var(--text-body);
+  opacity: 0.5;
+}
+.footer-links {
+  display: flex; gap: var(--space-lg);
+}
+.footer-links a {
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  opacity: 0.4;
+  transition: opacity 0.35s;
+}
+.footer-links a:hover { opacity: 0.75; }
+.footer-contact {
+  font-size: var(--text-label);
+  opacity: 0.35;
+  margin-left: auto;
+}
+.footer-contact a { opacity: 0.7; transition: opacity 0.35s; }
+.footer-contact a:hover { opacity: 1; }
+@media (max-width: 600px) {
+  .footer-contact { margin-left: 0; }
+}
+</style>
+
 <script>
-  function initReveal() {
+function initReveal() {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {

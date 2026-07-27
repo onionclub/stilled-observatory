@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Head from '../components/Head.astro';
+---
+
+<Layout title="Stilled | Refund Policy">
+  <Head slot="head" title="Refund Policy — Stilled." description="Refund and cancellation terms for Stilled services." />
+
+  <div class="mesh-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <section class="page">
+    <header class="page-header reveal">
+      <span class="mark" aria-hidden="true"></span>
+      <h1>Refund Policy</h1>
+      <p class="sub">Effective Date: July 26, 2026</p>
+    </header>
+
+    <div class="prose reveal">
+
+      <h2>Our Commitment</h2>
+      <p>We want you to feel confident in your purchase. This policy outlines the circumstances under which refunds are available for services purchased through stilled.page.</p>
+
+      <h2>One-Time Services (Single Inquiry, 3-Letter Series)</h2>
+      <p><strong>Before delivery:</strong> You may request a full refund at any point before the written response has been delivered to your email. To request a refund, email us with your order reference number. Refunds are processed within 5–10 business days and returned to the original payment method.</p>
+      <p><strong>After delivery:</strong> Once the written response has been sent to your email, the service is considered fully delivered and is non-refundable. The nature of these services — personalized, written analysis — means the value is in the content itself, which cannot be returned.</p>
+      <p><strong>Partial delivery (3-Letter Series):</strong> If you have received one or two letters in a 3-Letter Series and wish to discontinue, contact us. We will issue a prorated refund for the undelivered portion, calculated at $72 per remaining letter.</p>
+
+      <h2>Recurring Mentorship (The Monthly Rhythm)</h2>
+      <p>You may cancel your Monthly Rhythm subscription at any time through your Stripe customer portal or by contacting us. Cancellation stops future charges. You will retain access to all correspondence delivered up to the cancellation date.</p>
+      <p>The current month's charge is non-refundable once any correspondence has been exchanged during that billing period. If no correspondence has occurred in the current month, you may request a refund for that month's charge.</p>
+
+      <h2>Add-Ons</h2>
+      <p><strong>Rush Delivery:</strong> If we fail to deliver your response within the 24-hour window, the Rush Delivery fee is fully refundable. If the response is delivered within 24 hours, the Rush fee is non-refundable as the service was performed.</p>
+      <p><strong>Audio Voice Reflection:</strong> Refundable before the audio file has been delivered. Non-refundable after delivery.</p>
+
+      <h2>How to Request a Refund</h2>
+      <p>Email your refund request with your order reference number (found in your Stripe receipt) to <a href="mailto:refunds@stilled.page">refunds@stilled.page</a>. We respond to all refund requests within 2 business days.</p>
+
+      <h2>Chargebacks</h2>
+      <p>If you believe a charge was made in error, please contact us before initiating a chargeback with your bank. We can resolve most issues quickly. Chargebacks filed without prior contact may result in termination of access to future services.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  body { background: var(--paper-deep); color: var(--ink); overflow-x: hidden; }
+  .mesh-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(130px); animation: drift 24s ease-in-out infinite; }
+  .blob-1 { width: 35vw; height: 35vw; background: var(--mesh-2); top: -10%; right: -10%; }
+  .blob-2 { width: 25vw; height: 25vw; background: var(--mesh-4); bottom: -10%; left: -5%; animation-delay: -11s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(4%,-6%) scale(1.08)} 50%{transform:translate(-2%,4%) scale(0.94)} 75%{transform:translate(-5%,-2%) scale(1.04)} }
+
+  .page { padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom); max-width: var(--measure-base); margin: 0 auto; position: relative; z-index: 2; }
+  .page-header { margin-bottom: var(--space-3xl); }
+  .page-header .mark { display: block; width: 32px; height: 1px; background: var(--accent); margin-bottom: var(--space-lg); opacity: 0.5; }
+  .page-header h1 { font-size: var(--text-display); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tightest); margin-bottom: var(--space-md); }
+  .sub { font-size: var(--text-caption); color: var(--ink-dim); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+
+  .prose h2 {
+    font-size: var(--text-h2); font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight); margin: var(--space-2xl) 0 var(--space-sm);
+    padding-top: var(--space-lg); border-top: 1px solid var(--border-hairline);
+  }
+  .prose p {
+    font-size: var(--text-body); line-height: var(--leading-relaxed);
+    color: var(--ink-dim); margin-bottom: var(--space-md);
+  }
+  .prose strong { font-weight: var(--weight-medium); color: var(--ink); }
+  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+</style>
