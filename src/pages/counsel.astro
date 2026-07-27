@@ -35,6 +35,15 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
       </div>
     </div>
 
+    <!-- Credibility -->
+    <section class="credibility reveal">
+      <span class="cred-eyebrow">Practice</span>
+      <h2>10,000 hours. No single teacher.</h2>
+      <p>5 years spent immersed in this work, not casually, not part-time. I have studied numerous traditions of manifestation and consciousness practice, and tested each one against results rather than accepting it on faith.</p>
+      <p>What's left is not recycled encouragement. It's a tested understanding of what actually creates shift, applied directly to your situation.</p>
+      <p class="cred-close">You are in careful hands.</p>
+    </section>
+
     <!-- Services -->
     <div class="services">
       {services.map((s, i) => (
@@ -133,6 +142,37 @@ const desc = 'Quiet, deliberate written guidance for internal clarity, assumptio
     color: var(--accent); flex-shrink: 0;
   }
   .step-sep { color: var(--ink-faint); font-size: var(--text-label); }
+
+  /* ── Credibility ──────────────────────── */
+  .credibility {
+    margin-bottom: var(--space-3xl);
+    max-width: var(--measure-narrow);
+  }
+  .cred-eyebrow {
+    display: block;
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    opacity: 0.5;
+    margin-bottom: var(--space-sm);
+  }
+  .credibility h2 {
+    font-size: var(--text-h3);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-lg);
+  }
+  .credibility p {
+    font-size: var(--text-body);
+    color: var(--ink-dim);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-md);
+  }
+  .cred-close {
+    margin-top: var(--space-xl) !important;
+    font-style: italic;
+    color: var(--ink) !important;
+  }
 
   /* ── Service Cards ─────────────────── */
   .services { display: flex; flex-direction: column; gap: var(--space-2xl); margin-bottom: var(--space-3xl); }

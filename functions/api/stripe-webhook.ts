@@ -39,11 +39,11 @@ function buildEmailHtml(
   // --- Package block ---
   const packages: Record<string, string> = {
     'single-inquiry':
-      'You have chosen <strong style="color: #2C3E33;">The Single Inquiry</strong>. We will explore <strong>one specific situation</strong>. I will return to you with a comprehensive, essay-style reflection designed to offer <strong>deep clarity</strong> and a <strong>shift in perspective</strong>.',
+      'You have chosen <strong style="color: #2C3E33;">The Single Inquiry</strong>. We will explore <strong>1 specific situation</strong>. I will return to you with a comprehensive, essay-style reflection designed to offer <strong>deep clarity</strong> and a <strong>shift in perspective</strong>.',
     'three-letter-series':
-      'You have chosen <strong style="color: #2C3E33;">The 3-Letter Series</strong>. Over the next <strong>60 days</strong>, we will have <strong>three full exchanges</strong>. This is a short arc of sustained correspondence. It allows you to reflect, apply insights, and write back as your situation evolves. You may use your letters <strong>at your own pace</strong>.',
+      'You have chosen <strong style="color: #2C3E33;">The 3-Letter Series</strong>. Over the next <strong>60 days</strong>, we will have <strong>3 full exchanges</strong>. This is a short arc of sustained correspondence. It allows you to reflect, apply insights, and write back as your situation evolves. You may use your letters <strong>at your own pace</strong>.',
     'monthly-rhythm':
-      'You have joined <strong style="color: #2C3E33;">The Monthly Rhythm</strong>. I am deeply honored to be one of the <strong>eight people</strong> holding this space for you this month. We will establish a steady, quiet accountability through our weekly deep-dives and mid-week check-ins. This will accompany you through your daily integration <strong>without the friction of live calls</strong>.',
+      'You have joined <strong style="color: #2C3E33;">The Monthly Rhythm</strong>. I am deeply honored to be one of the <strong>8 people</strong> holding this space for you this month. We will establish a steady, quiet accountability through our weekly deep-dives and mid-week check-ins. This will accompany you through your daily integration <strong>without the friction of live calls</strong>.',
   };
   const packageBlock = packages[service] || '';
 
@@ -53,7 +53,7 @@ function buildEmailHtml(
     addonBlock += '<p style="margin: 0 0 0.75rem 0;">I also see you have chosen the <strong>24-Hour Rush Delivery</strong>. I will make your words my immediate priority to ensure your response is delivered <strong>swiftly</strong>.</p>';
   }
   if (hasAudio) {
-    addonBlock += '<p style="margin: 0 0 0.75rem 0;">You have also included the <strong>Audio Voice Reflection</strong>. Alongside my written words, you will hear my voice in a <strong>five to seven minute personalized memo</strong> with each response. This offers another layer of <strong>nuance and care</strong>.</p>';
+    addonBlock += '<p style="margin: 0 0 0.75rem 0;">You have also included the <strong>Audio Voice Reflection</strong>. Alongside my written words, you will hear my voice in a <strong>5-7 minute personalized memo</strong> with each response. This offers another layer of <strong>nuance and care</strong>.</p>';
   }
 
   // --- Timeline/cadence block ---
@@ -77,7 +77,7 @@ function buildEmailHtml(
 
   return `<!DOCTYPE html>
 <html>
-<body style="font-family: Georgia, 'Times New Roman', serif; max-width: 580px; margin: 0 auto; padding: 2.5rem 2rem; color: #1A1A1A; background: #F4F4F0; line-height: 1.75;">
+<body style="font-family: Georgia, 'Times New Roman', serif; max-width: 580px; margin: 0 auto; padding: 2.5rem 2rem; color: #1A1A1A; background: #F9F8F6; line-height: 1.75;">
 
   <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: #999; margin: 0 0 2rem 0;">Stilled.</p>
 
@@ -106,7 +106,7 @@ function buildEmailHtml(
   </div>
 
   <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin: 2rem 0 0.35rem 0;">A quiet note before you write</p>
-  <p style="margin: 0 0 0.75rem 0;">I want you to feel <strong>secure</strong> in what you are stepping into. I have spent over <strong>five years</strong> and more than <strong>ten thousand hours</strong> immersed in this work. I do not follow a single path or repeat one teacher's framework. I have studied multiple traditions of manifestation and tested their principles exhaustively. I understand the underlying mechanics with the <strong>precision of a science</strong> and the <strong>depth of a lived practice</strong>.</p>
+  <p style="margin: 0 0 0.75rem 0;">I want you to feel <strong>secure</strong> in what you are stepping into. I have spent over <strong>5 years</strong> and more than <strong>10,000 hours</strong> immersed in this work. I do not follow a single path or repeat one teacher's framework. I have studied multiple traditions of manifestation and tested their principles exhaustively. I understand the underlying mechanics with the <strong>precision of a science</strong> and the <strong>depth of a lived practice</strong>.</p>
   <p style="margin: 0 0 0.75rem 0;">What you receive from me is not surface encouragement or recycled advice. It is a response shaped by a deep, tested understanding of what <strong>actually creates shift</strong>, and what does not. You are in <strong>careful hands</strong>.</p>
   <p style="margin: 0 0 0.75rem 0;">This is a quiet, private correspondence between you and one person. Your inquiry will be read <strong>slowly</strong> and held with <strong>care</strong>. The response you receive will be written with the same depth of attention you brought to the asking. <strong>The quality of the answer should honor the courage it took to ask.</strong></p>
   <p style="margin: 0 0 1.75rem 0;">If you have any questions before you send your inquiry, simply reply to this email. <strong>I am here.</strong></p>
