@@ -140,6 +140,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }
   });
 
+  // Human-readable description for the Stripe dashboard
+  const addonSummary = validAddons.length ? ` + ${validAddons.map(a => ADDONS[a].name).join(' + ')}` : '';
+  const description = `Stilled — ${svc.name}${addonSummary}`;
+  params.append('payment_intent_data[description]', description);
+
   if (svc.mode === 'subscription') {
     params.append('subscription_data[metadata][service]', service);
   }
